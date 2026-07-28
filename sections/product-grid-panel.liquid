@@ -107,9 +107,10 @@
 
         {% for i in (1..4) %}
           {% assign idx = forloop.index0 %}
+          {% assign mod2 = forloop.index | modulo: 2 %}
           <div class="haute-product-card">
             <div class="card-image-wrapper">
-              {% if forloop.index % 2 == 0 %}
+              {% if mod2 == 0 %}
                 <img src="{{ 'luxury-cream.jpg' | asset_url }}" class="card-img" alt="Demo Ürün" width="400" height="400" loading="lazy">
               {% else %}
                 <img src="{{ 'luxury-serum.jpg' | asset_url }}" class="card-img" alt="Demo Ürün" width="400" height="400" loading="lazy">
