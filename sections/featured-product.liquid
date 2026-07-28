@@ -1,5 +1,5 @@
 {% comment %}
-  Ultra-Luxury High-Fashion Cosmetic Product Spotlight Section (100% Block-Based & Fully Customizable)
+  Ultra-Luxury High-Fashion Cosmetic Product Spotlight Section (100% Fully Customisable CSS Variables)
 {% endcomment %}
 
 <div class="featured-product-section full-width" id="featuredProduct" style="
@@ -7,14 +7,55 @@
   --padding-bottom: {{ section.settings.padding_bottom }}px;
   --mobile-padding-top: {{ section.settings.mobile_padding_top }}px;
   --mobile-padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  --element-gap: {{ section.settings.element_gap }}px;
+  --card-padding: {{ section.settings.card_padding }}px;
+
   --bg-gradient-start: {{ section.settings.bg_gradient_start }};
   --bg-gradient-end: {{ section.settings.bg_gradient_end }};
+  --orb-1-color: {{ section.settings.orb_1_color }};
+  --orb-1-size: {{ section.settings.orb_1_size }}px;
+  --orb-2-color: {{ section.settings.orb_2_color }};
+  --orb-2-size: {{ section.settings.orb_2_size }}px;
+
+  --title-font-size: {{ section.settings.title_font_size }}rem;
+  --title-color: {{ section.settings.title_color }};
+  --subheading-font-size: {{ section.settings.subheading_font_size }}rem;
+  --subheading-color: {{ section.settings.subheading_color }};
+  --price-font-size: {{ section.settings.price_font_size }}rem;
+  --price-color: {{ section.settings.price_color }};
+  --price-compare-color: {{ section.settings.price_compare_color }};
+  --desc-font-size: {{ section.settings.desc_font_size }}rem;
+  --desc-color: {{ section.settings.desc_color }};
+  --star-color: {{ section.settings.star_color }};
+  --accent-color: {{ section.settings.accent_color }};
+
   --glass-bg: {{ section.settings.glass_bg }};
   --glass-border: {{ section.settings.glass_border }};
+  --glass-border-width: {{ section.settings.glass_border_width }}px;
   --glass-blur: {{ section.settings.glass_blur }}px;
   --glass-radius: {{ section.settings.glass_radius }}px;
-  --accent-color: {{ section.settings.accent_color }};
-  --title-color: {{ section.settings.title_color }};
+
+  --btn-bg-color: {{ section.settings.btn_bg_color }};
+  --btn-bg-end: {{ section.settings.btn_bg_end }};
+  --btn-hover-bg: {{ section.settings.btn_hover_bg }};
+  --btn-text-color: {{ section.settings.btn_text_color }};
+  --btn-radius: {{ section.settings.btn_radius }}px;
+  --btn-font-size: {{ section.settings.btn_font_size }}rem;
+
+  --stepper-bg: {{ section.settings.stepper_bg }};
+  --stepper-border: {{ section.settings.stepper_border }};
+  --stepper-text-color: {{ section.settings.stepper_text_color }};
+  --stepper-radius: {{ section.settings.stepper_radius }}px;
+
+  --chip-bg: {{ section.settings.chip_bg }};
+  --chip-active-bg: {{ section.settings.chip_active_bg }};
+  --chip-border: {{ section.settings.chip_border }};
+  --chip-text-color: {{ section.settings.chip_text_color }};
+  --chip-radius: {{ section.settings.chip_radius }}px;
+
+  --badge-bg: {{ section.settings.badge_bg }};
+  --badge-text-color: {{ section.settings.badge_text_color }};
+  --badge-radius: {{ section.settings.badge_radius }}px;
 ">
   <!-- Glowing Atmosphere Orbs -->
   <div class="luxury-orb orb-top-left"></div>
@@ -153,9 +194,9 @@
 <style>
   .featured-product-section {
     position: relative;
-    background: linear-gradient(135deg, var(--bg-gradient-start, #0f0b10) 0%, #170f1a 50%, var(--bg-gradient-end, #0b080c) 100%);
-    padding-top: var(--padding-top, 100px);
-    padding-bottom: var(--padding-bottom, 100px);
+    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, #170f1a 50%, var(--bg-gradient-end) 100%);
+    padding-top: var(--padding-top);
+    padding-bottom: var(--padding-bottom);
     padding-left: 24px;
     padding-right: 24px;
     margin: 0;
@@ -172,17 +213,17 @@
   }
 
   .orb-top-left {
-    width: 500px;
-    height: 500px;
-    background: rgba(194, 91, 130, 0.18);
+    width: var(--orb-1-size);
+    height: var(--orb-1-size);
+    background: var(--orb-1-color);
     top: -100px;
     left: -100px;
   }
 
   .orb-bottom-right {
-    width: 600px;
-    height: 600px;
-    background: rgba(247, 202, 208, 0.14);
+    width: var(--orb-2-size);
+    height: var(--orb-2-size);
+    background: var(--orb-2-color);
     bottom: -150px;
     right: -150px;
   }
@@ -206,7 +247,7 @@
 
   .luxury-image-frame {
     position: relative;
-    border-radius: 32px;
+    border-radius: var(--glass-radius);
     padding: 8px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%);
     box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
@@ -216,7 +257,7 @@
   .frame-aura-glow {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, rgba(194, 91, 130, 0.35) 0%, transparent 70%);
+    background: radial-gradient(circle at center, var(--orb-1-color) 0%, transparent 70%);
     filter: blur(20px);
     pointer-events: none;
   }
@@ -226,7 +267,7 @@
     height: auto;
     aspect-ratio: 1 / 1;
     object-fit: cover;
-    border-radius: 26px;
+    border-radius: calc(var(--glass-radius) - 6px);
     display: block;
     position: relative;
     z-index: 2;
@@ -237,14 +278,14 @@
     top: 24px;
     left: 24px;
     z-index: 3;
-    background: linear-gradient(135deg, #c25b82 0%, #a44267 100%);
-    color: #ffffff;
+    background: var(--badge-bg);
+    color: var(--badge-text-color);
     font-size: 0.78rem;
     font-weight: 800;
     padding: 8px 18px;
-    border-radius: 30px;
+    border-radius: var(--badge-radius);
     letter-spacing: 0.1em;
-    box-shadow: 0 8px 20px rgba(194, 91, 130, 0.4);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
   }
 
   .featured-product__thumbs {
@@ -257,9 +298,9 @@
     height: 80px;
     border-radius: 16px;
     padding: 4px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
+    background: var(--glass-bg);
+    border: var(--glass-border-width) solid var(--glass-border);
+    backdrop-filter: blur(var(--glass-blur));
     cursor: pointer;
     overflow: hidden;
     transition: all 0.25s ease;
@@ -274,38 +315,38 @@
 
   .thumb-glass-card.active,
   .thumb-glass-card:hover {
-    border-color: #c25b82;
+    border-color: var(--btn-bg-color);
     transform: scale(1.05);
     box-shadow: 0 0 15px rgba(194, 91, 130, 0.3);
   }
 
   .featured-product__glass-card {
-    background: var(--glass-bg, rgba(255, 255, 255, 0.05));
-    backdrop-filter: blur(var(--glass-blur, 24px));
-    -webkit-backdrop-filter: blur(var(--glass-blur, 24px));
-    border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.15));
-    border-radius: var(--glass-radius, 36px);
-    padding: 50px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border-width) solid var(--glass-border);
+    border-radius: var(--glass-radius);
+    padding: var(--card-padding);
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--element-gap);
   }
 
   .brand-subheading {
-    font-size: 0.78rem;
+    font-size: var(--subheading-font-size);
     font-weight: 700;
     letter-spacing: 0.2em;
-    color: var(--accent-color, #f7cad0);
+    color: var(--subheading-color);
     text-transform: uppercase;
   }
 
   .featured-product__title {
-    font-size: 2.3rem;
+    font-size: var(--title-font-size);
     font-weight: 800;
     line-height: 1.2;
     margin: 0;
-    color: var(--title-color, #ffffff);
+    color: var(--title-color);
   }
 
   .featured-product__rating {
@@ -316,7 +357,7 @@
   }
 
   .stars {
-    color: var(--accent-color, #f7cad0);
+    color: var(--star-color);
     letter-spacing: 2px;
   }
 
@@ -338,21 +379,21 @@
   }
 
   .price-current {
-    font-size: 2.1rem;
+    font-size: var(--price-font-size);
     font-weight: 800;
-    color: #ffffff;
+    color: var(--price-color);
   }
 
   .price-compare {
-    font-size: 1.2rem;
-    color: rgba(255, 255, 255, 0.45);
+    font-size: calc(var(--price-font-size) * 0.6);
+    color: var(--price-compare-color);
     text-decoration: line-through;
   }
 
   .gold-savings-badge {
     background: rgba(247, 202, 208, 0.15);
     border: 1px solid rgba(247, 202, 208, 0.3);
-    color: var(--accent-color, #f7cad0);
+    color: var(--accent-color);
     font-size: 0.78rem;
     font-weight: 700;
     padding: 4px 12px;
@@ -360,9 +401,9 @@
   }
 
   .featured-product__description {
-    font-size: 0.96rem;
+    font-size: var(--desc-font-size);
     line-height: 1.65;
-    color: rgba(255, 255, 255, 0.82);
+    color: var(--desc-color);
     margin: 0;
   }
 
@@ -370,8 +411,8 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: var(--glass-bg);
+    border: var(--glass-border-width) solid var(--glass-border);
     padding: 8px 16px;
     border-radius: 30px;
     font-size: 0.82rem;
@@ -398,11 +439,11 @@
   }
 
   .dark-chip-btn {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    color: #ffffff;
+    background: var(--chip-bg);
+    border: var(--glass-border-width) solid var(--chip-border);
+    color: var(--chip-text-color);
     padding: 10px 20px;
-    border-radius: 14px;
+    border-radius: var(--chip-radius);
     font-size: 0.88rem;
     font-weight: 700;
     cursor: pointer;
@@ -411,8 +452,8 @@
 
   .dark-chip-btn.active,
   .dark-chip-btn:hover {
-    background: rgba(194, 91, 130, 0.3);
-    border-color: var(--accent-color, #f7cad0);
+    background: var(--chip-active-bg);
+    border-color: var(--accent-color);
     box-shadow: 0 4px 15px rgba(194, 91, 130, 0.25);
   }
 
@@ -424,9 +465,9 @@
   .dark-qty-stepper {
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
+    background: var(--stepper-bg);
+    border: var(--glass-border-width) solid var(--stepper-border);
+    border-radius: var(--stepper-radius);
     overflow: hidden;
   }
 
@@ -435,7 +476,7 @@
     height: 48px;
     background: transparent;
     border: none;
-    color: #ffffff;
+    color: var(--stepper-text-color);
     font-size: 1.1rem;
     cursor: pointer;
     transition: background 0.2s;
@@ -450,7 +491,7 @@
     text-align: center;
     background: transparent;
     border: none;
-    color: #ffffff;
+    color: var(--stepper-text-color);
     font-size: 1rem;
     font-weight: 800;
     outline: none;
@@ -462,12 +503,12 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
-    background: linear-gradient(135deg, #c25b82 0%, #a44267 100%);
-    color: #ffffff;
-    font-size: 1.05rem;
+    background: linear-gradient(135deg, var(--btn-bg-color) 0%, var(--btn-bg-end) 100%);
+    color: var(--btn-text-color);
+    font-size: var(--btn-font-size);
     font-weight: 800;
     padding: 14px 28px;
-    border-radius: 16px;
+    border-radius: var(--btn-radius);
     border: none;
     cursor: pointer;
     box-shadow: 0 10px 30px rgba(194, 91, 130, 0.4);
@@ -475,6 +516,7 @@
   }
 
   .haute-add-btn:hover {
+    background: var(--btn-hover-bg);
     transform: translateY(-2px);
     box-shadow: 0 15px 35px rgba(194, 91, 130, 0.55);
   }
@@ -500,9 +542,9 @@
   }
 
   .accordion-item {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 16px;
+    background: var(--glass-bg);
+    border: var(--glass-border-width) solid var(--glass-border);
+    border-radius: var(--stepper-radius);
     overflow: hidden;
   }
 
@@ -527,15 +569,15 @@
     font-size: 0.88rem;
     line-height: 1.6;
     color: rgba(255, 255, 255, 0.75);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--glass-border);
     padding-top: 14px;
   }
 
   /* Pixel-Perfect Mobile Optimization */
   @media (max-width: 992px) {
     .featured-product-section {
-      padding-top: var(--mobile-padding-top, 60px);
-      padding-bottom: var(--mobile-padding-bottom, 60px);
+      padding-top: var(--mobile-padding-top);
+      padding-bottom: var(--mobile-padding-bottom);
       padding-left: 16px;
       padding-right: 16px;
     }
@@ -545,14 +587,14 @@
     }
     .featured-product__glass-card {
       padding: 24px 20px;
-      border-radius: 24px;
-      gap: 16px;
+      border-radius: calc(var(--glass-radius) * 0.7);
+      gap: calc(var(--element-gap) * 0.8);
     }
     .featured-product__title {
-      font-size: 1.8rem;
+      font-size: calc(var(--title-font-size) * 0.8);
     }
     .price-current {
-      font-size: 1.7rem;
+      font-size: calc(var(--price-font-size) * 0.8);
     }
     .featured-product__actions {
       flex-direction: column;
@@ -625,7 +667,103 @@
     },
     {
       "type": "header",
-      "content": "🎨 Renk ve Tasarım Ayarları"
+      "content": "🔤 Tipografi & Boyutlar"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "label": "Ana Başlık Yazı Boyutu (rem)",
+      "min": 1.2,
+      "max": 4.0,
+      "step": 0.1,
+      "unit": "rem",
+      "default": 2.3
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size",
+      "label": "Alt Başlık Yazı Boyutu (rem)",
+      "min": 0.6,
+      "max": 1.5,
+      "step": 0.05,
+      "unit": "rem",
+      "default": 0.78
+    },
+    {
+      "type": "range",
+      "id": "price_font_size",
+      "label": "Fiyat Yazı Boyutu (rem)",
+      "min": 1.0,
+      "max": 3.5,
+      "step": 0.1,
+      "unit": "rem",
+      "default": 2.1
+    },
+    {
+      "type": "range",
+      "id": "desc_font_size",
+      "label": "Açıklama Yazı Boyutu (rem)",
+      "min": 0.7,
+      "max": 1.5,
+      "step": 0.05,
+      "unit": "rem",
+      "default": 0.96
+    },
+    {
+      "type": "range",
+      "id": "btn_font_size",
+      "label": "Buton Yazı Boyutu (rem)",
+      "min": 0.8,
+      "max": 1.8,
+      "step": 0.05,
+      "unit": "rem",
+      "default": 1.05
+    },
+    {
+      "type": "header",
+      "content": "🎨 Renk Paleti"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Ana Başlık Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Alt Başlık Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Mevcut Fiyat Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "price_compare_color",
+      "label": "Eski Fiyat Rengi",
+      "default": "rgba(255, 255, 255, 0.45)"
+    },
+    {
+      "type": "color",
+      "id": "desc_color",
+      "label": "Açıklama Yazısı Rengi",
+      "default": "rgba(255, 255, 255, 0.82)"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Yıldız İkon Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Genel Vurgu Rengi",
+      "default": "#f7cad0"
     },
     {
       "type": "color",
@@ -638,6 +776,10 @@
       "id": "bg_gradient_end",
       "label": "Arka Plan Bitiş Rengi",
       "default": "#0b080c"
+    },
+    {
+      "type": "header",
+      "content": "✨ Cam Efekti (Glassmorphism)"
     },
     {
       "type": "color",
@@ -653,44 +795,220 @@
     },
     {
       "type": "range",
-      "id": "glass_radius",
-      "label": "Cam Kart Köşe Yuvarlama (px)",
+      "id": "glass_border_width",
+      "label": "Kenarlık Kalınlığı (px)",
       "min": 0,
-      "max": 50,
-      "step": 2,
+      "max": 5,
+      "step": 1,
       "unit": "px",
-      "default": 36
+      "default": 1
     },
     {
       "type": "range",
       "id": "glass_blur",
-      "label": "Cam Bulanıklık Düzeyi (Blur px)",
+      "label": "Bulanıklık Derecesi (Blur px)",
       "min": 0,
-      "max": 40,
+      "max": 50,
       "step": 2,
       "unit": "px",
       "default": 24
     },
     {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Vurgu Rengi (Rozet & Yıldızlar)",
-      "default": "#f7cad0"
-    },
-    {
-      "type": "color",
-      "id": "title_color",
-      "label": "Ürün Başlığı Rengi",
-      "default": "#ffffff"
+      "type": "range",
+      "id": "glass_radius",
+      "label": "Köşe Yuvarlaklığı (px)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 36
     },
     {
       "type": "header",
-      "content": "📐 İç Boşluk (Padding) Ayarları"
+      "content": "🔘 Butonlar & Çipler"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Sepete Ekle Butonu Başlangıç Rengi",
+      "default": "#c25b82"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_end",
+      "label": "Sepete Ekle Butonu Bitiş Rengi",
+      "default": "#a44267"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_bg",
+      "label": "Sepete Ekle Hover Rengi",
+      "default": "#a44267"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Buton Yazı Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "btn_radius",
+      "label": "Buton Köşe Yuvarlama (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "stepper_bg",
+      "label": "Miktar Seçici (Stepper) Arka Plan Rengi",
+      "default": "rgba(255, 255, 255, 0.08)"
+    },
+    {
+      "type": "color",
+      "id": "stepper_border",
+      "label": "Miktar Seçici Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.2)"
+    },
+    {
+      "type": "color",
+      "id": "stepper_text_color",
+      "label": "Miktar Seçici Yazı Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "stepper_radius",
+      "label": "Miktar Seçici Köşe Yuvarlama (px)",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "chip_bg",
+      "label": "Hacim Çipi Arka Plan Rengi",
+      "default": "rgba(255, 255, 255, 0.06)"
+    },
+    {
+      "type": "color",
+      "id": "chip_active_bg",
+      "label": "Aktif Hacim Çipi Arka Plan Rengi",
+      "default": "rgba(194, 91, 130, 0.3)"
+    },
+    {
+      "type": "color",
+      "id": "chip_border",
+      "label": "Hacim Çipi Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.18)"
+    },
+    {
+      "type": "color",
+      "id": "chip_text_color",
+      "label": "Hacim Çipi Yazı Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "chip_radius",
+      "label": "Hacim Çipi Köşe Yuvarlama (px)",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "badge_bg",
+      "label": "Rozet Arka Plan Rengi",
+      "default": "linear-gradient(135deg, #c25b82 0%, #a44267 100%)"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Rozet Yazı Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "badge_radius",
+      "label": "Rozet Köşe Yuvarlama (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "🔮 Işık Efektleri (Orbs)"
+    },
+    {
+      "type": "color",
+      "id": "orb_1_color",
+      "label": "Üst-Sol Işık Rengi",
+      "default": "rgba(194, 91, 130, 0.18)"
+    },
+    {
+      "type": "range",
+      "id": "orb_1_size",
+      "label": "Üst-Sol Işık Boyutu (px)",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "orb_2_color",
+      "label": "Alt-Sağ Işık Rengi",
+      "default": "rgba(247, 202, 208, 0.14)"
+    },
+    {
+      "type": "range",
+      "id": "orb_2_size",
+      "label": "Alt-Sağ Işık Boyutu (px)",
+      "min": 200,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "📐 Boşluklar (Spacing & Padding)"
+    },
+    {
+      "type": "range",
+      "id": "element_gap",
+      "label": "Elemanlar Arası Boşluk (gap px)",
+      "min": 8,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Cam Kart İç Boşluğu (padding px)",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 50
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Üst İç Boşluk (Masaüstü px)",
+      "label": "Üst Bölüm Boşluğu (Masaüstü px)",
       "min": 20,
       "max": 180,
       "step": 5,
@@ -700,7 +1018,7 @@
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Alt İç Boşluk (Masaüstü px)",
+      "label": "Alt Bölüm Boşluğu (Masaüstü px)",
       "min": 20,
       "max": 180,
       "step": 5,
@@ -710,7 +1028,7 @@
     {
       "type": "range",
       "id": "mobile_padding_top",
-      "label": "Üst İç Boşluk (Mobil px)",
+      "label": "Üst Bölüm Boşluğu (Mobil px)",
       "min": 10,
       "max": 120,
       "step": 5,
@@ -720,7 +1038,7 @@
     {
       "type": "range",
       "id": "mobile_padding_bottom",
-      "label": "Alt İç Boşluk (Mobil px)",
+      "label": "Alt Bölüm Boşluğu (Mobil px)",
       "min": 10,
       "max": 120,
       "step": 5,
