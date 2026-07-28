@@ -1,5 +1,5 @@
 {% comment %}
-  Ultra-Luxury High-Fashion Cosmetic Product Spotlight Section
+  Ultra-Luxury High-Fashion Cosmetic Product Spotlight Section (100% Block-Based)
 {% endcomment %}
 
 <div class="featured-product-section full-width" id="featuredProduct">
@@ -39,100 +39,100 @@
       </div>
     </div>
 
-    <!-- Right: High-Fashion Glass Content Panel -->
+    <!-- Right: High-Fashion Glass Content Panel (Rendered dynamically from Blocks) -->
     <div class="featured-product__glass-card">
-      {% if section.settings.subheading != blank %}
-        <div class="brand-subheading">{{ section.settings.subheading }}</div>
-      {% endif %}
       
-      <h2 class="featured-product__title">
-        {% if display_product %}{{ display_product.title }}{% else %}{{ section.settings.title | default: "Radiance Glow Hyalüronik Serum" }}{% endif %}
-      </h2>
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'subheading' %}
+            <div class="brand-subheading" {{ block.shopify_attributes }}>
+              {{ block.settings.text }}
+            </div>
 
-      <!-- Rating & Reviews -->
-      <div class="featured-product__rating">
-        <div class="stars">★★★★★</div>
-        <span class="rating-score">4.9 / 5.0</span>
-        <span class="rating-count">(248 Müşteri Yorumu)</span>
-      </div>
+          {% when 'title' %}
+            <h2 class="featured-product__title" {{ block.shopify_attributes }}>
+              {% if display_product %}{{ display_product.title }}{% else %}{{ block.settings.text }}{% endif %}
+            </h2>
 
-      <!-- Price Box -->
-      <div class="featured-product__price-box">
-        <span class="price-current">
-          {% if display_product %}{{ display_product.price | money }}{% else %}{{ section.settings.price | default: "₺450,00" }}{% endif %}
-        </span>
-        <span class="price-compare">
-          {% if display_product and display_product.compare_at_price %}{{ display_product.compare_at_price | money }}{% else %}{{ section.settings.compare_price | default: "₺650,00" }}{% endif %}
-        </span>
-        {% if section.settings.savings_text != blank %}
-          <span class="gold-savings-badge">{{ section.settings.savings_text }}</span>
-        {% endif %}
-      </div>
+          {% when 'rating' %}
+            <div class="featured-product__rating" {{ block.shopify_attributes }}>
+              <div class="stars">{{ block.settings.stars }}</div>
+              <span class="rating-score">{{ block.settings.score }}</span>
+              <span class="rating-count">{{ block.settings.count_text }}</span>
+            </div>
 
-      <p class="featured-product__description">
-        {% if display_product and display_product.description != blank %}
-          {{ display_product.description | strip_html | truncate: 220 }}
-        {% else %}
-          {{ section.settings.description | default: "Cildinize anında doğal ışıltı ve derinlemesine nem kazandıran 3'lü saf hyalüronik asit kompleksi, pembe kuvars özü ve Fransız gül suyu ile zenginleştirilmiş konsantre gençlik iksiri." }}
-        {% endif %}
-      </p>
+          {% when 'price' %}
+            <div class="featured-product__price-box" {{ block.shopify_attributes }}>
+              <span class="price-current">
+                {% if display_product %}{{ display_product.price | money }}{% else %}{{ block.settings.price }}{% endif %}
+              </span>
+              <span class="price-compare">
+                {% if display_product and display_product.compare_at_price %}{{ display_product.compare_at_price | money }}{% else %}{{ block.settings.compare_price }}{% endif %}
+              </span>
+              {% if block.settings.savings_text != blank %}
+                <span class="gold-savings-badge">{{ block.settings.savings_text }}</span>
+              {% endif %}
+            </div>
 
-      <!-- Dynamic Certifications Blocks -->
-      <div class="featured-product__badges">
-        {% for block in section.blocks %}
-          {% if block.type == 'cert_pill' %}
+          {% when 'description' %}
+            <p class="featured-product__description" {{ block.shopify_attributes }}>
+              {% if display_product and display_product.description != blank %}
+                {{ display_product.description | strip_html | truncate: 220 }}
+              {% else %}
+                {{ block.settings.text }}
+              {% endif %}
+            </p>
+
+          {% when 'cert_pill' %}
             <div class="dark-cert-pill" {{ block.shopify_attributes }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
               {{ block.settings.text }}
             </div>
-          {% endif %}
-        {% endfor %}
-      </div>
 
-      <!-- Volume Chips -->
-      <div class="featured-product__option">
-        <span class="option-label">Hacim Seçimi:</span>
-        <div class="option-chips">
-          <button type="button" class="dark-chip-btn active" data-volume="30ml">30 ml (Standart)</button>
-          <button type="button" class="dark-chip-btn" data-volume="50ml">50 ml Büyük Boy (+₺180)</button>
-        </div>
-      </div>
+          {% when 'volume_options' %}
+            <div class="featured-product__option" {{ block.shopify_attributes }}>
+              <span class="option-label">{{ block.settings.label }}</span>
+              <div class="option-chips">
+                <button type="button" class="dark-chip-btn active" data-volume="30ml">{{ block.settings.opt_1 }}</button>
+                <button type="button" class="dark-chip-btn" data-volume="50ml">{{ block.settings.opt_2 }}</button>
+              </div>
+            </div>
 
-      <!-- Form Actions & Stepper -->
-      <div class="featured-product__actions">
-        <div class="dark-qty-stepper">
-          <button type="button" class="dstepper-btn qty-minus" aria-label="Azalt">-</button>
-          <input type="number" value="1" min="1" class="dstepper-input qty-input" readonly>
-          <button type="button" class="dstepper-btn qty-plus" aria-label="Artır">+</button>
-        </div>
-        
-        <button type="button" class="haute-add-btn demo-add-btn">
-          <span>{{ section.settings.btn_text | default: "Sepete Ekle" }}</span>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        </button>
-      </div>
+          {% when 'buy_buttons' %}
+            <div class="featured-product__actions" {{ block.shopify_attributes }}>
+              <div class="dark-qty-stepper">
+                <button type="button" class="dstepper-btn qty-minus" aria-label="Azalt">-</button>
+                <input type="number" value="1" min="1" class="dstepper-input qty-input" readonly>
+                <button type="button" class="dstepper-btn qty-plus" aria-label="Artır">+</button>
+              </div>
+              
+              <button type="button" class="haute-add-btn demo-add-btn">
+                <span>{{ block.settings.btn_text }}</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              </button>
+            </div>
+
+          {% when 'accordion' %}
+            <div class="featured-product__accordion" {{ block.shopify_attributes }}>
+              <details class="accordion-item" open>
+                <summary class="accordion-header">
+                  <span>{{ block.settings.title }}</span>
+                  <span class="acc-icon">+</span>
+                </summary>
+                <div class="accordion-body">
+                  {{ block.settings.content }}
+                </div>
+              </details>
+            </div>
+
+        {% endcase %}
+      {% endfor %}
 
       <!-- Toast Alert -->
       <div class="cart-toast" id="cartToast">
         ✓ Özel bakım ürünü sepete başarıyla eklendi!
       </div>
 
-      <!-- Dynamic Accordions Blocks -->
-      <div class="featured-product__accordion">
-        {% for block in section.blocks %}
-          {% if block.type == 'accordion_item' %}
-            <details class="accordion-item" {% if forloop.first %}open{% endif %} {{ block.shopify_attributes }}>
-              <summary class="accordion-header">
-                <span>{{ block.settings.title }}</span>
-                <span class="acc-icon">+</span>
-              </summary>
-              <div class="accordion-body">
-                {{ block.settings.content }}
-              </div>
-            </details>
-          {% endif %}
-        {% endfor %}
-      </div>
     </div>
   </div>
 </div>
@@ -347,12 +347,6 @@
     line-height: 1.65;
     color: rgba(255, 255, 255, 0.82);
     margin: 0;
-  }
-
-  .featured-product__badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
   }
 
   .dark-cert-pill {
@@ -574,58 +568,100 @@
     {
       "type": "product",
       "id": "featured_product",
-      "label": "Öne Çıkan Ürün Seçin"
+      "label": "Öne Çıkan Ürün Seçin (İsteğe Bağlı)"
     },
     {
       "type": "text",
       "id": "badge_text",
-      "label": "İndirim Rozeti Metni",
+      "label": "Görsel Üstü İndirim Rozeti",
       "default": "✦ %30 ÖZEL İNDİRİM"
-    },
-    {
-      "type": "text",
-      "id": "subheading",
-      "label": "Üst Marka Başlığı",
-      "default": "LUMIÈRE BOTANICALS • HAUTE COUTURE BEAUTY"
-    },
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Varsayılan Ürün Adı",
-      "default": "Radiance Glow Hyalüronik Serum"
-    },
-    {
-      "type": "text",
-      "id": "price",
-      "label": "Varsayılan Fiyat",
-      "default": "₺450,00"
-    },
-    {
-      "type": "text",
-      "id": "compare_price",
-      "label": "Varsayılan Karşılaştırma Fiyatı",
-      "default": "₺650,00"
-    },
-    {
-      "type": "text",
-      "id": "savings_text",
-      "label": "Tasarruf Rozeti Metni",
-      "default": "₺200 Tasarruf"
-    },
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Varsayılan Açıklama Metni",
-      "default": "Cildinize anında doğal ışıltı ve derinlemesine nem kazandıran 3'lü saf hyalüronik asit kompleksi, pembe kuvars özü ve Fransız gül suyu ile zenginleştirilmiş konsantre gençlik iksiri."
-    },
-    {
-      "type": "text",
-      "id": "btn_text",
-      "label": "Buton Metni",
-      "default": "Sepete Ekle"
     }
   ],
   "blocks": [
+    {
+      "type": "subheading",
+      "name": "Üst Marka Rozeti",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Rozet Metni",
+          "default": "LUMIÈRE BOTANICALS • HAUTE COUTURE BEAUTY"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "Ürün Başlığı",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Ürün Adı",
+          "default": "Radiance Glow Hyalüronik Serum"
+        }
+      ]
+    },
+    {
+      "type": "rating",
+      "name": "Yıldız & Puan",
+      "settings": [
+        {
+          "type": "text",
+          "id": "stars",
+          "label": "Yıldız Metni",
+          "default": "★★★★★"
+        },
+        {
+          "type": "text",
+          "id": "score",
+          "label": "Puan Oranı",
+          "default": "4.9 / 5.0"
+        },
+        {
+          "type": "text",
+          "id": "count_text",
+          "label": "Yorum Sayısı Metni",
+          "default": "(248 Müşteri Yorumu)"
+        }
+      ]
+    },
+    {
+      "type": "price",
+      "name": "Fiyat Kutusu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Mevcut Fiyat",
+          "default": "₺450,00"
+        },
+        {
+          "type": "text",
+          "id": "compare_price",
+          "label": "Karşılaştırma Fiyatı",
+          "default": "₺650,00"
+        },
+        {
+          "type": "text",
+          "id": "savings_text",
+          "label": "Tasarruf Rozeti",
+          "default": "₺200 Tasarruf"
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Açıklama Metni",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Ürün Açıklaması",
+          "default": "Cildinize anında doğal ışıltı ve derinlemesine nem kazandıran 3'lü saf hyalüronik asit kompleksi, pembe kuvars özü ve Fransız gül suyu ile zenginleştirilmiş konsantre gençlik iksiri."
+        }
+      ]
+    },
     {
       "type": "cert_pill",
       "name": "Sertifika Rozeti",
@@ -639,19 +675,55 @@
       ]
     },
     {
-      "type": "accordion_item",
-      "name": "Akordiyon Açıklaması",
+      "type": "volume_options",
+      "name": "Hacim Seçenekleri",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Seçenek Etiketi",
+          "default": "Hacim Seçimi:"
+        },
+        {
+          "type": "text",
+          "id": "opt_1",
+          "label": "1. Seçenek",
+          "default": "30 ml (Standart)"
+        },
+        {
+          "type": "text",
+          "id": "opt_2",
+          "label": "2. Seçenek",
+          "default": "50 ml Büyük Boy (+₺180)"
+        }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Satın Alma Butonları",
+      "settings": [
+        {
+          "type": "text",
+          "id": "btn_text",
+          "label": "Buton Metni",
+          "default": "Sepete Ekle"
+        }
+      ]
+    },
+    {
+      "type": "accordion",
+      "name": "Akordiyon Sekmesi",
       "settings": [
         {
           "type": "text",
           "id": "title",
-          "label": "Akordiyon Başlığı",
+          "label": "Sekme Başlığı",
           "default": "Öne Çıkan Aktif İçerikler"
         },
         {
           "type": "textarea",
           "id": "content",
-          "label": "Akordiyon İçeriği",
+          "label": "Sekme İçeriği",
           "default": "%2 Triple Hyalüronik Asit, Isparta Gül Suyu ve Niasinamid (B3 Vitamini) kompleksi."
         }
       ]
@@ -662,6 +734,40 @@
       "name": "Öne Çıkan Ürün Paneli",
       "category": "Ürün",
       "blocks": [
+        {
+          "type": "subheading",
+          "settings": {
+            "text": "LUMIÈRE BOTANICALS • HAUTE COUTURE BEAUTY"
+          }
+        },
+        {
+          "type": "title",
+          "settings": {
+            "text": "Radiance Glow Hyalüronik Serum"
+          }
+        },
+        {
+          "type": "rating",
+          "settings": {
+            "stars": "★★★★★",
+            "score": "4.9 / 5.0",
+            "count_text": "(248 Müşteri Yorumu)"
+          }
+        },
+        {
+          "type": "price",
+          "settings": {
+            "price": "₺450,00",
+            "compare_price": "₺650,00",
+            "savings_text": "₺200 Tasarruf"
+          }
+        },
+        {
+          "type": "description",
+          "settings": {
+            "text": "Cildinize anında doğal ışıltı ve derinlemesine nem kazandıran 3'lü saf hyalüronik asit kompleksi, pembe kuvars özü ve Fransız gül suyu ile zenginleştirilmiş konsantre gençlik iksiri."
+          }
+        },
         {
           "type": "cert_pill",
           "settings": {
@@ -675,20 +781,28 @@
           }
         },
         {
-          "type": "cert_pill",
+          "type": "volume_options",
           "settings": {
-            "text": "Dermatolojik Onaylı"
+            "label": "Hacim Seçimi:",
+            "opt_1": "30 ml (Standart)",
+            "opt_2": "50 ml Büyük Boy (+₺180)"
           }
         },
         {
-          "type": "accordion_item",
+          "type": "buy_buttons",
+          "settings": {
+            "btn_text": "Sepete Ekle"
+          }
+        },
+        {
+          "type": "accordion",
           "settings": {
             "title": "Öne Çıkan Aktif İçerikler",
             "content": "%2 Triple Hyalüronik Asit, Isparta Gül Suyu ve Niasinamid (B3 Vitamini) kompleksi."
           }
         },
         {
-          "type": "accordion_item",
+          "type": "accordion",
           "settings": {
             "title": "Kullanım Rutini & Uygulama",
             "content": "Sabah ve akşam temizlenmiş yüz ve boyun bölgesine 3-4 damla uygulayın."
