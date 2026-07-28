@@ -1,8 +1,22 @@
 {% comment %}
-  Kozmetik Hero Banner Section (100% Block-Based Modular Architecture)
+  Kozmetik Hero Banner Section (100% Block-Based & Fully Customizable Design System)
 {% endcomment %}
 
-<div class="hero-banner-section full-width">
+<div class="hero-banner-section full-width" style="
+  --padding-top: {{ section.settings.padding_top }}px;
+  --padding-bottom: {{ section.settings.padding_bottom }}px;
+  --mobile-padding-top: {{ section.settings.mobile_padding_top }}px;
+  --mobile-padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  --badge-color: {{ section.settings.badge_color }};
+  --title-color-start: {{ section.settings.title_color_start }};
+  --title-color-end: {{ section.settings.title_color_end }};
+  --card-bg-color: {{ section.settings.card_bg_color }};
+  --card-border-color: {{ section.settings.card_border_color }};
+  --card-border-radius: {{ section.settings.card_border_radius }}px;
+  --card-blur: {{ section.settings.card_blur }}px;
+  --btn-primary-bg-start: {{ section.settings.btn_primary_bg_start }};
+  --btn-primary-bg-end: {{ section.settings.btn_primary_bg_end }};
+">
   <div class="hero-banner__image-container">
     {% if section.settings.image != blank %}
       {{ section.settings.image | image_url: width: 2000 | image_tag: class: 'hero-banner__img', loading: 'eager' }}
@@ -100,7 +114,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, rgba(15, 11, 16, 0.75) 0%, rgba(15, 11, 16, 0.35) 60%, rgba(15, 11, 16, 0.1) 100%);
+    background: linear-gradient(90deg, rgba(15, 11, 16, 0.78) 0%, rgba(15, 11, 16, 0.38) 60%, rgba(15, 11, 16, 0.12) 100%);
   }
 
   .hero-banner__content-wrapper {
@@ -109,19 +123,22 @@
     max-width: 1300px;
     width: 100%;
     margin: 0 auto;
-    padding: 130px 24px 70px;
+    padding-top: var(--padding-top, 130px);
+    padding-bottom: var(--padding-bottom, 70px);
+    padding-left: 24px;
+    padding-right: 24px;
   }
 
   .hero-banner__card {
     max-width: 620px;
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 28px;
+    background: var(--card-bg-color, rgba(255, 255, 255, 0.12));
+    backdrop-filter: blur(var(--card-blur, 16px));
+    -webkit-backdrop-filter: blur(var(--card-blur, 16px));
+    border: 1px solid var(--card-border-color, rgba(255, 255, 255, 0.22));
+    border-radius: var(--card-border-radius, 28px);
     padding: 44px;
     color: #ffffff;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
     animation: heroFadeUp 0.8s ease forwards;
     display: flex;
     flex-direction: column;
@@ -133,7 +150,7 @@
     font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.18em;
-    color: #f7cad0;
+    color: var(--badge-color, #f7cad0);
     text-transform: uppercase;
   }
 
@@ -142,7 +159,7 @@
     font-weight: 800;
     line-height: 1.15;
     margin: 0;
-    background: linear-gradient(135deg, #ffffff 0%, #ffdfeb 100%);
+    background: linear-gradient(135deg, var(--title-color-start, #ffffff) 0%, var(--title-color-end, #ffdfeb) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -162,6 +179,7 @@
   .hero-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     padding: 14px 28px;
     border-radius: 14px;
@@ -172,7 +190,7 @@
   }
 
   .primary-btn {
-    background: linear-gradient(135deg, #c25b82 0%, #a44267 100%);
+    background: linear-gradient(135deg, var(--btn-primary-bg-start, #c25b82) 0%, var(--btn-primary-bg-end, #a44267) 100%);
     color: #ffffff;
     box-shadow: 0 8px 24px rgba(194, 91, 130, 0.4);
   }
@@ -200,6 +218,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.18);
     padding-top: 24px;
     margin-top: 16px;
+    flex-wrap: wrap;
   }
 
   .stat-item {
@@ -210,7 +229,7 @@
   .stat-num {
     font-size: 1.25rem;
     font-weight: 800;
-    color: #f7cad0;
+    color: var(--badge-color, #f7cad0);
   }
 
   .stat-text {
@@ -234,15 +253,44 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* Pixel-Perfect Mobile Optimization */
   @media (max-width: 768px) {
     .hero-banner-section {
-      min-height: 70vh;
+      min-height: 75vh;
     }
-    .hero-title {
-      font-size: 2rem;
+    .hero-banner__content-wrapper {
+      padding-top: var(--mobile-padding-top, 90px);
+      padding-bottom: var(--mobile-padding-bottom, 40px);
+      padding-left: 16px;
+      padding-right: 16px;
     }
     .hero-banner__card {
-      padding: 24px;
+      padding: 24px 20px;
+      border-radius: 20px;
+      gap: 12px;
+    }
+    .hero-title {
+      font-size: 2.1rem;
+      line-height: 1.2;
+    }
+    .hero-subtitle {
+      font-size: 0.94rem;
+    }
+    .hero-button-wrapper {
+      width: 100%;
+    }
+    .hero-btn {
+      width: 100%;
+    }
+    .hero-stats {
+      gap: 12px;
+      padding-top: 16px;
+    }
+    .stat-num {
+      font-size: 1.1rem;
+    }
+    .stat-text {
+      font-size: 0.72rem;
     }
   }
 </style>
@@ -255,6 +303,116 @@
       "type": "image_picker",
       "id": "image",
       "label": "Arka Plan Resmi"
+    },
+    {
+      "type": "header",
+      "content": "🎨 Renk ve Tasarım Ayarları"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Rozet Metni Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "color",
+      "id": "title_color_start",
+      "label": "Başlık Başlangıç Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color_end",
+      "label": "Başlık Bitiş Rengi (Gradient)",
+      "default": "#ffdfeb"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Cam Kart Arka Plan Rengi",
+      "default": "rgba(255, 255, 255, 0.12)"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Cam Kart Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.22)"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Cam Kart Köşe Yuvarlama (px)",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_blur",
+      "label": "Cam Bulanıklık Düzeyi (Blur px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "btn_primary_bg_start",
+      "label": "Ana Buton Başlangıç Rengi",
+      "default": "#c25b82"
+    },
+    {
+      "type": "color",
+      "id": "btn_primary_bg_end",
+      "label": "Ana Buton Bitiş Rengi",
+      "default": "#a44267"
+    },
+    {
+      "type": "header",
+      "content": "📐 İç Boşluk (Padding) Ayarları"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Üst İç Boşluk (Masaüstü px)",
+      "min": 40,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 130
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Alt İç Boşluk (Masaüstü px)",
+      "min": 20,
+      "max": 160,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Üst İç Boşluk (Mobil px)",
+      "min": 20,
+      "max": 160,
+      "step": 5,
+      "unit": "px",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Alt İç Boşluk (Mobil px)",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 40
     }
   ],
   "blocks": [

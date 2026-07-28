@@ -1,8 +1,21 @@
 {% comment %}
-  Ultra-Luxury High-Fashion Cosmetic Product Spotlight Section (100% Block-Based)
+  Ultra-Luxury High-Fashion Cosmetic Product Spotlight Section (100% Block-Based & Fully Customizable)
 {% endcomment %}
 
-<div class="featured-product-section full-width" id="featuredProduct">
+<div class="featured-product-section full-width" id="featuredProduct" style="
+  --padding-top: {{ section.settings.padding_top }}px;
+  --padding-bottom: {{ section.settings.padding_bottom }}px;
+  --mobile-padding-top: {{ section.settings.mobile_padding_top }}px;
+  --mobile-padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  --bg-gradient-start: {{ section.settings.bg_gradient_start }};
+  --bg-gradient-end: {{ section.settings.bg_gradient_end }};
+  --glass-bg: {{ section.settings.glass_bg }};
+  --glass-border: {{ section.settings.glass_border }};
+  --glass-blur: {{ section.settings.glass_blur }}px;
+  --glass-radius: {{ section.settings.glass_radius }}px;
+  --accent-color: {{ section.settings.accent_color }};
+  --title-color: {{ section.settings.title_color }};
+">
   <!-- Glowing Atmosphere Orbs -->
   <div class="luxury-orb orb-top-left"></div>
   <div class="luxury-orb orb-bottom-right"></div>
@@ -137,11 +150,14 @@
   </div>
 </div>
 
-{% stylesheet %}
+<style>
   .featured-product-section {
     position: relative;
-    background: linear-gradient(135deg, #0f0b10 0%, #170f1a 50%, #0b080c 100%);
-    padding: 100px 24px;
+    background: linear-gradient(135deg, var(--bg-gradient-start, #0f0b10) 0%, #170f1a 50%, var(--bg-gradient-end, #0b080c) 100%);
+    padding-top: var(--padding-top, 100px);
+    padding-bottom: var(--padding-bottom, 100px);
+    padding-left: 24px;
+    padding-right: 24px;
     margin: 0;
     overflow: hidden;
     color: #ffffff;
@@ -264,11 +280,11 @@
   }
 
   .featured-product__glass-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 36px;
+    background: var(--glass-bg, rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(var(--glass-blur, 24px));
+    -webkit-backdrop-filter: blur(var(--glass-blur, 24px));
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.15));
+    border-radius: var(--glass-radius, 36px);
     padding: 50px;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
     display: flex;
@@ -280,7 +296,7 @@
     font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.2em;
-    color: #f7cad0;
+    color: var(--accent-color, #f7cad0);
     text-transform: uppercase;
   }
 
@@ -289,7 +305,7 @@
     font-weight: 800;
     line-height: 1.2;
     margin: 0;
-    color: #ffffff;
+    color: var(--title-color, #ffffff);
   }
 
   .featured-product__rating {
@@ -300,7 +316,7 @@
   }
 
   .stars {
-    color: #f7cad0;
+    color: var(--accent-color, #f7cad0);
     letter-spacing: 2px;
   }
 
@@ -318,6 +334,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    flex-wrap: wrap;
   }
 
   .price-current {
@@ -335,7 +352,7 @@
   .gold-savings-badge {
     background: rgba(247, 202, 208, 0.15);
     border: 1px solid rgba(247, 202, 208, 0.3);
-    color: #f7cad0;
+    color: var(--accent-color, #f7cad0);
     font-size: 0.78rem;
     font-weight: 700;
     padding: 4px 12px;
@@ -377,6 +394,7 @@
   .option-chips {
     display: flex;
     gap: 12px;
+    flex-wrap: wrap;
   }
 
   .dark-chip-btn {
@@ -394,7 +412,7 @@
   .dark-chip-btn.active,
   .dark-chip-btn:hover {
     background: rgba(194, 91, 130, 0.3);
-    border-color: #f7cad0;
+    border-color: var(--accent-color, #f7cad0);
     box-shadow: 0 4px 15px rgba(194, 91, 130, 0.25);
   }
 
@@ -513,12 +531,41 @@
     padding-top: 14px;
   }
 
+  /* Pixel-Perfect Mobile Optimization */
   @media (max-width: 992px) {
+    .featured-product-section {
+      padding-top: var(--mobile-padding-top, 60px);
+      padding-bottom: var(--mobile-padding-bottom, 60px);
+      padding-left: 16px;
+      padding-right: 16px;
+    }
     .featured-product-container {
       grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    .featured-product__glass-card {
+      padding: 24px 20px;
+      border-radius: 24px;
+      gap: 16px;
+    }
+    .featured-product__title {
+      font-size: 1.8rem;
+    }
+    .price-current {
+      font-size: 1.7rem;
+    }
+    .featured-product__actions {
+      flex-direction: column;
+    }
+    .dark-qty-stepper {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .dstepper-btn {
+      flex: 1;
     }
   }
-{% endstylesheet %}
+</style>
 
 {% javascript %}
   document.addEventListener('DOMContentLoaded', () => {
@@ -575,6 +622,110 @@
       "id": "badge_text",
       "label": "Görsel Üstü İndirim Rozeti",
       "default": "✦ %30 ÖZEL İNDİRİM"
+    },
+    {
+      "type": "header",
+      "content": "🎨 Renk ve Tasarım Ayarları"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_start",
+      "label": "Arka Plan Başlangıç Rengi",
+      "default": "#0f0b10"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_end",
+      "label": "Arka Plan Bitiş Rengi",
+      "default": "#0b080c"
+    },
+    {
+      "type": "color",
+      "id": "glass_bg",
+      "label": "Cam Kart Arka Plan Rengi",
+      "default": "rgba(255, 255, 255, 0.05)"
+    },
+    {
+      "type": "color",
+      "id": "glass_border",
+      "label": "Cam Kart Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.15)"
+    },
+    {
+      "type": "range",
+      "id": "glass_radius",
+      "label": "Cam Kart Köşe Yuvarlama (px)",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "glass_blur",
+      "label": "Cam Bulanıklık Düzeyi (Blur px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Vurgu Rengi (Rozet & Yıldızlar)",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Ürün Başlığı Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "📐 İç Boşluk (Padding) Ayarları"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Üst İç Boşluk (Masaüstü px)",
+      "min": 20,
+      "max": 180,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Alt İç Boşluk (Masaüstü px)",
+      "min": 20,
+      "max": 180,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Üst İç Boşluk (Mobil px)",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Alt İç Boşluk (Mobil px)",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 60
     }
   ],
   "blocks": [
