@@ -1,0 +1,480 @@
+{% comment %}
+  Ultra-Luxury High-Fashion Showcase Product Grid Panel
+{% endcomment %}
+
+<div class="product-grid-panel full-width">
+  <!-- Glowing Background Orbs -->
+  <div class="grid-orb orb-g1"></div>
+  <div class="grid-orb orb-g2"></div>
+
+  <div class="product-grid-panel__container">
+    
+    <!-- Section Header -->
+    <div class="product-grid-panel__header">
+      <div class="header-title-group">
+        <span class="luxury-subheading">✦ SEÇKİN BAKIM KOLEKSİYONU</span>
+        <h2 class="luxury-heading">{{ section.settings.heading | default: "Çok Satan Kozmetik Ürünlerimiz" }}</h2>
+      </div>
+      {% if section.settings.button_link != blank %}
+        <a href="{{ section.settings.button_link }}" class="haute-view-all-btn">
+          <span>{{ section.settings.button_text | default: "Tüm Koleksiyonu Keşfet" }}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Product Cards Grid -->
+    <div class="product-grid-panel__grid">
+      
+      <!-- Card 1 -->
+      <div class="haute-product-card">
+        <div class="card-image-wrapper">
+          <img src="{{ 'luxury-serum.jpg' | asset_url }}" class="card-img" alt="Hyalüronik Asit Serum" width="400" height="400" loading="lazy">
+          <span class="card-badge badge-bestseller">EN ÇOK SATAN</span>
+          <button type="button" class="wishlist-heart-btn" aria-label="Favorilere Ekle" title="Favorilere Ekle">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button type="button" class="quick-add-glass-btn demo-quick-add">
+            <span>+ Sepete Hızlı Ekle</span>
+          </button>
+        </div>
+        <div class="card-info">
+          <div class="card-rating">★★★★★ <span>(4.9 • 142)</span></div>
+          <h3 class="card-title"><a href="#">Lumière Radiance Serum 30ml</a></h3>
+          <p class="card-desc">Cilt bariyerini yenileyici ve nemlendirici gençlik iksiri</p>
+          <div class="card-price-row">
+            <span class="price-current">₺450,00</span>
+            <span class="price-old">₺650,00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="haute-product-card">
+        <div class="card-image-wrapper">
+          <img src="{{ 'luxury-cream.jpg' | asset_url }}" class="card-img" alt="Velvet Gece Kremi" width="400" height="400" loading="lazy">
+          <span class="card-badge badge-new">YENİ</span>
+          <button type="button" class="wishlist-heart-btn" aria-label="Favorilere Ekle" title="Favorilere Ekle">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button type="button" class="quick-add-glass-btn demo-quick-add">
+            <span>+ Sepete Hızlı Ekle</span>
+          </button>
+        </div>
+        <div class="card-info">
+          <div class="card-rating">★★★★★ <span>(5.0 • 89)</span></div>
+          <h3 class="card-title"><a href="#">Velvet Hydra Besleyici Gece Kremi</a></h3>
+          <p class="card-desc">Gece boyunca yoğun elastikiyet ve nem bakımı</p>
+          <div class="card-price-row">
+            <span class="price-current">₺520,00</span>
+            <span class="price-old">₺700,00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="haute-product-card">
+        <div class="card-image-wrapper">
+          <img src="{{ 'luxury-serum.jpg' | asset_url }}" class="card-img" alt="Gül Suyu Toniği" width="400" height="400" loading="lazy">
+          <span class="card-badge badge-organic">ORGANİK</span>
+          <button type="button" class="wishlist-heart-btn" aria-label="Favorilere Ekle" title="Favorilere Ekle">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button type="button" class="quick-add-glass-btn demo-quick-add">
+            <span>+ Sepete Hızlı Ekle</span>
+          </button>
+        </div>
+        <div class="card-info">
+          <div class="card-rating">★★★★☆ <span>(4.8 • 64)</span></div>
+          <h3 class="card-title"><a href="#">Isparta Gül Suyu Arındırıcı Tonik</a></h3>
+          <p class="card-desc">Gözenek sıkılaştırıcı %100 doğal gül suyu</p>
+          <div class="card-price-row">
+            <span class="price-current">₺280,00</span>
+            <span class="price-old">₺350,00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="haute-product-card">
+        <div class="card-image-wrapper">
+          <img src="{{ 'luxury-cream.jpg' | asset_url }}" class="card-img" alt="Göz Çevresi Kremi" width="400" height="400" loading="lazy">
+          <span class="card-badge badge-sale">%20 İNDİRİM</span>
+          <button type="button" class="wishlist-heart-btn" aria-label="Favorilere Ekle" title="Favorilere Ekle">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button type="button" class="quick-add-glass-btn demo-quick-add">
+            <span>+ Sepete Hızlı Ekle</span>
+          </button>
+        </div>
+        <div class="card-info">
+          <div class="card-rating">★★★★★ <span>(4.9 • 110)</span></div>
+          <h3 class="card-title"><a href="#">Anti-Aging Peptit Göz Çevresi Kremi</a></h3>
+          <p class="card-desc">Göz altı morlukları ve şişlik karşıtı peptit kompleks</p>
+          <div class="card-price-row">
+            <span class="price-current">₺390,00</span>
+            <span class="price-old">₺500,00</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% stylesheet %}
+  .product-grid-panel {
+    position: relative;
+    background: linear-gradient(135deg, #0d090e 0%, #160f18 50%, #0a070b 100%);
+    padding: 90px 24px;
+    margin: 0;
+    overflow: hidden;
+    color: #ffffff;
+  }
+
+  /* Atmosphere Orbs */
+  .grid-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .orb-g1 {
+    width: 450px;
+    height: 450px;
+    background: rgba(194, 91, 130, 0.18);
+    top: -50px;
+    right: -100px;
+  }
+
+  .orb-g2 {
+    width: 500px;
+    height: 500px;
+    background: rgba(247, 202, 208, 0.15);
+    bottom: -100px;
+    left: -100px;
+  }
+
+  .product-grid-panel__container {
+    position: relative;
+    z-index: 2;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .product-grid-panel__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .luxury-subheading {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #f7cad0;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .luxury-heading {
+    font-size: 2.4rem;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(135deg, #ffffff 0%, #ffdfeb 60%, #f7cad0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .haute-view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 0.92rem;
+    padding: 10px 20px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    transition: all 0.25s ease;
+  }
+
+  .haute-view-all-btn:hover {
+    background: linear-gradient(135deg, #c25b82 0%, #a44267 100%);
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(194, 91, 130, 0.35);
+  }
+
+  .product-grid-panel__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 22px;
+  }
+
+  .haute-product-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .haute-product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 28px 60px rgba(194, 91, 130, 0.25);
+    border-color: rgba(194, 91, 130, 0.5);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .card-image-wrapper {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .haute-product-card:hover .card-img {
+    transform: scale(1.08);
+  }
+
+  .card-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+    z-index: 2;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .badge-bestseller { background: linear-gradient(135deg, #c25b82, #993b60); }
+  .badge-new { background: #2a9d8f; }
+  .badge-organic { background: #52b788; }
+  .badge-sale { background: #e63946; }
+
+  .wishlist-heart-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff;
+    transition: all 0.25s ease;
+    z-index: 2;
+  }
+
+  .wishlist-heart-btn:hover,
+  .wishlist-heart-btn.active {
+    background: #ffffff;
+    color: #e63946;
+    transform: scale(1.1);
+  }
+
+  .quick-add-glass-btn {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    right: 14px;
+    background: rgba(15, 11, 16, 0.8);
+    backdrop-filter: blur(12px);
+    color: #ffffff;
+    border: 1.5px solid rgba(247, 202, 208, 0.4);
+    font-weight: 800;
+    font-size: 0.88rem;
+    padding: 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .haute-product-card:hover .quick-add-glass-btn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .quick-add-glass-btn:hover {
+    background: linear-gradient(135deg, #c25b82 0%, #a44267 100%);
+    border-color: transparent;
+  }
+
+  .card-info {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .card-rating {
+    font-size: 0.88rem;
+    color: #ffb703;
+    letter-spacing: 1px;
+  }
+
+  .card-rating span {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.78rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1.35;
+    margin: 2px 0;
+  }
+
+  .card-title a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .card-title a:hover {
+    color: #f7cad0;
+  }
+
+  .card-desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .card-price-row {
+    margin-top: auto;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .price-current {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #f7cad0;
+  }
+
+  .price-old {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: line-through;
+  }
+
+  @media (max-width: 1024px) {
+    .product-grid-panel__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .product-grid-panel__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', () => {
+    // Wishlist heart toggle
+    const wishlistBtns = document.querySelectorAll('.wishlist-heart-btn');
+    wishlistBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        btn.classList.toggle('active');
+        const svg = btn.querySelector('svg');
+        if (btn.classList.contains('active')) {
+          svg.setAttribute('fill', '#e63946');
+        } else {
+          svg.setAttribute('fill', 'none');
+        }
+      });
+    });
+
+    // Quick add click effect
+    const quickAddBtns = document.querySelectorAll('.demo-quick-add');
+    quickAddBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span>✓ Sepete Eklendi!</span>';
+        btn.style.background = '#2a9d8f';
+        btn.style.color = '#ffffff';
+        btn.style.borderColor = '#2a9d8f';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.background = '';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }, 2000);
+      });
+    });
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Vitrin Ürün Kartları",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Ana Başlık",
+      "default": "Çok Satan Kozmetik Ürünlerimiz"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Tümünü İncele Bağlantısı"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Buton Yazısı",
+      "default": "Tüm Koleksiyonu Keşfet"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vitrin Ürün Kartları",
+      "category": "Ürün"
+    }
+  ]
+}
+{% endschema %}

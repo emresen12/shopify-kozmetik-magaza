@@ -1,0 +1,109 @@
+{% comment %}
+  This section is used in the product template to render product page with
+  media, content, and add-to-cart form.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
+{% endcomment %}
+
+<div class="product-images">
+  {% for image in product.images %}
+    {% render 'image', class: 'product-image', image: image %}
+  {% endfor %}
+</div>
+
+<div class="product-info">
+  <h1>{{ product.title }}</h1>
+  <p class="product-info__price">{{ product.price | money }}</p>
+
+  <ul class="product-badges" aria-label="{{ 'products.badges.label' | t }}">
+    <li class="product-badge product-badge--cruelty-free">
+      {{ 'products.badges.cruelty_free' | t }}
+    </li>
+    <li class="product-badge product-badge--vegan">
+      {{ 'products.badges.vegan' | t }}
+    </li>
+  </ul>
+
+  <p>{{ product.description }}</p>
+</div>
+
+<div class="product-form">
+  {% form 'product', product %}
+    {% assign current_variant = product.selected_or_first_available_variant %}
+
+    <select name="id">
+      {% for variant in product.variants %}
+        <option
+          value="{{ variant.id }}"
+          {% if variant == current_variant %}
+            selected="selected"
+          {% endif %}
+        >
+          {{ variant.title }} - {{ variant.price | money }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <input type="text" name="quantity" min="1" value="1">
+
+    <input type="submit" value="Add to cart">
+    {{ form | payment_button }}
+  {% endform %}
+</div>
+
+{% stylesheet %}
+  .product-info__price {
+    margin-block-end: 0.75rem;
+  }
+
+  .product-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.25rem;
+  }
+
+  .product-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+    border: 1px solid transparent;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .product-badge--cruelty-free {
+    color: #9d4b6a;
+    background: linear-gradient(135deg, #fce7f0 0%, #f8d7e3 100%);
+    border-color: rgba(194, 91, 130, 0.18);
+    box-shadow: 0 1px 3px rgba(194, 91, 130, 0.12);
+  }
+
+  .product-badge--vegan {
+    color: #8b4a72;
+    background: linear-gradient(135deg, #fdf0f5 0%, #f5e0eb 100%);
+    border-color: rgba(176, 82, 122, 0.16);
+    box-shadow: 0 1px 3px rgba(176, 82, 122, 0.1);
+  }
+
+  .product-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(194, 91, 130, 0.16);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.product",
+  "settings": [],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

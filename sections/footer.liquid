@@ -1,0 +1,86 @@
+<footer class="theme-footer full-width">
+  <div class="footer-container">
+    <div class="footer__copyright">
+      &copy; {{ 'now' | date: '%Y' }} {{ shop.name | default: "LUMIÈRE BEAUTY" }}. Tüm hakları saklıdır.
+    </div>
+
+    <div class="footer__links">
+      {% if section.settings.menu != blank %}
+        {% for link in section.settings.menu.links %}
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        {% endfor %}
+      {% else %}
+        <a href="{{ routes.root_url }}">Ana Sayfa</a>
+        <a href="{{ routes.all_products_collection_url }}">Koleksiyonlar</a>
+        <a href="#">Gizlilik Politikası</a>
+        <a href="#">İletişim</a>
+      {% endif %}
+    </div>
+
+    <div class="footer__payment">
+      {% if section.settings.show_payment_icons %}
+        {% for type in shop.enabled_payment_types %}
+          {{ type | payment_type_svg_tag }}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</footer>
+
+{% stylesheet %}
+  .theme-footer {
+    background: #09060a;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 40px 24px;
+    margin: 0;
+  }
+
+  .footer-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    font-size: 0.88rem;
+  }
+
+  .footer__copyright a,
+  .footer__links a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.2s;
+  }
+
+  .footer__links a:hover {
+    color: #f7cad0;
+  }
+
+  .footer__links,
+  .footer__payment {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Alt Bilgi (Footer)",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Gezinti Menüsü"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Ödeme İkonlarını Göster",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

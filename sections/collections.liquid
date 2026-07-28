@@ -1,0 +1,284 @@
+{% comment %}
+  Dark Luxury Collections List Showcase Section
+{% endcomment %}
+
+<div class="collections-page-section full-width">
+  <div class="collections-hero-banner">
+    <div class="hero-orb orb-1"></div>
+    <div class="hero-orb orb-2"></div>
+    <div class="collections-hero-content">
+      <span class="collections-badge">✦ ÖZEL BAKIM RİTÜELLERİ</span>
+      <h1 class="collections-main-title">Koleksiyonlarımızı Keşfedin</h1>
+      <p class="collections-main-desc">
+        Cildinizin ihtiyaçlarına özel olarak tasarlanmış kürler, yoğun nem ritüelleri ve seçkin bakım serilerimiz.
+      </p>
+    </div>
+  </div>
+
+  <div class="collections-container">
+    <div class="collections-grid">
+      {% if collections.size > 0 %}
+        {% for collection in collections %}
+          <a class="luxury-collection-card" href="{{ collection.url }}">
+            <div class="collection-card__img-wrapper">
+              {% if collection.featured_image %}
+                {{ collection.featured_image | image_url: width: 800 | image_tag: class: 'collection-card__img', loading: 'lazy' }}
+              {% else %}
+                <img src="{{ 'hero-banner.jpg' | asset_url }}" alt="{{ collection.title }}" class="collection-card__img" width="600" height="450" loading="lazy">
+              {% endif %}
+              <div class="collection-card__overlay"></div>
+            </div>
+
+            <div class="collection-card__glass-content">
+              <span class="collection-card__count">{{ collection.all_products_count | default: 8 }} ÜRÜN</span>
+              <h2 class="collection-card__title">{{ collection.title }}</h2>
+              <p class="collection-card__desc">
+                {{ collection.description | default: "Doğal özler ve ileri teknoloji hyalüronik asit kompleksi ile harmanlanmış özel seri." | strip_html | truncatewords: 12 }}
+              </p>
+              <div class="collection-card__btn">
+                <span>Koleksiyonu Keşfet</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% comment %} Demonstration fallback collections for initial preview {% endcomment %}
+        {% assign demo_titles = "Gençleştirici Serumlar,Hydra-Luxe Nemlendirici Serisi,Lumière Işıltı & Lekeler,Midnight Gece Onarım Ritüeli,Detoks & Arındırıcı Yüz Maskeleri,Göz Çevresi & Dudak Kompleksleri" | split: "," %}
+        {% assign demo_counts = "14 ÜRÜN,9 ÜRÜN,11 ÜRÜN,6 ÜRÜN,8 ÜRÜN,7 ÜRÜN" | split: "," %}
+        {% assign demo_descs = "İnce çizgileri hedef alan konsantre peptit ve hyalüronik asit özleri.,Cildin alt katmanlarına 24 saat kesintisiz nem sağlayan yoğun kadife krem serisi.,Cilt tonunu eşitleyen ve doğal ışıltıyı ortaya çıkaran aydınlatıcı ürünler.,Gece boyunca hücre yenilenmesini destekleyen besleyici değerli botanical yağlar.,Gözenekleri arındıran ve cilde anında tazelik veren antioksidan nem maskeleri.,Hassas göz çevresi ve dudak bölgesine özel elastikiyet artıran konsantreler." | split: "," %}
+
+        {% for i in (1..6) %}
+          {% assign demo_idx = forloop.index0 %}
+          {% assign mod2 = forloop.index | modulo: 2 %}
+          
+          <a class="luxury-collection-card" href="#">
+            <div class="collection-card__img-wrapper">
+              {% if mod2 == 0 %}
+                <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Koleksiyon Görseli" class="collection-card__img" width="600" height="450" loading="lazy">
+              {% else %}
+                <img src="{{ 'hero-banner.jpg' | asset_url }}" alt="Koleksiyon Görseli" class="collection-card__img" width="600" height="450" loading="lazy">
+              {% endif %}
+              <div class="collection-card__overlay"></div>
+            </div>
+
+            <div class="collection-card__glass-content">
+              <span class="collection-card__count">{{ demo_counts[demo_idx] }}</span>
+              <h2 class="collection-card__title">{{ demo_titles[demo_idx] }}</h2>
+              <p class="collection-card__desc">{{ demo_descs[demo_idx] }}</p>
+              <div class="collection-card__btn">
+                <span>Koleksiyonu Keşfet</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .collections-page-section {
+    background: linear-gradient(180deg, #0b080c 0%, #130d16 40%, #09060a 100%);
+    color: #ffffff;
+    padding-bottom: 100px;
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  .collections-hero-banner {
+    position: relative;
+    padding: 140px 24px 60px;
+    text-align: center;
+    background: radial-gradient(circle at center, rgba(194, 91, 130, 0.16) 0%, transparent 70%);
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+  }
+
+  .hero-orb.orb-1 {
+    width: 450px;
+    height: 450px;
+    background: rgba(194, 91, 130, 0.2);
+    top: -50px;
+    left: 15%;
+  }
+
+  .hero-orb.orb-2 {
+    width: 400px;
+    height: 400px;
+    background: rgba(247, 202, 208, 0.15);
+    bottom: -50px;
+    right: 15%;
+  }
+
+  .collections-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
+  .collections-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px);
+    color: #f7cad0;
+    font-size: 0.76rem;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 30px;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+  }
+
+  .collections-main-title {
+    font-size: 2.6rem;
+    font-weight: 800;
+    margin: 0 0 14px;
+    background: linear-gradient(135deg, #ffffff 0%, #f7cad0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .collections-main-desc {
+    font-size: 0.96rem;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .collections-container {
+    max-width: 1320px;
+    margin: 50px auto 0;
+    padding: 0 24px;
+  }
+
+  .collections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 30px;
+  }
+
+  .luxury-collection-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .luxury-collection-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(247, 202, 208, 0.45);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(194, 91, 130, 0.25);
+  }
+
+  .collection-card__img-wrapper {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .collection-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .luxury-collection-card:hover .collection-card__img {
+    transform: scale(1.08);
+  }
+
+  .collection-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 30%, rgba(11, 8, 12, 0.95) 100%);
+  }
+
+  .collection-card__glass-content {
+    padding: 22px 24px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .collection-card__count {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #f7cad0;
+    letter-spacing: 1.5px;
+  }
+
+  .collection-card__title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.3;
+    transition: color 0.2s ease;
+  }
+
+  .luxury-collection-card:hover .collection-card__title {
+    color: #f7cad0;
+  }
+
+  .collection-card__desc {
+    font-size: 0.86rem;
+    color: rgba(255, 255, 255, 0.68);
+    line-height: 1.5;
+    margin: 0 0 10px;
+  }
+
+  .collection-card__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #ffffff;
+    transition: gap 0.25s ease, color 0.25s ease;
+  }
+
+  .luxury-collection-card:hover .collection-card__btn {
+    color: #f7cad0;
+    gap: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .collections-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Koleksiyon Listesi",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Koleksiyon Listesi"
+    }
+  ]
+}
+{% endschema %}

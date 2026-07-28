@@ -1,0 +1,30 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero_banner_section": {
+      "type": "hero-banner",
+      "settings": {}
+    },
+    "featured_product_showcase": {
+      "type": "featured-product",
+      "settings": {}
+    },
+    "product_grid_showcase": {
+      "type": "product-grid-panel",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero_banner_section",
+    "featured_product_showcase",
+    "product_grid_showcase"
+  ]
+}
