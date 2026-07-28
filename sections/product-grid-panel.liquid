@@ -1,5 +1,5 @@
 {% comment %}
-  Ultra-Luxury High-Fashion Showcase Product Grid Panel (Block-Based & Fully Customizable)
+  Ultra-Luxury High-Fashion Showcase Product Grid Panel (100% Fully Granular Block Customization)
 {% endcomment %}
 
 <div class="product-grid-panel full-width" style="
@@ -22,22 +22,38 @@
 
   <div class="product-grid-panel__container">
     
-    <!-- Section Header (Rendered dynamically from Blocks) -->
+    <!-- Section Header (Rendered dynamically from Blocks with block-level granular styles) -->
     <div class="product-grid-panel__header">
       <div class="header-title-group">
         {% for block in section.blocks %}
           {% case block.type %}
             {% when 'subtitle' %}
-              <span class="luxury-subheading" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+              <span class="luxury-subheading" style="
+                --badge-color: {{ block.settings.color }};
+                --badge-size: {{ block.settings.font_size }}px;
+                --badge-spacing: {{ block.settings.letter_spacing }}px;
+                --badge-transform: {{ block.settings.text_transform }};
+              " {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+
             {% when 'title' %}
-              <h2 class="luxury-heading" {{ block.shopify_attributes }}>{{ block.settings.text }}</h2>
+              <h2 class="luxury-heading" style="
+                --title-color-start: {{ block.settings.color_start }};
+                --title-color-end: {{ block.settings.color_end }};
+                --title-size-desk: {{ block.settings.font_size_desktop }}px;
+                --title-size-mob: {{ block.settings.font_size_mobile }}px;
+              " {{ block.shopify_attributes }}>{{ block.settings.text }}</h2>
           {% endcase %}
         {% endfor %}
       </div>
 
       {% for block in section.blocks %}
         {% if block.type == 'button' %}
-          <a href="{{ block.settings.url | default: routes.all_products_collection_url }}" class="haute-view-all-btn" {{ block.shopify_attributes }}>
+          <a href="{{ block.settings.url | default: routes.all_products_collection_url }}" class="haute-view-all-btn" style="
+            --btn-bg: {{ block.settings.bg_color }};
+            --btn-text-color: {{ block.settings.text_color }};
+            --btn-border-color: {{ block.settings.border_color }};
+            --btn-radius: {{ block.settings.border_radius }}px;
+          " {{ block.shopify_attributes }}>
             <span>{{ block.settings.text }}</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
@@ -52,7 +68,12 @@
       {% if card_blocks.size > 0 %}
         {% for block in card_blocks %}
           {% assign prod = block.settings.product %}
-          <div class="haute-product-card" {{ block.shopify_attributes }}>
+          <div class="haute-product-card" style="
+            --card-badge-start: {{ block.settings.badge_bg_start }};
+            --card-badge-end: {{ block.settings.badge_bg_end }};
+            --card-title-color: {{ block.settings.title_color }};
+            --card-price-color: {{ block.settings.price_color }};
+          " {{ block.shopify_attributes }}>
             <div class="card-image-wrapper">
               <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
                 {% if block.settings.image != blank %}
@@ -77,12 +98,12 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
               </button>
               <button type="button" class="quick-add-glass-btn demo-quick-add">
-                <span>+ Sepete Hızlı Ekle</span>
+                <span>{{ block.settings.quick_add_text | default: "+ Sepete Hızlı Ekle" }}</span>
               </button>
             </div>
 
             <div class="card-info">
-              <div class="card-rating">★★★★★ <span>(4.9)</span></div>
+              <div class="card-rating">{{ block.settings.rating_stars | default: "★★★★★" }} <span>{{ block.settings.rating_score | default: "(4.9)" }}</span></div>
               <h3 class="card-title">
                 <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
                   {% if prod != blank %}{{ prod.title }}{% else %}{{ block.settings.title }}{% endif %}
@@ -195,19 +216,19 @@
 
   .luxury-subheading {
     display: block;
-    font-size: 0.78rem;
+    font-size: var(--badge-size, 0.78rem);
     font-weight: 700;
-    letter-spacing: 0.18em;
-    color: var(--accent-color, #f7cad0);
-    text-transform: uppercase;
+    letter-spacing: var(--badge-spacing, 0.18em);
+    color: var(--badge-color, #f7cad0);
+    text-transform: var(--badge-transform, uppercase);
     margin-bottom: 8px;
   }
 
   .luxury-heading {
-    font-size: 2.2rem;
+    font-size: var(--title-size-desk, 2.2rem);
     font-weight: 800;
     margin: 0;
-    background: linear-gradient(135deg, #ffffff 0%, #ffdfeb 100%);
+    background: linear-gradient(135deg, var(--title-color-start, #ffffff) 0%, var(--title-color-end, #ffdfeb) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -216,14 +237,14 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #ffffff;
+    color: var(--btn-text-color, #ffffff);
     font-weight: 800;
     text-decoration: none;
     font-size: 0.92rem;
     padding: 10px 20px;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--btn-radius, 14px);
+    background: var(--btn-bg, rgba(255, 255, 255, 0.1));
+    border: 1px solid var(--btn-border-color, rgba(255, 255, 255, 0.2));
     backdrop-filter: blur(10px);
     transition: all 0.25s ease;
   }
@@ -291,7 +312,7 @@
     color: #ffffff;
     z-index: 2;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(135deg, #c25b82, #993b60);
+    background: linear-gradient(135deg, var(--card-badge-start, #c25b82), var(--card-badge-end, #993b60));
   }
 
   .wishlist-heart-btn {
@@ -373,7 +394,7 @@
   }
 
   .card-title a {
-    color: #ffffff;
+    color: var(--card-title-color, #ffffff);
     text-decoration: none;
     transition: color 0.2s;
   }
@@ -399,7 +420,7 @@
   .price-current {
     font-size: 1.05rem;
     font-weight: 800;
-    color: #ffffff;
+    color: var(--card-price-color, #ffffff);
   }
 
   .price-old {
@@ -423,7 +444,7 @@
       margin-bottom: 24px;
     }
     .luxury-heading {
-      font-size: 1.7rem;
+      font-size: var(--title-size-mob, 1.7rem);
     }
     .product-grid-panel__grid {
       grid-template-columns: repeat(var(--grid-columns-mobile, 2), 1fr);
@@ -593,6 +614,43 @@
           "id": "text",
           "label": "Rozet Metni",
           "default": "✦ SEÇKİN BAKIM KOLEKSİYONU"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Rozet Yazı Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Yazı Boyutu (px)",
+          "min": 10,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "default": 12
+        },
+        {
+          "type": "range",
+          "id": "letter_spacing",
+          "label": "Harf Arası Boşluk (px)",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "unit": "px",
+          "default": 3
+        },
+        {
+          "type": "select",
+          "id": "text_transform",
+          "label": "Büyük/Küçük Harf",
+          "options": [
+            { "value": "uppercase", "label": "TÜMÜ BÜYÜK" },
+            { "value": "capitalize", "label": "Baş Harfler Büyük" },
+            { "value": "none", "label": "Normal Metin" }
+          ],
+          "default": "uppercase"
         }
       ]
     },
@@ -605,6 +663,38 @@
           "id": "text",
           "label": "Başlık Metni",
           "default": "Çok Satan Kozmetik Ürünlerimiz"
+        },
+        {
+          "type": "color",
+          "id": "color_start",
+          "label": "Başlık Gradient Başlangıç Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "color_end",
+          "label": "Başlık Gradient Bitiş Rengi",
+          "default": "#ffdfeb"
+        },
+        {
+          "type": "range",
+          "id": "font_size_desktop",
+          "label": "Masaüstü Yazı Boyutu (px)",
+          "min": 20,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "default": 35
+        },
+        {
+          "type": "range",
+          "id": "font_size_mobile",
+          "label": "Mobil Yazı Boyutu (px)",
+          "min": 16,
+          "max": 36,
+          "step": 1,
+          "unit": "px",
+          "default": 26
         }
       ]
     },
@@ -622,6 +712,34 @@
           "type": "url",
           "id": "url",
           "label": "Buton Bağlantısı"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Buton Arka Plan Rengi",
+          "default": "rgba(255, 255, 255, 0.1)"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Buton Yazı Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Buton Kenarlık Rengi",
+          "default": "rgba(255, 255, 255, 0.2)"
+        },
+        {
+          "type": "range",
+          "id": "border_radius",
+          "label": "Köşe Yuvarlama (px)",
+          "min": 0,
+          "max": 30,
+          "step": 2,
+          "unit": "px",
+          "default": 14
         }
       ]
     },
@@ -646,13 +764,43 @@
           "default": "EN ÇOK SATAN"
         },
         {
+          "type": "color",
+          "id": "badge_bg_start",
+          "label": "Rozet Gradient Başlangıç Rengi",
+          "default": "#c25b82"
+        },
+        {
+          "type": "color",
+          "id": "badge_bg_end",
+          "label": "Rozet Gradient Bitiş Rengi",
+          "default": "#993b60"
+        },
+        {
+          "type": "text",
+          "id": "rating_stars",
+          "label": "Yıldızlar",
+          "default": "★★★★★"
+        },
+        {
+          "type": "text",
+          "id": "rating_score",
+          "label": "Puan Metni",
+          "default": "(4.9)"
+        },
+        {
           "type": "text",
           "id": "title",
           "label": "Ürün Adı",
           "default": "Lumière Radiance Serum 30ml"
         },
         {
-          "type": "text",
+          "type": "color",
+          "id": "title_color",
+          "label": "Ürün Başlığı Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "textarea",
           "id": "description",
           "label": "Kısa Açıklama",
           "default": "Cilt bariyerini yenileyici ve nemlendirici gençlik iksiri"
@@ -664,10 +812,22 @@
           "default": "₺450,00"
         },
         {
+          "type": "color",
+          "id": "price_color",
+          "label": "Fiyat Rengi",
+          "default": "#ffffff"
+        },
+        {
           "type": "text",
           "id": "compare_price",
           "label": "Eski Fiyat",
           "default": "₺650,00"
+        },
+        {
+          "type": "text",
+          "id": "quick_add_text",
+          "label": "Hızlı Ekle Buton Metni",
+          "default": "+ Sepete Hızlı Ekle"
         },
         {
           "type": "url",
