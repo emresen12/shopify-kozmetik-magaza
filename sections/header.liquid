@@ -188,51 +188,76 @@
 
     <!-- Free Shipping Bar -->
     <div class="free-shipping-bar">
-      <p class="free-shipping-text">🎉 ₺500 üzeri alışverişlerde <strong>Kargo Bedava!</strong></p>
+      <p class="free-shipping-text">🎉 {{ section.settings.free_shipping_text | default: "₺500 üzeri alışverişlerde Kargo Bedava!" }}</p>
       <div class="progress-line"><div class="progress-fill" style="width: 100%;"></div></div>
     </div>
 
     <div class="side-drawer__body cart-drawer-body">
       
-      <!-- Cart Items List (Real liquid cart or Demo items) -->
+      <!-- Cart Items List (Real Liquid cart or Demo items fallback) -->
       <div class="cart-drawer-items">
-        
-        <!-- Cart Item 1 -->
-        <div class="drawer-cart-item">
-          <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Lumière Radiance Serum" class="cart-item-img" width="80" height="80">
-          <div class="cart-item-info">
-            <h4 class="cart-item-title">Lumière Radiance Serum 30ml</h4>
-            <div class="cart-item-meta">%2 Saf Hyalüronik Asit</div>
-            <div class="cart-item-bottom">
-              <div class="drawer-qty-picker">
-                <button type="button" class="drawer-qty-btn dqty-minus">-</button>
-                <input type="text" value="1" readonly class="drawer-qty-val">
-                <button type="button" class="drawer-qty-btn dqty-plus">+</button>
+        {% if cart.item_count > 0 %}
+          {% for item in cart.items %}
+            <div class="drawer-cart-item">
+              {% if item.image %}
+                {{ item.image | image_url: width: 160 | image_tag: class: 'cart-item-img', loading: 'lazy' }}
+              {% else %}
+                <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ item.product.title }}" class="cart-item-img" width="80" height="80">
+              {% endif %}
+              <div class="cart-item-info">
+                <h4 class="cart-item-title">{{ item.product.title }}</h4>
+                {% if item.variant.title != 'Default Title' %}
+                  <div class="cart-item-meta">{{ item.variant.title }}</div>
+                {% endif %}
+                <div class="cart-item-bottom">
+                  <div class="drawer-qty-picker">
+                    <button type="button" class="drawer-qty-btn dqty-minus">-</button>
+                    <input type="text" value="{{ item.quantity }}" readonly class="drawer-qty-val">
+                    <button type="button" class="drawer-qty-btn dqty-plus">+</button>
+                  </div>
+                  <span class="cart-item-price">{{ item.final_line_price | money }}</span>
+                </div>
               </div>
-              <span class="cart-item-price">₺450,00</span>
+              <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0" class="cart-item-remove" title="Kaldır">✕</a>
             </div>
-          </div>
-          <button type="button" class="cart-item-remove" title="Kaldır">✕</button>
-        </div>
-
-        <!-- Cart Item 2 -->
-        <div class="drawer-cart-item">
-          <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Velvet Hydra Gece Kremi" class="cart-item-img" width="80" height="80">
-          <div class="cart-item-info">
-            <h4 class="cart-item-title">Velvet Hydra Gece Kremi 50ml</h4>
-            <div class="cart-item-meta">Yoğun Nem & Onarım</div>
-            <div class="cart-item-bottom">
-              <div class="drawer-qty-picker">
-                <button type="button" class="drawer-qty-btn dqty-minus">-</button>
-                <input type="text" value="1" readonly class="drawer-qty-val">
-                <button type="button" class="drawer-qty-btn dqty-plus">+</button>
+          {% endfor %}
+        {% else %}
+          <!-- Demo Cart Item 1 -->
+          <div class="drawer-cart-item">
+            <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Lumière Radiance Serum" class="cart-item-img" width="80" height="80">
+            <div class="cart-item-info">
+              <h4 class="cart-item-title">Lumière Radiance Serum 30ml</h4>
+              <div class="cart-item-meta">%2 Saf Hyalüronik Asit</div>
+              <div class="cart-item-bottom">
+                <div class="drawer-qty-picker">
+                  <button type="button" class="drawer-qty-btn dqty-minus">-</button>
+                  <input type="text" value="1" readonly class="drawer-qty-val">
+                  <button type="button" class="drawer-qty-btn dqty-plus">+</button>
+                </div>
+                <span class="cart-item-price">₺450,00</span>
               </div>
-              <span class="cart-item-price">₺520,00</span>
             </div>
+            <button type="button" class="cart-item-remove" title="Kaldır">✕</button>
           </div>
-          <button type="button" class="cart-item-remove" title="Kaldır">✕</button>
-        </div>
 
+          <!-- Demo Cart Item 2 -->
+          <div class="drawer-cart-item">
+            <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Velvet Hydra Gece Kremi" class="cart-item-img" width="80" height="80">
+            <div class="cart-item-info">
+              <h4 class="cart-item-title">Velvet Hydra Gece Kremi 50ml</h4>
+              <div class="cart-item-meta">Yoğun Nem & Onarım</div>
+              <div class="cart-item-bottom">
+                <div class="drawer-qty-picker">
+                  <button type="button" class="drawer-qty-btn dqty-minus">-</button>
+                  <input type="text" value="1" readonly class="drawer-qty-val">
+                  <button type="button" class="drawer-qty-btn dqty-plus">+</button>
+                </div>
+                <span class="cart-item-price">₺520,00</span>
+              </div>
+            </div>
+            <button type="button" class="cart-item-remove" title="Kaldır">✕</button>
+          </div>
+        {% endif %}
       </div>
 
     </div>
@@ -241,7 +266,7 @@
     <div class="side-drawer__footer">
       <div class="cart-summary-row">
         <span>Ara Toplam</span>
-        <span class="summary-val" id="drawerSubtotal">₺970,00</span>
+        <span class="summary-val" id="drawerSubtotal">{% if cart.item_count > 0 %}{{ cart.total_price | money }}{% else %}₺970,00{% endif %}</span>
       </div>
       <div class="cart-summary-row">
         <span>Kargo Ücreti</span>
@@ -249,12 +274,12 @@
       </div>
       <div class="cart-summary-row total-row">
         <span>Genel Toplam</span>
-        <span class="summary-val total-val" id="drawerTotal">₺970,00</span>
+        <span class="summary-val total-val" id="drawerTotal">{% if cart.item_count > 0 %}{{ cart.total_price | money }}{% else %}₺970,00{% endif %}</span>
       </div>
 
-      <a href="{{ routes.cart_url | default: '/checkout' }}" class="checkout-btn">
+      <a href="{% if cart.item_count > 0 %}/checkout{% else %}{{ routes.cart_url }}{% endif %}" class="checkout-btn">
         <span>Siparişi Tamamla (Ödemeye Geç)</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12" 5 19 12 12 19"/></svg>
       </a>
 
       <a href="{{ routes.cart_url }}" class="view-cart-link">Sepet Sayfasına Git</a>
