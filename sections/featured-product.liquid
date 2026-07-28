@@ -19,7 +19,10 @@
         {% else %}
           <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Gençleştirici Serum" class="featured-product__img" width="600" height="600" loading="lazy">
         {% endif %}
-        <span class="metallic-sale-tag">✦ %30 ÖZEL İNDİRİM</span>
+
+        {% if section.settings.badge_text != blank %}
+          <span class="metallic-sale-tag">{{ section.settings.badge_text }}</span>
+        {% endif %}
       </div>
       
       <div class="featured-product__thumbs">
@@ -38,52 +41,52 @@
 
     <!-- Right: High-Fashion Glass Content Panel -->
     <div class="featured-product__glass-card">
-      <div class="brand-subheading">LUMIÈRE BOTANICALS • HAUTE COUTURE BEAUTY</div>
+      {% if section.settings.subheading != blank %}
+        <div class="brand-subheading">{{ section.settings.subheading }}</div>
+      {% endif %}
       
       <h2 class="featured-product__title">
-        {% if display_product %}{{ display_product.title }}{% else %}Radiance Glow Hyalüronik Serum{% endif %}
+        {% if display_product %}{{ display_product.title }}{% else %}{{ section.settings.title | default: "Radiance Glow Hyalüronik Serum" }}{% endif %}
       </h2>
 
       <!-- Rating & Reviews -->
       <div class="featured-product__rating">
         <div class="stars">★★★★★</div>
         <span class="rating-score">4.9 / 5.0</span>
-        <span class="rating-count">(248 Özel Müşteri Yorumu)</span>
+        <span class="rating-count">(248 Müşteri Yorumu)</span>
       </div>
 
       <!-- Price Box -->
       <div class="featured-product__price-box">
         <span class="price-current">
-          {% if display_product %}{{ display_product.price | money }}{% else %}₺450,00{% endif %}
+          {% if display_product %}{{ display_product.price | money }}{% else %}{{ section.settings.price | default: "₺450,00" }}{% endif %}
         </span>
         <span class="price-compare">
-          {% if display_product and display_product.compare_at_price %}{{ display_product.compare_at_price | money }}{% else %}₺650,00{% endif %}
+          {% if display_product and display_product.compare_at_price %}{{ display_product.compare_at_price | money }}{% else %}{{ section.settings.compare_price | default: "₺650,00" }}{% endif %}
         </span>
-        <span class="gold-savings-badge">₺200 Tasarruf</span>
+        {% if section.settings.savings_text != blank %}
+          <span class="gold-savings-badge">{{ section.settings.savings_text }}</span>
+        {% endif %}
       </div>
 
       <p class="featured-product__description">
         {% if display_product and display_product.description != blank %}
           {{ display_product.description | strip_html | truncate: 220 }}
         {% else %}
-          Cildinize anında doğal ışıltı ve derinlemesine nem kazandıran 3'lü saf hyalüronik asit kompleksi, pembe kuvars özü ve Fransız gül suyu ile zenginleştirilmiş konsantre gençlik iksiri. Cilt bariyerinizi yeniler, ipeksi bir doku sunar.
+          {{ section.settings.description | default: "Cildinize anında doğal ışıltı ve derinlemesine nem kazandıran 3'lü saf hyalüronik asit kompleksi, pembe kuvars özü ve Fransız gül suyu ile zenginleştirilmiş konsantre gençlik iksiri." }}
         {% endif %}
       </p>
 
-      <!-- Certifications -->
+      <!-- Dynamic Certifications Blocks -->
       <div class="featured-product__badges">
-        <div class="dark-cert-pill cert-vegan">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          %100 Vegan Formula
-        </div>
-        <div class="dark-cert-pill cert-cruelty">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-          Cruelty-Free Approved
-        </div>
-        <div class="dark-cert-pill cert-derma">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-          Dermatolojik Onaylı
-        </div>
+        {% for block in section.blocks %}
+          {% if block.type == 'cert_pill' %}
+            <div class="dark-cert-pill" {{ block.shopify_attributes }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+              {{ block.settings.text }}
+            </div>
+          {% endif %}
+        {% endfor %}
       </div>
 
       <!-- Volume Chips -->
@@ -104,7 +107,7 @@
         </div>
         
         <button type="button" class="haute-add-btn demo-add-btn">
-          <span>Sepete Ekle</span>
+          <span>{{ section.settings.btn_text | default: "Sepete Ekle" }}</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         </button>
       </div>
@@ -114,32 +117,22 @@
         ✓ Özel bakım ürünü sepete başarıyla eklendi!
       </div>
 
-      <!-- Dark Accordions -->
+      <!-- Dynamic Accordions Blocks -->
       <div class="featured-product__accordion">
-        <details class="accordion-item" open>
-          <summary class="accordion-header">
-            <span>Öne Çıkan Aktif İçerikler</span>
-            <span class="acc-icon">+</span>
-          </summary>
-          <div class="accordion-body">
-            <ul>
-              <li><strong>%2 Triple Hyalüronik Asit:</strong> Derin epidermise nüfuz eden nem hapsi.</li>
-              <li><strong>Isparta Gül Suyu:</strong> Cildi ferahlatan ve sıkılaştıran doğal tonik etki.</li>
-              <li><strong>Niasinamid (B3 Vitamini):</strong> Lekelerin ve gözeneklerin görünümünü azaltma.</li>
-            </ul>
-          </div>
-        </details>
-        <details class="accordion-item">
-          <summary class="accordion-header">
-            <span>Kullanım Rutini & Uygulama</span>
-            <span class="acc-icon">+</span>
-          </summary>
-          <div class="accordion-body">
-            Sabah ve akşam temizlenmiş yüz ve boyun bölgesine 3-4 damla uygulayın. Avuç içlerinizle nazikçe tampon hareketlerle emilmesini sağlayın.
-          </div>
-        </details>
+        {% for block in section.blocks %}
+          {% if block.type == 'accordion_item' %}
+            <details class="accordion-item" {% if forloop.first %}open{% endif %} {{ block.shopify_attributes }}>
+              <summary class="accordion-header">
+                <span>{{ block.settings.title }}</span>
+                <span class="acc-icon">+</span>
+              </summary>
+              <div class="accordion-body">
+                {{ block.settings.content }}
+              </div>
+            </details>
+          {% endif %}
+        {% endfor %}
       </div>
-
     </div>
   </div>
 </div>
@@ -147,50 +140,48 @@
 {% stylesheet %}
   .featured-product-section {
     position: relative;
-    background: linear-gradient(135deg, #0f0b10 0%, #17101a 50%, #0d090e 100%);
-    padding: 90px 24px;
+    background: linear-gradient(135deg, #0f0b10 0%, #170f1a 50%, #0b080c 100%);
+    padding: 100px 24px;
     margin: 0;
     overflow: hidden;
     color: #ffffff;
   }
 
-  /* Atmosphere Orbs */
   .luxury-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(90px);
+    filter: blur(120px);
     pointer-events: none;
     z-index: 1;
   }
 
   .orb-top-left {
-    width: 450px;
-    height: 450px;
-    background: rgba(194, 91, 130, 0.22);
+    width: 500px;
+    height: 500px;
+    background: rgba(194, 91, 130, 0.18);
     top: -100px;
     left: -100px;
   }
 
   .orb-bottom-right {
-    width: 500px;
-    height: 500px;
-    background: rgba(247, 202, 208, 0.18);
-    bottom: -120px;
-    right: -100px;
+    width: 600px;
+    height: 600px;
+    background: rgba(247, 202, 208, 0.14);
+    bottom: -150px;
+    right: -150px;
   }
 
   .featured-product-container {
     position: relative;
     z-index: 2;
-    max-width: 1300px;
+    max-width: 1280px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1.15fr;
+    grid-template-columns: 1fr 1fr;
     gap: 60px;
     align-items: center;
   }
 
-  /* Left Gallery */
   .featured-product__gallery {
     display: flex;
     flex-direction: column;
@@ -200,50 +191,44 @@
   .luxury-image-frame {
     position: relative;
     border-radius: 32px;
+    padding: 8px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
-    aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   .frame-aura-glow {
     position: absolute;
-    width: 75%;
-    height: 75%;
-    background: radial-gradient(circle, rgba(194, 91, 130, 0.3) 0%, rgba(0,0,0,0) 70%);
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(194, 91, 130, 0.35) 0%, transparent 70%);
+    filter: blur(20px);
     pointer-events: none;
   }
 
   .featured-product__img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 26px;
+    display: block;
     position: relative;
     z-index: 2;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .luxury-image-frame:hover .featured-product__img {
-    transform: scale(1.06);
   }
 
   .metallic-sale-tag {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 24px;
+    left: 24px;
+    z-index: 3;
     background: linear-gradient(135deg, #c25b82 0%, #a44267 100%);
     color: #ffffff;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     font-weight: 800;
     padding: 8px 18px;
     border-radius: 30px;
     letter-spacing: 0.1em;
-    box-shadow: 0 6px 20px rgba(194, 91, 130, 0.4);
-    z-index: 3;
+    box-shadow: 0 8px 20px rgba(194, 91, 130, 0.4);
   }
 
   .featured-product__thumbs {
@@ -254,116 +239,114 @@
   .thumb-glass-card {
     width: 80px;
     height: 80px;
-    border-radius: 18px;
-    overflow: hidden;
-    border: 1.5px solid rgba(255, 255, 255, 0.15);
-    cursor: pointer;
-    background: rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
+    cursor: pointer;
+    overflow: hidden;
     transition: all 0.25s ease;
-  }
-
-  .thumb-glass-card.active,
-  .thumb-glass-card:hover {
-    border-color: #f7cad0;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(194, 91, 130, 0.3);
   }
 
   .thumb-glass-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 12px;
   }
 
-  /* Right Glass Card */
+  .thumb-glass-card.active,
+  .thumb-glass-card:hover {
+    border-color: #c25b82;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(194, 91, 130, 0.3);
+  }
+
   .featured-product__glass-card {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 36px;
-    padding: 48px;
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
+    padding: 50px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     gap: 20px;
   }
 
   .brand-subheading {
-    font-size: 0.8rem;
-    font-weight: 800;
+    font-size: 0.78rem;
+    font-weight: 700;
     letter-spacing: 0.2em;
     color: #f7cad0;
     text-transform: uppercase;
   }
 
   .featured-product__title {
-    font-size: 2.5rem;
+    font-size: 2.3rem;
     font-weight: 800;
-    line-height: 1.18;
+    line-height: 1.2;
     margin: 0;
-    background: linear-gradient(135deg, #ffffff 0%, #ffdfeb 60%, #f7cad0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ffffff;
   }
 
   .featured-product__rating {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 0.9rem;
   }
 
   .stars {
-    color: #ffb703;
-    font-size: 1.15rem;
+    color: #f7cad0;
     letter-spacing: 2px;
   }
 
   .rating-score {
     font-weight: 800;
     color: #ffffff;
-    font-size: 0.95rem;
   }
 
   .rating-count {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.82rem;
   }
 
   .featured-product__price-box {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 16px;
-    margin: 4px 0;
   }
 
   .price-current {
-    font-size: 2.3rem;
+    font-size: 2.1rem;
     font-weight: 800;
-    color: #f7cad0;
+    color: #ffffff;
   }
 
   .price-compare {
-    font-size: 1.3rem;
-    color: rgba(255, 255, 255, 0.4);
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.45);
     text-decoration: line-through;
   }
 
   .gold-savings-badge {
-    background: rgba(194, 91, 130, 0.25);
-    color: #f7cad0;
-    font-size: 0.82rem;
-    font-weight: 700;
-    padding: 6px 14px;
-    border-radius: 20px;
+    background: rgba(247, 202, 208, 0.15);
     border: 1px solid rgba(247, 202, 208, 0.3);
+    color: #f7cad0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
   }
 
   .featured-product__description {
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1.7;
-    font-size: 1rem;
+    font-size: 0.96rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.82);
+    margin: 0;
   }
 
   .featured-product__badges {
@@ -376,30 +359,25 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 18px;
-    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 8px 16px;
+    border-radius: 30px;
     font-size: 0.82rem;
-    font-weight: 700;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-weight: 600;
     color: rgba(255, 255, 255, 0.9);
   }
-
-  .cert-vegan { color: #52b788; border-color: rgba(82, 183, 136, 0.3); }
-  .cert-cruelty { color: #f7cad0; border-color: rgba(247, 202, 208, 0.3); }
-  .cert-derma { color: #90e0ef; border-color: rgba(144, 224, 239, 0.3); }
 
   .featured-product__option {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 6px;
   }
 
   .option-label {
-    font-weight: 700;
     font-size: 0.88rem;
-    color: rgba(255, 255, 255, 0.9);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
   }
 
   .option-chips {
@@ -408,48 +386,45 @@
   }
 
   .dark-chip-btn {
-    padding: 11px 22px;
-    border-radius: 14px;
-    border: 1.5px solid rgba(255, 255, 255, 0.18);
-    background: rgba(255, 255, 255, 0.08);
-    font-size: 0.9rem;
-    font-weight: 700;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.25s ease;
   }
 
   .dark-chip-btn.active,
   .dark-chip-btn:hover {
-    border-color: #c25b82;
-    color: #ffffff;
     background: rgba(194, 91, 130, 0.3);
-    box-shadow: 0 4px 16px rgba(194, 91, 130, 0.3);
+    border-color: #f7cad0;
+    box-shadow: 0 4px 15px rgba(194, 91, 130, 0.25);
   }
 
   .featured-product__actions {
     display: flex;
     gap: 16px;
-    margin-top: 8px;
   }
 
   .dark-qty-stepper {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    border: 1.5px solid rgba(255, 255, 255, 0.18);
-    border-radius: 16px;
     background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
     overflow: hidden;
   }
 
   .dstepper-btn {
-    width: 44px;
-    height: 52px;
+    width: 42px;
+    height: 48px;
     background: transparent;
     border: none;
-    font-size: 1.2rem;
-    font-weight: 700;
     color: #ffffff;
+    font-size: 1.1rem;
     cursor: pointer;
     transition: background 0.2s;
   }
@@ -459,13 +434,13 @@
   }
 
   .dstepper-input {
-    width: 44px;
+    width: 40px;
     text-align: center;
-    border: none;
-    font-weight: 800;
-    font-size: 1.05rem;
-    color: #ffffff;
     background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
     outline: none;
   }
 
@@ -479,101 +454,97 @@
     color: #ffffff;
     font-size: 1.05rem;
     font-weight: 800;
-    padding: 16px 32px;
-    border: none;
+    padding: 14px 28px;
     border-radius: 16px;
+    border: none;
     cursor: pointer;
     box-shadow: 0 10px 30px rgba(194, 91, 130, 0.4);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.3s ease;
   }
 
   .haute-add-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 38px rgba(194, 91, 130, 0.55);
+    box-shadow: 0 15px 35px rgba(194, 91, 130, 0.55);
   }
 
   .cart-toast {
     display: none;
-    background: #2a9d8f;
-    color: #ffffff;
+    background: rgba(42, 157, 143, 0.25);
+    border: 1px solid rgba(42, 157, 143, 0.5);
+    color: #52b788;
     padding: 12px 20px;
-    border-radius: 12px;
+    border-radius: 14px;
     font-size: 0.9rem;
     font-weight: 700;
-    animation: fadeIn 0.3s forwards;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
   }
 
   .featured-product__accordion {
-    margin-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
   }
 
   .accordion-item {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 14px 0;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    overflow: hidden;
   }
 
   .accordion-header {
+    padding: 16px 20px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: 700;
-    color: #ffffff;
-    cursor: pointer;
+    user-select: none;
     list-style: none;
-    font-size: 0.95rem;
   }
 
-  .accordion-header::-webkit-details-marker { display: none; }
+  .accordion-header::-webkit-details-marker {
+    display: none;
+  }
 
   .accordion-body {
-    padding-top: 12px;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
+    padding: 0 20px 18px;
+    font-size: 0.88rem;
     line-height: 1.6;
+    color: rgba(255, 255, 255, 0.75);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 14px;
   }
 
-  .accordion-body ul {
-    padding-left: 20px;
-    margin: 0;
-  }
-
-  @media (max-width: 990px) {
+  @media (max-width: 992px) {
     .featured-product-container {
       grid-template-columns: 1fr;
-      gap: 40px;
-    }
-    .featured-product__glass-card {
-      padding: 28px;
-    }
-    .featured-product__title {
-      font-size: 1.9rem;
-    }
-    .featured-product__actions {
-      flex-direction: column;
     }
   }
 {% endstylesheet %}
 
 {% javascript %}
   document.addEventListener('DOMContentLoaded', () => {
-    // Quantity logic
-    const minusBtn = document.querySelector('.qty-minus');
-    const plusBtn = document.querySelector('.qty-plus');
-    const qtyInput = document.querySelector('.qty-input');
+    // Quantity stepper
+    const minus = document.querySelector('.qty-minus');
+    const plus = document.querySelector('.qty-plus');
+    const input = document.querySelector('.qty-input');
 
-    if (minusBtn && plusBtn && qtyInput) {
-      minusBtn.addEventListener('click', () => {
-        let val = parseInt(qtyInput.value) || 1;
-        if (val > 1) qtyInput.value = val - 1;
+    if (minus && plus && input) {
+      minus.addEventListener('click', () => {
+        let val = parseInt(input.value) || 1;
+        if (val > 1) input.value = val - 1;
       });
-      plusBtn.addEventListener('click', () => {
-        let val = parseInt(qtyInput.value) || 1;
-        qtyInput.value = val + 1;
+      plus.addEventListener('click', () => {
+        let val = parseInt(input.value) || 1;
+        input.value = val + 1;
       });
     }
 
-    // Chip variant toggle
+    // Chip selection
     const chips = document.querySelectorAll('.dark-chip-btn');
     chips.forEach(chip => {
       chip.addEventListener('click', () => {
@@ -603,13 +574,127 @@
     {
       "type": "product",
       "id": "featured_product",
-      "label": "Ürün Seçin"
+      "label": "Öne Çıkan Ürün Seçin"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "İndirim Rozeti Metni",
+      "default": "✦ %30 ÖZEL İNDİRİM"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Üst Marka Başlığı",
+      "default": "LUMIÈRE BOTANICALS • HAUTE COUTURE BEAUTY"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Varsayılan Ürün Adı",
+      "default": "Radiance Glow Hyalüronik Serum"
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Varsayılan Fiyat",
+      "default": "₺450,00"
+    },
+    {
+      "type": "text",
+      "id": "compare_price",
+      "label": "Varsayılan Karşılaştırma Fiyatı",
+      "default": "₺650,00"
+    },
+    {
+      "type": "text",
+      "id": "savings_text",
+      "label": "Tasarruf Rozeti Metni",
+      "default": "₺200 Tasarruf"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Varsayılan Açıklama Metni",
+      "default": "Cildinize anında doğal ışıltı ve derinlemesine nem kazandıran 3'lü saf hyalüronik asit kompleksi, pembe kuvars özü ve Fransız gül suyu ile zenginleştirilmiş konsantre gençlik iksiri."
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Buton Metni",
+      "default": "Sepete Ekle"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "cert_pill",
+      "name": "Sertifika Rozeti",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Rozet Metni",
+          "default": "%100 Vegan Formula"
+        }
+      ]
+    },
+    {
+      "type": "accordion_item",
+      "name": "Akordiyon Açıklaması",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Akordiyon Başlığı",
+          "default": "Öne Çıkan Aktif İçerikler"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Akordiyon İçeriği",
+          "default": "%2 Triple Hyalüronik Asit, Isparta Gül Suyu ve Niasinamid (B3 Vitamini) kompleksi."
+        }
+      ]
     }
   ],
   "presets": [
     {
       "name": "Öne Çıkan Ürün Paneli",
-      "category": "Ürün"
+      "category": "Ürün",
+      "blocks": [
+        {
+          "type": "cert_pill",
+          "settings": {
+            "text": "%100 Vegan Formula"
+          }
+        },
+        {
+          "type": "cert_pill",
+          "settings": {
+            "text": "Cruelty-Free Approved"
+          }
+        },
+        {
+          "type": "cert_pill",
+          "settings": {
+            "text": "Dermatolojik Onaylı"
+          }
+        },
+        {
+          "type": "accordion_item",
+          "settings": {
+            "title": "Öne Çıkan Aktif İçerikler",
+            "content": "%2 Triple Hyalüronik Asit, Isparta Gül Suyu ve Niasinamid (B3 Vitamini) kompleksi."
+          }
+        },
+        {
+          "type": "accordion_item",
+          "settings": {
+            "title": "Kullanım Rutini & Uygulama",
+            "content": "Sabah ve akşam temizlenmiş yüz ve boyun bölgesine 3-4 damla uygulayın."
+          }
+        }
+      ]
     }
   ]
 }

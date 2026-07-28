@@ -14,41 +14,51 @@
 
   <div class="hero-banner__content-wrapper">
     <div class="hero-banner__card">
-      <span class="hero-badge">✦ İPEKSİ DOKU & DOĞAL IŞILTI</span>
-      <h1 class="hero-title">
-        {{ section.settings.title | default: "Cilt Bakımında Yeni Çağ" }}
-      </h1>
-      <p class="hero-subtitle">
-        {{ section.settings.subtitle | default: "Doğanın en değerli özleri ve ileri teknoloji hyalüronik asit kompleksi ile cildinize anında gençlik ve ışıltı kazandırın." }}
-      </p>
+      {% if section.settings.badge_text != blank %}
+        <span class="hero-badge">{{ section.settings.badge_text }}</span>
+      {% endif %}
+
+      {% if section.settings.title != blank %}
+        <h1 class="hero-title">
+          {{ section.settings.title }}
+        </h1>
+      {% endif %}
+
+      {% if section.settings.subtitle != blank %}
+        <p class="hero-subtitle">
+          {{ section.settings.subtitle }}
+        </p>
+      {% endif %}
 
       <div class="hero-buttons">
-        <a href="{{ section.settings.btn_link_1 | default: routes.all_products_collection_url }}" class="hero-btn primary-btn">
-          <span>Koleksiyonu Keşfet</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-        <a href="#featuredProduct" class="hero-btn secondary-btn">
-          <span>Öne Çıkan Ürün</span>
-        </a>
+        {% if section.settings.btn_text_1 != blank %}
+          <a href="{{ section.settings.btn_link_1 | default: routes.all_products_collection_url }}" class="hero-btn primary-btn">
+            <span>{{ section.settings.btn_text_1 }}</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        {% endif %}
+
+        {% if section.settings.btn_text_2 != blank %}
+          <a href="{{ section.settings.btn_link_2 | default: '#featuredProduct' }}" class="hero-btn secondary-btn">
+            <span>{{ section.settings.btn_text_2 }}</span>
+          </a>
+        {% endif %}
       </div>
 
-      <!-- Feature stats -->
-      <div class="hero-stats">
-        <div class="stat-item">
-          <span class="stat-num">%100</span>
-          <span class="stat-text">Organik & Vegan</span>
+      <!-- Dynamic Feature stats blocks -->
+      {% if section.blocks.size > 0 %}
+        <div class="hero-stats">
+          {% for block in section.blocks %}
+            {% if forloop.index > 1 %}
+              <div class="stat-divider"></div>
+            {% endif %}
+            <div class="stat-item" {{ block.shopify_attributes }}>
+              <span class="stat-num">{{ block.settings.number }}</span>
+              <span class="stat-text">{{ block.settings.label }}</span>
+            </div>
+          {% endfor %}
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <span class="stat-num">24 Sa.</span>
-          <span class="stat-text">Kesintisiz Nem</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <span class="stat-num">4.9 ★</span>
-          <span class="stat-text">Müşteri Puanı</span>
-        </div>
-      </div>
+      {% endif %}
     </div>
   </div>
 </div>
@@ -244,7 +254,13 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Hero Görseli"
+      "label": "Hero Arka Plan Görseli"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Üst Rozet Metni",
+      "default": "✦ İPEKSİ DOKU & DOĞAL IŞILTI"
     },
     {
       "type": "text",
@@ -253,21 +269,81 @@
       "default": "Cilt Bakımında Yeni Çağ"
     },
     {
-      "type": "text",
+      "type": "textarea",
       "id": "subtitle",
       "label": "Alt Açıklama",
       "default": "Doğanın en değerli özleri ve ileri teknoloji hyalüronik asit kompleksi ile cildinize anında gençlik ve ışıltı kazandırın."
     },
     {
+      "type": "text",
+      "id": "btn_text_1",
+      "label": "1. Buton Metni",
+      "default": "Koleksiyonu Keşfet"
+    },
+    {
       "type": "url",
       "id": "btn_link_1",
-      "label": "Buton Bağlantısı"
+      "label": "1. Buton Bağlantısı"
+    },
+    {
+      "type": "text",
+      "id": "btn_text_2",
+      "label": "2. Buton Metni",
+      "default": "Öne Çıkan Ürün"
+    },
+    {
+      "type": "url",
+      "id": "btn_link_2",
+      "label": "2. Buton Bağlantısı"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat_item",
+      "name": "İstatistik / Özellik",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Sayı veya Oran",
+          "default": "%100"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Açıklama Etiketi",
+          "default": "Organik & Vegan"
+        }
+      ]
     }
   ],
   "presets": [
     {
       "name": "Hero Banner",
-      "category": "Görsel"
+      "category": "Görsel",
+      "blocks": [
+        {
+          "type": "stat_item",
+          "settings": {
+            "number": "%100",
+            "label": "Organik & Vegan"
+          }
+        },
+        {
+          "type": "stat_item",
+          "settings": {
+            "number": "24 Sa.",
+            "label": "Kesintisiz Nem"
+          }
+        },
+        {
+          "type": "stat_item",
+          "settings": {
+            "number": "4.9 ★",
+            "label": "Müşteri Puanı"
+          }
+        }
+      ]
     }
   ]
 }

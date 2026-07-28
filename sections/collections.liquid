@@ -7,17 +7,57 @@
     <div class="hero-orb orb-1"></div>
     <div class="hero-orb orb-2"></div>
     <div class="collections-hero-content">
-      <span class="collections-badge">✦ ÖZEL BAKIM RİTÜELLERİ</span>
-      <h1 class="collections-main-title">Koleksiyonlarımızı Keşfedin</h1>
-      <p class="collections-main-desc">
-        Cildinizin ihtiyaçlarına özel olarak tasarlanmış kürler, yoğun nem ritüelleri ve seçkin bakım serilerimiz.
-      </p>
+      {% if section.settings.badge_text != blank %}
+        <span class="collections-badge">{{ section.settings.badge_text }}</span>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <h1 class="collections-main-title">{{ section.settings.title }}</h1>
+      {% endif %}
+      {% if section.settings.description != blank %}
+        <p class="collections-main-desc">
+          {{ section.settings.description }}
+        </p>
+      {% endif %}
     </div>
   </div>
 
   <div class="collections-container">
     <div class="collections-grid">
-      {% if collections.size > 0 %}
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% assign col = block.settings.collection %}
+          <a class="luxury-collection-card" href="{{ col.url | default: '#' }}" {{ block.shopify_attributes }}>
+            <div class="collection-card__img-wrapper">
+              {% if block.settings.image != blank %}
+                {{ block.settings.image | image_url: width: 800 | image_tag: class: 'collection-card__img', loading: 'lazy' }}
+              {% elsif col != blank and col.featured_image %}
+                {{ col.featured_image | image_url: width: 800 | image_tag: class: 'collection-card__img', loading: 'lazy' }}
+              {% else %}
+                <img src="{{ 'hero-banner.jpg' | asset_url }}" alt="Koleksiyon Görseli" class="collection-card__img" width="600" height="450" loading="lazy">
+              {% endif %}
+              <div class="collection-card__overlay"></div>
+            </div>
+
+            <div class="collection-card__glass-content">
+              <span class="collection-card__count">{{ block.settings.count_text | default: "8 ÜRÜN" }}</span>
+              <h2 class="collection-card__title">
+                {% if block.settings.title != blank %}{{ block.settings.title }}{% else %}{{ col.title | default: "Koleksiyon Adı" }}{% endif %}
+              </h2>
+              <p class="collection-card__desc">
+                {% if block.settings.description != blank %}
+                  {{ block.settings.description }}
+                {% else %}
+                  {{ col.description | default: "Doğal özler ve ileri teknoloji hyalüronik asit kompleksi ile harmanlanmış özel seri." | strip_html | truncatewords: 12 }}
+                {% endif %}
+              </p>
+              <div class="collection-card__btn">
+                <span>Koleksiyonu Keşfet</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      {% elsif collections.size > 0 %}
         {% for collection in collections %}
           <a class="luxury-collection-card" href="{{ collection.url }}">
             <div class="collection-card__img-wrapper">
@@ -274,7 +314,62 @@
 {% schema %}
 {
   "name": "Koleksiyon Listesi",
-  "settings": [],
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Üst Rozet Metni",
+      "default": "✦ ÖZEL BAKIM RİTÜELLERİ"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Ana Başlık",
+      "default": "Koleksiyonlarımızı Keşfedin"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Alt Açıklama Metni",
+      "default": "Cildinizin ihtiyaçlarına özel olarak tasarlanmış kürler, yoğun nem ritüelleri ve seçkin bakım serilerimiz."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_card",
+      "name": "Özel Koleksiyon Kartı",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Koleksiyon Seçin"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Özel Kart Görseli"
+        },
+        {
+          "type": "text",
+          "id": "count_text",
+          "label": "Ürün Sayısı Etiketi",
+          "default": "14 ÜRÜN"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Koleksiyon Adı",
+          "default": "Gençleştirici Serumlar"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Koleksiyon Açıklaması",
+          "default": "İnce çizgileri hedef alan konsantre peptit ve hyalüronik asit özleri."
+        }
+      ]
+    }
+  ],
   "presets": [
     {
       "name": "Koleksiyon Listesi"
