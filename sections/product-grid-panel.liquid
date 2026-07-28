@@ -1,5 +1,5 @@
 {% comment %}
-  Ultra-Luxury High-Fashion Showcase Product Grid Panel (100% Granular Individual Product Card Customization)
+  Ultra-Luxury High-Fashion Showcase Product Grid Panel (Direct Block-Level Card Customization Architecture)
 {% endcomment %}
 
 <div class="product-grid-panel full-width" style="
@@ -9,10 +9,6 @@
   --mobile-padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
   --bg-gradient-start: {{ section.settings.bg_gradient_start }};
   --bg-gradient-end: {{ section.settings.bg_gradient_end }};
-  --card-bg-color: {{ section.settings.card_bg_color }};
-  --card-border-color: {{ section.settings.card_border_color }};
-  --card-border-radius: {{ section.settings.card_border_radius }}px;
-  --card-blur: {{ section.settings.card_blur }}px;
   --accent-color: {{ section.settings.accent_color }};
   --grid-columns-mobile: {{ section.settings.columns_mobile }};
 ">
@@ -61,7 +57,7 @@
       {% endfor %}
     </div>
 
-    <!-- Product Cards Grid (Rendered dynamically from Blocks with individual card styling) -->
+    <!-- Product Cards Grid (Each card styled directly via its own Block settings) -->
     <div class="product-grid-panel__grid">
       {% assign card_blocks = section.blocks | where: "type", "product_card" %}
 
@@ -274,12 +270,12 @@
   }
 
   .haute-product-card {
-    background: var(--item-card-bg, var(--card-bg-color, rgba(255, 255, 255, 0.05)));
-    backdrop-filter: blur(var(--item-card-blur, var(--card-blur, 20px)));
-    -webkit-backdrop-filter: blur(var(--item-card-blur, var(--card-blur, 20px)));
-    border-radius: var(--item-card-radius, var(--card-border-radius, 20px));
+    background: var(--item-card-bg, rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(var(--item-card-blur, 20px));
+    -webkit-backdrop-filter: blur(var(--item-card-blur, 20px));
+    border-radius: var(--item-card-radius, 20px);
     overflow: hidden;
-    border: 1px solid var(--item-card-border, var(--card-border-color, rgba(255, 255, 255, 0.12)));
+    border: 1px solid var(--item-card-border, rgba(255, 255, 255, 0.12));
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
@@ -290,7 +286,6 @@
     transform: translateY(-8px);
     box-shadow: 0 28px 60px rgba(194, 91, 130, 0.25);
     border-color: rgba(194, 91, 130, 0.5);
-    background: rgba(255, 255, 255, 0.08);
   }
 
   .card-image-wrapper {
@@ -518,7 +513,7 @@
     },
     {
       "type": "header",
-      "content": "🎨 Renk ve Tasarım Ayarları"
+      "content": "🎨 Bölüm Genel Arka Plan & Renkler"
     },
     {
       "type": "color",
@@ -534,45 +529,13 @@
     },
     {
       "type": "color",
-      "id": "card_bg_color",
-      "label": "Genel Ürün Kartı Arka Plan Rengi",
-      "default": "rgba(255, 255, 255, 0.05)"
-    },
-    {
-      "type": "color",
-      "id": "card_border_color",
-      "label": "Genel Ürün Kartı Kenarlık Rengi",
-      "default": "rgba(255, 255, 255, 0.12)"
-    },
-    {
-      "type": "range",
-      "id": "card_border_radius",
-      "label": "Genel Ürün Kartı Köşe Yuvarlama (px)",
-      "min": 0,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "card_blur",
-      "label": "Genel Ürün Kartı Bulanıklık Düzeyi (Blur px)",
-      "min": 0,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
-      "default": 20
-    },
-    {
-      "type": "color",
       "id": "accent_color",
       "label": "Vurgu & Yıldız Rengi",
       "default": "#f7cad0"
     },
     {
       "type": "header",
-      "content": "📐 İç Boşluk (Padding) Ayarları"
+      "content": "📐 Bölüm İç Boşluk (Padding) Ayarları"
     },
     {
       "type": "range",
@@ -779,7 +742,7 @@
         },
         {
           "type": "header",
-          "content": "🎨 Kart Tasarım & Renk Ayarları"
+          "content": "🎨 Kart Tasarım & Renk Ayarları (Bu Karta Özel)"
         },
         {
           "type": "color",
@@ -816,7 +779,7 @@
         {
           "type": "range",
           "id": "card_padding",
-          "label": "Kart Bilgi İç Boşluğu (padding px)",
+          "label": "Kart İç Boşluğu (padding px)",
           "min": 8,
           "max": 40,
           "step": 2,
