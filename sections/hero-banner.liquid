@@ -1,5 +1,5 @@
 {% comment %}
-  Luxury Cosmetic Hero Banner Section
+  Kozmetik Hero Banner Section
 {% endcomment %}
 
 <div class="hero-banner-section full-width">
@@ -7,7 +7,7 @@
     {% if section.settings.image != blank %}
       {{ section.settings.image | image_url: width: 2000 | image_tag: class: 'hero-banner__img', loading: 'eager' }}
     {% else %}
-      <img src="{{ 'hero-banner.jpg' | asset_url }}" alt="Cilt Bakımı Koleksiyonu" class="hero-banner__img" width="1920" height="1080" loading="eager">
+      <img src="{{ 'hero-banner.jpg' | asset_url }}" alt="{{ section.settings.title | escape }}" class="hero-banner__img" width="1920" height="1080" loading="eager">
     {% endif %}
     <div class="hero-banner__overlay"></div>
   </div>
@@ -45,7 +45,7 @@
         {% endif %}
       </div>
 
-      <!-- Dynamic Feature stats blocks -->
+      <!-- Feature stats -->
       {% if section.blocks.size > 0 %}
         <div class="hero-stats">
           {% for block in section.blocks %}
@@ -63,7 +63,7 @@
   </div>
 </div>
 
-{% stylesheet %}
+<style>
   .hero-banner-section {
     position: relative;
     width: 100%;
@@ -245,21 +245,21 @@
       flex-direction: column;
     }
   }
-{% endstylesheet %}
+</style>
 
 {% schema %}
 {
-  "name": "Hero Banner",
+  "name": "Kozmetik Hero Banner",
   "settings": [
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Hero Arka Plan Görseli"
+      "label": "Arka Plan Resmi"
     },
     {
       "type": "text",
       "id": "badge_text",
-      "label": "Üst Rozet Metni",
+      "label": "Üst Başlık / Rozet",
       "default": "✦ İPEKSİ DOKU & DOĞAL IŞILTI"
     },
     {
@@ -271,30 +271,30 @@
     {
       "type": "textarea",
       "id": "subtitle",
-      "label": "Alt Açıklama",
+      "label": "Açıklama Metni",
       "default": "Doğanın en değerli özleri ve ileri teknoloji hyalüronik asit kompleksi ile cildinize anında gençlik ve ışıltı kazandırın."
     },
     {
       "type": "text",
       "id": "btn_text_1",
-      "label": "1. Buton Metni",
+      "label": "1. Buton Etiketi",
       "default": "Koleksiyonu Keşfet"
     },
     {
       "type": "url",
       "id": "btn_link_1",
-      "label": "1. Buton Bağlantısı"
+      "label": "1. Buton URL"
     },
     {
       "type": "text",
       "id": "btn_text_2",
-      "label": "2. Buton Metni",
+      "label": "2. Buton Etiketi",
       "default": "Öne Çıkan Ürün"
     },
     {
       "type": "url",
       "id": "btn_link_2",
-      "label": "2. Buton Bağlantısı"
+      "label": "2. Buton URL"
     }
   ],
   "blocks": [
@@ -319,7 +319,7 @@
   ],
   "presets": [
     {
-      "name": "Hero Banner",
+      "name": "Kozmetik Hero Banner",
       "category": "Görsel",
       "blocks": [
         {
