@@ -1,6 +1,6 @@
 {% comment %}
-  Modular Collection Product Grid Section with Sticky Left Side Filter Panel
-  Includes Theme Blocks for Product Cards, Category Filters, Availability Filters, Price Range, and Trust Cards.
+  Modular Collection Product Grid Section with Fully Customizable Sticky Left Side Filter Panel
+  Includes Block-Level Editor Control for Sidebar Header, Categories, Stock Availability, Price Range, Vendors, Tags, Trust Cards, Banners & Product Cards.
 {% endcomment %}
 
 <div class="collection-product-grid-section full-width" style="
@@ -16,57 +16,85 @@
     <div class="collection-main-side-layout">
       
       <!-- Sol Yan Ekran Filtre Paneli (Sticky Side Filter Panel) -->
-      <aside class="collection-sidebar-panel" id="collectionSidebarPanel">
-        <div class="sidebar-header">
-          <div class="sidebar-title-group">
-            <span class="sidebar-sparkle">✦</span>
-            <h3 class="sidebar-main-title">FİLTRELER</h3>
+      <aside class="collection-sidebar-panel" id="collectionSidebarPanel" style="
+        --sidebar-width: {{ section.settings.sidebar_width | default: 280 }}px;
+        --sidebar-sticky-top: {{ section.settings.sidebar_sticky_top | default: 100 }}px;
+        --sidebar-bg: {{ section.settings.sidebar_bg | default: '#151019' }};
+        --sidebar-border: {{ section.settings.sidebar_border | default: 'rgba(255, 255, 255, 0.12)' }};
+        --sidebar-radius: {{ section.settings.sidebar_radius | default: 20 }}px;
+        --sidebar-blur: {{ section.settings.sidebar_blur | default: 16 }}px;
+        --sidebar-padding: {{ section.settings.sidebar_padding | default: 24 }}px;
+      ">
+        
+        <!-- Sidebar Header Block -->
+        {% assign header_blocks = section.blocks | where: "type", "sidebar_header" %}
+        {% if header_blocks.size > 0 %}
+          {% for block in header_blocks %}
+            <div class="sidebar-header" style="
+              --hdr-title-color: {{ block.settings.title_color | default: '#ffffff' }};
+              --hdr-icon-color: {{ block.settings.icon_color | default: '#f7cad0' }};
+              --hdr-title-size: {{ block.settings.title_font_size | default: 14 }}px;
+              --hdr-title-spacing: {{ block.settings.title_letter_spacing | default: 2 }}px;
+              --hdr-reset-color: {{ block.settings.reset_color | default: 'rgba(255, 255, 255, 0.6)' }};
+              --hdr-reset-bg: {{ block.settings.reset_bg | default: 'transparent' }};
+              --hdr-reset-border: {{ block.settings.reset_border | default: 'rgba(255, 255, 255, 0.15)' }};
+              --hdr-reset-hover-bg: {{ block.settings.reset_hover_bg | default: 'rgba(194, 91, 130, 0.2)' }};
+              --hdr-reset-hover-border: {{ block.settings.reset_hover_border | default: '#f7cad0' }};
+              --hdr-border-color: {{ block.settings.border_color | default: 'rgba(255, 255, 255, 0.08)' }};
+            " {{ block.shopify_attributes }}>
+              <div class="sidebar-title-group">
+                <span class="sidebar-sparkle">{{ block.settings.icon | default: "✦" }}</span>
+                <h3 class="sidebar-main-title">{{ block.settings.title | default: "FİLTRELER" }}</h3>
+              </div>
+              <button type="button" class="sidebar-reset-btn" id="resetSidebarFiltersBtn">
+                <span>{{ block.settings.reset_text | default: "Temizle" }}</span>
+              </button>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="sidebar-header">
+            <div class="sidebar-title-group">
+              <span class="sidebar-sparkle">✦</span>
+              <h3 class="sidebar-main-title">FİLTRELER</h3>
+            </div>
+            <button type="button" class="sidebar-reset-btn" id="resetSidebarFiltersBtn">
+              <span>Temizle</span>
+            </button>
           </div>
-          <button type="button" class="sidebar-reset-btn" id="resetSidebarFiltersBtn">
-            <span>Temizle</span>
-          </button>
-        </div>
+        {% endif %}
 
         <div class="sidebar-blocks-wrapper">
           
-          <!-- Category Filter Block -->
+          <!-- Category Filter Block Group -->
           {% assign category_blocks = section.blocks | where: "type", "category_filter" %}
           {% if category_blocks.size > 0 %}
-            <div class="sidebar-filter-block">
-              <h4 class="sidebar-block-title">KATEGORİLER</h4>
+            {% assign cat_first = category_blocks | first %}
+            <div class="sidebar-filter-block" style="
+              --blk-title-color: {{ cat_first.settings.title_color | default: '#f7cad0' }};
+              --blk-title-size: {{ cat_first.settings.title_font_size | default: 12 }}px;
+              --blk-title-spacing: {{ cat_first.settings.title_letter_spacing | default: 1.5 }}px;
+            ">
+              <h4 class="sidebar-block-title">{{ cat_first.settings.block_title | default: "KATEGORİLER" }}</h4>
               <div class="sidebar-category-list" id="categoryFilterPills">
                 {% for block in category_blocks %}
-                  <button type="button" class="filter-pill sidebar-cat-item {% if block.settings.is_active or forloop.first %}active{% endif %}" data-category="{{ block.settings.category | default: 'all' }}" {{ block.shopify_attributes }}>
+                  <button type="button" class="filter-pill sidebar-cat-item {% if block.settings.is_active or forloop.first %}active{% endif %}"
+                    data-category="{{ block.settings.category | default: 'all' }}"
+                    style="
+                      --cat-item-bg: {{ block.settings.item_bg | default: 'rgba(255, 255, 255, 0.03)' }};
+                      --cat-item-border: {{ block.settings.item_border | default: 'rgba(255, 255, 255, 0.08)' }};
+                      --cat-item-color: {{ block.settings.item_text_color | default: 'rgba(255, 255, 255, 0.75)' }};
+                      --cat-active-bg-start: {{ block.settings.active_bg_start | default: 'rgba(194, 91, 130, 0.3)' }};
+                      --cat-active-bg-end: {{ block.settings.active_bg_end | default: 'rgba(162, 67, 103, 0.3)' }};
+                      --cat-active-border: {{ block.settings.active_border | default: '#f7cad0' }};
+                      --cat-active-color: {{ block.settings.active_text_color | default: '#ffffff' }};
+                      --cat-dot-color: {{ block.settings.dot_color | default: 'transparent' }};
+                      --cat-active-dot-color: {{ block.settings.active_dot_color | default: '#f7cad0' }};
+                    "
+                    {{ block.shopify_attributes }}>
                     <span class="cat-label">{{ block.settings.label }}</span>
                     <span class="cat-dot"></span>
                   </button>
                 {% endfor %}
-              </div>
-            </div>
-          {% else %}
-            <div class="sidebar-filter-block">
-              <h4 class="sidebar-block-title">KATEGORİLER</h4>
-              <div class="sidebar-category-list" id="categoryFilterPills">
-                <button type="button" class="filter-pill sidebar-cat-item active" data-category="all">
-                  <span class="cat-label">Tüm Ürünler</span>
-                  <span class="cat-dot"></span>
-                </button>
-                <button type="button" class="filter-pill sidebar-cat-item" data-category="serum">
-                  <span class="cat-label">Serumlar</span>
-                  <span class="cat-dot"></span>
-                </button>
-                <button type="button" class="filter-pill sidebar-cat-item" data-category="moisturizer">
-                  <span class="cat-label">Nemlendiriciler</span>
-                  <span class="cat-dot"></span>
-                </button>
-                <button type="button" class="filter-pill sidebar-cat-item" data-category="mask">
-                  <span class="cat-label">Yüz Maskeleri</span>
-                  <span class="cat-dot"></span>
-                </button>
-                <button type="button" class="filter-pill sidebar-cat-item" data-category="eye-care">
-                  <span class="cat-label">Göz Bakımı</span>
-                  <span class="cat-dot"></span>
-                </button>
               </div>
             </div>
           {% endif %}
@@ -75,7 +103,22 @@
           {% assign avail_blocks = section.blocks | where: "type", "availability_filter" %}
           {% if avail_blocks.size > 0 %}
             {% for block in avail_blocks %}
-              <div class="sidebar-filter-block" {{ block.shopify_attributes }}>
+              <div class="sidebar-filter-block" style="
+                --blk-title-color: {{ block.settings.title_color | default: '#f7cad0' }};
+                --blk-title-size: {{ block.settings.title_font_size | default: 12 }}px;
+                --stk-in-dot: {{ block.settings.in_stock_dot_color | default: '#52c41a' }};
+                --stk-in-glow: {{ block.settings.in_stock_dot_glow | default: 'rgba(82, 196, 26, 0.6)' }};
+                --stk-out-dot: {{ block.settings.out_stock_dot_color | default: '#ff4d4f' }};
+                --stk-out-glow: {{ block.settings.out_stock_dot_glow | default: 'rgba(255, 77, 79, 0.6)' }};
+                --stk-chk-bg: {{ block.settings.checkbox_bg | default: 'rgba(255, 255, 255, 0.05)' }};
+                --stk-chk-border: {{ block.settings.checkbox_border | default: 'rgba(255, 255, 255, 0.2)' }};
+                --stk-chk-checked-start: {{ block.settings.checkbox_checked_bg_start | default: '#c25b82' }};
+                --stk-chk-checked-end: {{ block.settings.checkbox_checked_bg_end | default: '#a24367' }};
+                --stk-chk-checked-border: {{ block.settings.checkbox_checked_border | default: '#f7cad0' }};
+                --stk-checkmark-color: {{ block.settings.checkmark_color | default: '#ffffff' }};
+                --stk-text-color: {{ block.settings.label_text_color | default: 'rgba(255, 255, 255, 0.85)' }};
+                --stk-chk-radius: {{ block.settings.checkbox_radius | default: 6 }}px;
+              " {{ block.shopify_attributes }}>
                 <h4 class="sidebar-block-title">{{ block.settings.title | default: "STOK DURUMU" }}</h4>
                 <div class="sidebar-stock-options">
                   <label class="stock-option-label">
@@ -94,75 +137,135 @@
                 </div>
               </div>
             {% endfor %}
-          {% else %}
-            <div class="sidebar-filter-block">
-              <h4 class="sidebar-block-title">STOK DURUMU</h4>
-              <div class="sidebar-stock-options">
-                <label class="stock-option-label">
-                  <input type="checkbox" class="stock-checkbox-input" value="in_stock" checked>
-                  <span class="custom-check-box"><span class="check-mark">✓</span></span>
-                  <span class="stock-status-dot in-stock-dot"></span>
-                  <span class="stock-text">Stokta Var</span>
-                </label>
-
-                <label class="stock-option-label">
-                  <input type="checkbox" class="stock-checkbox-input" value="out_of_stock" checked>
-                  <span class="custom-check-box"><span class="check-mark">✓</span></span>
-                  <span class="stock-status-dot out-stock-dot"></span>
-                  <span class="stock-text">Tükendi / Stokta Yok</span>
-                </label>
-              </div>
-            </div>
           {% endif %}
 
           <!-- Price Range Filter Block -->
           {% assign price_blocks = section.blocks | where: "type", "price_filter" %}
           {% if price_blocks.size > 0 %}
             {% for block in price_blocks %}
-              <div class="sidebar-filter-block" {{ block.shopify_attributes }}>
+              <div class="sidebar-filter-block" style="
+                --blk-title-color: {{ block.settings.title_color | default: '#f7cad0' }};
+                --blk-title-size: {{ block.settings.title_font_size | default: 12 }}px;
+                --prc-symbol-color: {{ block.settings.symbol_color | default: '#f7cad0' }};
+                --prc-input-bg: {{ block.settings.input_bg | default: 'rgba(255, 255, 255, 0.05)' }};
+                --prc-input-border: {{ block.settings.input_border | default: 'rgba(255, 255, 255, 0.12)' }};
+                --prc-input-focus: {{ block.settings.input_focus_border | default: '#f7cad0' }};
+                --prc-input-text: {{ block.settings.input_text_color | default: '#ffffff' }};
+                --prc-input-radius: {{ block.settings.input_radius | default: 8 }}px;
+                --prc-dash-color: {{ block.settings.dash_color | default: 'rgba(255, 255, 255, 0.4)' }};
+              " {{ block.shopify_attributes }}>
                 <h4 class="sidebar-block-title">{{ block.settings.title | default: "FİYAT ARALIĞI" }}</h4>
                 <div class="sidebar-price-controls">
                   <div class="price-inputs-row">
                     <div class="price-input-box">
-                      <span class="price-symbol">₺</span>
-                      <input type="number" class="price-num-input" id="minPriceInput" placeholder="Min" value="0" min="0">
+                      <span class="price-symbol">{{ block.settings.currency_symbol | default: "₺" }}</span>
+                      <input type="number" class="price-num-input" id="minPriceInput" placeholder="{{ block.settings.min_placeholder | default: 'Min' }}" value="{{ block.settings.min_price_default | default: 0 }}" min="0">
                     </div>
                     <span class="price-dash">-</span>
                     <div class="price-input-box">
-                      <span class="price-symbol">₺</span>
-                      <input type="number" class="price-num-input" id="maxPriceInput" placeholder="Max" value="{{ block.settings.max_price_limit | default: 1000 }}" min="0">
+                      <span class="price-symbol">{{ block.settings.currency_symbol | default: "₺" }}</span>
+                      <input type="number" class="price-num-input" id="maxPriceInput" placeholder="{{ block.settings.max_placeholder | default: 'Max' }}" value="{{ block.settings.max_price_limit | default: 1000 }}" min="0">
                     </div>
                   </div>
                 </div>
               </div>
             {% endfor %}
-          {% else %}
-            <div class="sidebar-filter-block">
-              <h4 class="sidebar-block-title">FİYAT ARALIĞI</h4>
-              <div class="sidebar-price-controls">
-                <div class="price-inputs-row">
-                  <div class="price-input-box">
-                    <span class="price-symbol">₺</span>
-                    <input type="number" class="price-num-input" id="minPriceInput" placeholder="Min" value="0" min="0">
-                  </div>
-                  <span class="price-dash">-</span>
-                  <div class="price-input-box">
-                    <span class="price-symbol">₺</span>
-                    <input type="number" class="price-num-input" id="maxPriceInput" placeholder="Max" value="1000" min="0">
-                  </div>
-                </div>
-              </div>
-            </div>
           {% endif %}
 
-          <!-- Luxury Trust Card -->
+          <!-- Vendor Filter Block -->
+          {% assign vendor_blocks = section.blocks | where: "type", "vendor_filter" %}
+          {% for block in vendor_blocks %}
+            <div class="sidebar-filter-block" style="
+              --blk-title-color: {{ block.settings.title_color | default: '#f7cad0' }};
+              --vnd-text-color: {{ block.settings.item_text_color | default: 'rgba(255, 255, 255, 0.85)' }};
+              --stk-chk-bg: {{ block.settings.checkbox_bg | default: 'rgba(255, 255, 255, 0.05)' }};
+              --stk-chk-border: {{ block.settings.checkbox_border | default: 'rgba(255, 255, 255, 0.2)' }};
+              --stk-chk-checked-start: {{ block.settings.checkbox_checked_bg | default: '#c25b82' }};
+              --stk-chk-checked-end: {{ block.settings.checkbox_checked_bg | default: '#a24367' }};
+              --stk-chk-checked-border: {{ block.settings.title_color | default: '#f7cad0' }};
+              --stk-checkmark-color: #ffffff;
+            " {{ block.shopify_attributes }}>
+              <h4 class="sidebar-block-title">{{ block.settings.title | default: "MARKALAR" }}</h4>
+              <div class="sidebar-vendor-options">
+                {% assign vendor_array = block.settings.vendors | split: "," %}
+                {% for vendor in vendor_array %}
+                  {% assign clean_vendor = vendor | strip %}
+                  {% if clean_vendor != blank %}
+                    <label class="stock-option-label vendor-option-label">
+                      <input type="checkbox" class="vendor-checkbox-input" value="{{ clean_vendor | escape }}">
+                      <span class="custom-check-box"><span class="check-mark">✓</span></span>
+                      <span class="stock-text" style="color: var(--vnd-text-color);">{{ clean_vendor }}</span>
+                    </label>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+
+          <!-- Tag Filter Block -->
+          {% assign tag_blocks = section.blocks | where: "type", "tag_filter" %}
+          {% for block in tag_blocks %}
+            <div class="sidebar-filter-block" style="
+              --blk-title-color: {{ block.settings.title_color | default: '#f7cad0' }};
+              --tag-pill-bg: {{ block.settings.pill_bg | default: 'rgba(255, 255, 255, 0.05)' }};
+              --tag-pill-border: {{ block.settings.pill_border | default: 'rgba(255, 255, 255, 0.12)' }};
+              --tag-pill-text: {{ block.settings.pill_text | default: 'rgba(255, 255, 255, 0.75)' }};
+              --tag-active-bg: {{ block.settings.active_pill_bg | default: '#c25b82' }};
+              --tag-active-text: {{ block.settings.active_pill_text | default: '#ffffff' }};
+            " {{ block.shopify_attributes }}>
+              <h4 class="sidebar-block-title">{{ block.settings.title | default: "ÖNE ÇIKAN ETİKETLER" }}</h4>
+              <div class="sidebar-tags-wrapper" id="sidebarTagPills">
+                {% assign tag_array = block.settings.tags | split: "," %}
+                {% for tag in tag_array %}
+                  {% assign clean_tag = tag | strip %}
+                  {% if clean_tag != blank %}
+                    <button type="button" class="tag-pill" data-tag="{{ clean_tag | escape }}">
+                      <span>#{{ clean_tag }}</span>
+                    </button>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+
+          <!-- Luxury Trust Card Block -->
           {% assign trust_blocks = section.blocks | where: "type", "sidebar_trust" %}
           {% for block in trust_blocks %}
-            <div class="sidebar-trust-card" {{ block.shopify_attributes }}>
-              <span class="trust-card-icon">{{ block.settings.icon | default: "✦" }}</span>
+            <div class="sidebar-trust-card" style="
+              --trst-icon-color: {{ block.settings.icon_color | default: '#f7cad0' }};
+              --trst-title-color: {{ block.settings.title_color | default: '#ffffff' }};
+              --trst-sub-color: {{ block.settings.subtitle_color | default: 'rgba(255, 255, 255, 0.65)' }};
+              --trst-bg: {{ block.settings.bg_color | default: 'rgba(194, 91, 130, 0.12)' }};
+              --trst-border: {{ block.settings.border_color | default: 'rgba(247, 202, 208, 0.25)' }};
+              --trst-radius: {{ block.settings.border_radius | default: 12 }}px;
+            " {{ block.shopify_attributes }}>
+              <span class="trust-card-icon" style="color: var(--trst-icon-color);">{{ block.settings.icon | default: "✦" }}</span>
               <div class="trust-card-info">
-                <h5 class="trust-card-title">{{ block.settings.title | default: "%100 Orijinal Ürün" }}</h5>
-                <p class="trust-card-desc">{{ block.settings.subtitle | default: "Resmi Distribütör Garantili" }}</p>
+                <h5 class="trust-card-title" style="color: var(--trst-title-color);">{{ block.settings.title | default: "%100 Orijinal Ürün" }}</h5>
+                <p class="trust-card-desc" style="color: var(--trst-sub-color);">{{ block.settings.subtitle | default: "Resmi Distribütör Garantili" }}</p>
+              </div>
+            </div>
+          {% endfor %}
+
+          <!-- Sidebar Banner / Promo Block -->
+          {% assign banner_blocks = section.blocks | where: "type", "sidebar_banner" %}
+          {% for block in banner_blocks %}
+            <div class="sidebar-promo-card" style="
+              --bnr-title-color: {{ block.settings.title_color | default: '#ffffff' }};
+              --bnr-sub-color: {{ block.settings.subtitle_color | default: 'rgba(255, 255, 255, 0.8)' }};
+              --bnr-bg: {{ block.settings.bg_color | default: '#1a121d' }};
+              --bnr-border: {{ block.settings.border_color | default: 'rgba(194, 91, 130, 0.3)' }};
+              --bnr-radius: {{ block.settings.border_radius | default: 16 }}px;
+            " {{ block.shopify_attributes }}>
+              {% if block.settings.image != blank %}
+                {{ block.settings.image | image_url: width: 300 | image_tag: class: 'promo-card-img', loading: 'lazy' }}
+              {% endif %}
+              <div class="promo-card-content">
+                <h5 class="promo-card-title">{{ block.settings.title }}</h5>
+                <p class="promo-card-desc">{{ block.settings.subtitle }}</p>
+                {% if block.settings.link != blank %}
+                  <a href="{{ block.settings.link }}" class="promo-card-link">İncele →</a>
+                {% endif %}
               </div>
             </div>
           {% endfor %}
@@ -181,10 +284,14 @@
               {% if prod != blank %}
                 {% assign raw_price = prod.price | divided_by: 100.0 %}
                 {% assign card_title = prod.title %}
+                {% assign card_vendor = prod.vendor | default: 'Lumière' %}
+                {% assign card_tags = prod.tags | join: ',' | default: 'Organik,Anti-Aging' %}
               {% else %}
                 {% assign price_str = block.settings.price | default: '0' %}
                 {% assign raw_price = price_str | remove: '₺' | remove: '.' | replace: ',', '.' | plus: 0 %}
                 {% assign card_title = block.settings.title %}
+                {% assign card_vendor = 'Lumière' %}
+                {% assign card_tags = 'Organik,Anti-Aging,Leke Karşıtı,Vegan' %}
               {% endif %}
 
               {% assign is_in_stock = true %}
@@ -199,6 +306,8 @@
                 data-price="{{ raw_price }}"
                 data-index="{{ forloop.index }}"
                 data-title="{{ card_title | escape }}"
+                data-vendor="{{ card_vendor | escape }}"
+                data-tags="{{ card_tags | escape }}"
                 data-stock="{% if is_in_stock %}in_stock{% else %}out_of_stock{% endif %}"
                 style="
                   --item-card-bg: {{ block.settings.card_bg_color }};
@@ -293,8 +402,8 @@
 
       const cards = Array.from(grid.querySelectorAll('.haute-product-card'));
       
-      const activePill = document.querySelector('#categoryFilterPills .filter-pill.active');
-      const selectedCategory = activePill ? activePill.getAttribute('data-category') : 'all';
+      const activeCatPill = document.querySelector('#categoryFilterPills .filter-pill.active');
+      const selectedCategory = activeCatPill ? activeCatPill.getAttribute('data-category') : 'all';
 
       const stockInputs = Array.from(document.querySelectorAll('.stock-checkbox-input:checked')).map(i => i.value);
 
@@ -303,16 +412,24 @@
       const minPrice = minInput ? (parseFloat(minInput.value) || 0) : 0;
       const maxPrice = maxInput ? (parseFloat(maxInput.value) || 999999) : 999999;
 
+      const vendorInputs = Array.from(document.querySelectorAll('.vendor-checkbox-input:checked')).map(i => i.value.toLowerCase());
+
+      const activeTagPills = Array.from(document.querySelectorAll('#sidebarTagPills .tag-pill.active')).map(p => (p.getAttribute('data-tag') || '').toLowerCase());
+
       cards.forEach(card => {
         const cardCategory = card.getAttribute('data-category') || 'all';
         const cardStock = card.getAttribute('data-stock') || 'in_stock';
         const cardPrice = parseFloat(card.getAttribute('data-price')) || 0;
+        const cardVendor = (card.getAttribute('data-vendor') || '').toLowerCase();
+        const cardTags = (card.getAttribute('data-tags') || '').toLowerCase();
 
         const categoryMatch = (selectedCategory === 'all' || cardCategory === selectedCategory);
         const stockMatch = (stockInputs.length === 0 || stockInputs.includes(cardStock));
         const priceMatch = (cardPrice >= minPrice && cardPrice <= maxPrice);
+        const vendorMatch = (vendorInputs.length === 0 || vendorInputs.some(v => cardVendor.includes(v)));
+        const tagMatch = (activeTagPills.length === 0 || activeTagPills.some(t => cardTags.includes(t)));
 
-        if (categoryMatch && stockMatch && priceMatch) {
+        if (categoryMatch && stockMatch && priceMatch && vendorMatch && tagMatch) {
           card.style.display = '';
           card.style.opacity = '1';
         } else {
@@ -322,10 +439,10 @@
     }
 
     // Category Filter Listener
-    const pills = document.querySelectorAll('#categoryFilterPills .filter-pill');
-    pills.forEach(pill => {
+    const catPills = document.querySelectorAll('#categoryFilterPills .filter-pill');
+    catPills.forEach(pill => {
       pill.addEventListener('click', function() {
-        pills.forEach(p => p.classList.remove('active'));
+        catPills.forEach(p => p.classList.remove('active'));
         this.classList.add('active');
         applyUnifiedFilters();
       });
@@ -343,17 +460,34 @@
     if (minInput) minInput.addEventListener('input', applyUnifiedFilters);
     if (maxInput) maxInput.addEventListener('input', applyUnifiedFilters);
 
+    // Vendor Checkboxes Listener
+    const vendorCheckboxes = document.querySelectorAll('.vendor-checkbox-input');
+    vendorCheckboxes.forEach(cb => {
+      cb.addEventListener('change', applyUnifiedFilters);
+    });
+
+    // Tag Pills Listener
+    const tagPills = document.querySelectorAll('#sidebarTagPills .tag-pill');
+    tagPills.forEach(pill => {
+      pill.addEventListener('click', function() {
+        this.classList.toggle('active');
+        applyUnifiedFilters();
+      });
+    });
+
     // Reset Filters Listener
     const resetBtn = document.getElementById('resetSidebarFiltersBtn');
     if (resetBtn) {
       resetBtn.addEventListener('click', function() {
-        pills.forEach((p, index) => {
+        catPills.forEach((p, index) => {
           if (index === 0) p.classList.add('active');
           else p.classList.remove('active');
         });
         stockCheckboxes.forEach(cb => cb.checked = true);
-        if (minInput) minInput.value = 0;
-        if (maxInput) maxInput.value = 1000;
+        vendorCheckboxes.forEach(cb => cb.checked = false);
+        tagPills.forEach(p => p.classList.remove('active'));
+        if (minInput) minInput.value = minInput.getAttribute('value') || 0;
+        if (maxInput) maxInput.value = maxInput.getAttribute('value') || 1000;
         applyUnifiedFilters();
       });
     }
@@ -385,12 +519,15 @@
   /* Sol Yan Ekran Filtre Paneli (Sticky Side Panel) */
   .collection-sidebar-panel {
     position: sticky;
-    top: 100px;
-    background: #151019;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(16px);
-    border-radius: 20px;
-    padding: 24px;
+    top: var(--sidebar-sticky-top, 100px);
+    width: 100%;
+    max-width: var(--sidebar-width, 280px);
+    background: var(--sidebar-bg, #151019);
+    border: 1px solid var(--sidebar-border, rgba(255, 255, 255, 0.12));
+    backdrop-filter: blur(var(--sidebar-blur, 16px));
+    -webkit-backdrop-filter: blur(var(--sidebar-blur, 16px));
+    border-radius: var(--sidebar-radius, 20px);
+    padding: var(--sidebar-padding, 24px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     z-index: 20;
   }
@@ -401,7 +538,7 @@
     justify-content: space-between;
     padding-bottom: 16px;
     margin-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--hdr-border-color, rgba(255, 255, 255, 0.08));
   }
 
   .sidebar-title-group {
@@ -411,24 +548,24 @@
   }
 
   .sidebar-sparkle {
-    color: #f7cad0;
-    font-size: 14px;
+    color: var(--hdr-icon-color, #f7cad0);
+    font-size: var(--hdr-title-size, 14px);
   }
 
   .sidebar-main-title {
-    font-size: 0.85rem;
+    font-size: var(--hdr-title-size, 0.85rem);
     font-weight: 800;
-    letter-spacing: 2px;
-    color: #ffffff;
+    letter-spacing: var(--hdr-title-spacing, 2px);
+    color: var(--hdr-title-color, #ffffff);
     margin: 0;
     text-transform: uppercase;
   }
 
   .sidebar-reset-btn {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: var(--hdr-reset-bg, transparent);
+    border: 1px solid var(--hdr-reset-border, rgba(255, 255, 255, 0.15));
     border-radius: 8px;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--hdr-reset-color, rgba(255, 255, 255, 0.6));
     font-size: 11px;
     font-weight: 700;
     padding: 4px 10px;
@@ -437,8 +574,8 @@
   }
 
   .sidebar-reset-btn:hover {
-    background: rgba(194, 91, 130, 0.2);
-    border-color: #f7cad0;
+    background: var(--hdr-reset-hover-bg, rgba(194, 91, 130, 0.2));
+    border-color: var(--hdr-reset-hover-border, #f7cad0);
     color: #ffffff;
   }
 
@@ -455,10 +592,10 @@
   }
 
   .sidebar-block-title {
-    font-size: 0.75rem;
+    font-size: var(--blk-title-size, 0.75rem);
     font-weight: 800;
-    letter-spacing: 1.5px;
-    color: #f7cad0;
+    letter-spacing: var(--blk-title-spacing, 1.5px);
+    color: var(--blk-title-color, #f7cad0);
     margin: 0;
     text-transform: uppercase;
   }
@@ -476,9 +613,9 @@
     width: 100%;
     padding: 9px 14px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.75);
+    background: var(--cat-item-bg, rgba(255, 255, 255, 0.03));
+    border: 1px solid var(--cat-item-border, rgba(255, 255, 255, 0.08));
+    color: var(--cat-item-color, rgba(255, 255, 255, 0.75));
     font-size: 13px;
     font-weight: 600;
     text-align: left;
@@ -488,9 +625,9 @@
 
   .sidebar-cat-item:hover,
   .sidebar-cat-item.active {
-    background: linear-gradient(135deg, rgba(194, 91, 130, 0.3) 0%, rgba(162, 67, 103, 0.3) 100%);
-    border-color: #f7cad0;
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--cat-active-bg-start, rgba(194, 91, 130, 0.3)) 0%, var(--cat-active-bg-end, rgba(162, 67, 103, 0.3)) 100%);
+    border-color: var(--cat-active-border, #f7cad0);
+    color: var(--cat-active-color, #ffffff);
     box-shadow: 0 4px 14px rgba(194, 91, 130, 0.2);
   }
 
@@ -498,17 +635,18 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: transparent;
+    background: var(--cat-dot-color, transparent);
     transition: background 0.25s ease;
   }
 
   .sidebar-cat-item.active .cat-dot {
-    background: #f7cad0;
-    box-shadow: 0 0 8px #f7cad0;
+    background: var(--cat-active-dot-color, #f7cad0);
+    box-shadow: 0 0 8px var(--cat-active-dot-color, #f7cad0);
   }
 
-  /* Stock Availability */
-  .sidebar-stock-options {
+  /* Stock Availability & Vendor Options */
+  .sidebar-stock-options,
+  .sidebar-vendor-options {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -522,19 +660,20 @@
     user-select: none;
     font-size: 13px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--stk-text-color, rgba(255, 255, 255, 0.85));
   }
 
-  .stock-checkbox-input {
+  .stock-checkbox-input,
+  .vendor-checkbox-input {
     display: none;
   }
 
   .custom-check-box {
     width: 18px;
     height: 18px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--stk-chk-radius, 6px);
+    background: var(--stk-chk-bg, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--stk-chk-border, rgba(255, 255, 255, 0.2));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -545,17 +684,19 @@
     opacity: 0;
     font-size: 11px;
     font-weight: 900;
-    color: #ffffff;
+    color: var(--stk-checkmark-color, #ffffff);
     transform: scale(0.5);
     transition: all 0.2s ease;
   }
 
-  .stock-checkbox-input:checked + .custom-check-box {
-    background: linear-gradient(135deg, #c25b82 0%, #a24367 100%);
-    border-color: #f7cad0;
+  .stock-checkbox-input:checked + .custom-check-box,
+  .vendor-checkbox-input:checked + .custom-check-box {
+    background: linear-gradient(135deg, var(--stk-chk-checked-start, #c25b82) 0%, var(--stk-chk-checked-end, #a24367) 100%);
+    border-color: var(--stk-chk-checked-border, #f7cad0);
   }
 
-  .stock-checkbox-input:checked + .custom-check-box .check-mark {
+  .stock-checkbox-input:checked + .custom-check-box .check-mark,
+  .vendor-checkbox-input:checked + .custom-check-box .check-mark {
     opacity: 1;
     transform: scale(1);
   }
@@ -567,13 +708,13 @@
   }
 
   .in-stock-dot {
-    background: #52c41a;
-    box-shadow: 0 0 8px rgba(82, 196, 26, 0.6);
+    background: var(--stk-in-dot, #52c41a);
+    box-shadow: 0 0 8px var(--stk-in-glow, rgba(82, 196, 26, 0.6));
   }
 
   .out-stock-dot {
-    background: #ff4d4f;
-    box-shadow: 0 0 8px rgba(255, 77, 79, 0.6);
+    background: var(--stk-out-dot, #ff4d4f);
+    box-shadow: 0 0 8px var(--stk-out-glow, rgba(255, 77, 79, 0.6));
   }
 
   /* Price Range Inputs */
@@ -593,14 +734,18 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
+    background: var(--prc-input-bg, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--prc-input-border, rgba(255, 255, 255, 0.12));
+    border-radius: var(--prc-input-radius, 8px);
     padding: 6px 10px;
   }
 
+  .price-input-box:focus-within {
+    border-color: var(--prc-input-focus, #f7cad0);
+  }
+
   .price-symbol {
-    color: #f7cad0;
+    color: var(--prc-symbol-color, #f7cad0);
     font-size: 12px;
     font-weight: 700;
   }
@@ -609,15 +754,41 @@
     width: 65px;
     background: transparent;
     border: none;
-    color: #ffffff;
+    color: var(--prc-input-text, #ffffff);
     font-size: 13px;
     font-weight: 600;
     outline: none;
   }
 
   .price-dash {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--prc-dash-color, rgba(255, 255, 255, 0.4));
     font-weight: 700;
+  }
+
+  /* Tag Pills */
+  .sidebar-tags-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag-pill {
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: var(--tag-pill-bg, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--tag-pill-border, rgba(255, 255, 255, 0.12));
+    color: var(--tag-pill-text, rgba(255, 255, 255, 0.75));
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tag-pill:hover,
+  .tag-pill.active {
+    background: var(--tag-active-bg, #c25b82);
+    border-color: transparent;
+    color: var(--tag-active-text, #ffffff);
   }
 
   /* Trust Card */
@@ -625,29 +796,65 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(194, 91, 130, 0.12);
-    border: 1px solid rgba(247, 202, 208, 0.25);
-    border-radius: 12px;
+    background: var(--trst-bg, rgba(194, 91, 130, 0.12));
+    border: 1px solid var(--trst-border, rgba(247, 202, 208, 0.25));
+    border-radius: var(--trst-radius, 12px);
     padding: 12px 14px;
     margin-top: 6px;
   }
 
   .trust-card-icon {
     font-size: 16px;
-    color: #f7cad0;
   }
 
   .trust-card-title {
     font-size: 12px;
     font-weight: 700;
-    color: #ffffff;
     margin: 0;
   }
 
   .trust-card-desc {
     font-size: 11px;
-    color: rgba(255, 255, 255, 0.65);
     margin: 2px 0 0 0;
+  }
+
+  /* Sidebar Promo Banner */
+  .sidebar-promo-card {
+    background: var(--bnr-bg, #1a121d);
+    border: 1px solid var(--bnr-border, rgba(194, 91, 130, 0.3));
+    border-radius: var(--bnr-radius, 16px);
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .promo-card-img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+  }
+
+  .promo-card-content {
+    padding: 12px;
+  }
+
+  .promo-card-title {
+    color: var(--bnr-title-color, #ffffff);
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+  }
+
+  .promo-card-desc {
+    color: var(--bnr-sub-color, rgba(255, 255, 255, 0.8));
+    font-size: 11px;
+    margin: 0 0 8px 0;
+  }
+
+  .promo-card-link {
+    color: #f7cad0;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
   }
 
   /* Product Grid Styling */
@@ -903,9 +1110,767 @@
       "step": 5,
       "unit": "px",
       "default": 60
+    },
+    {
+      "type": "header",
+      "content": "🛠 Sol Yan Filtre Paneli Genel Ayarları"
+    },
+    {
+      "type": "range",
+      "id": "sidebar_width",
+      "label": "Yan Panel Genişliği (px)",
+      "min": 220,
+      "max": 380,
+      "step": 10,
+      "unit": "px",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "sidebar_sticky_top",
+      "label": "Üst Yapışkan Mesafesi (Sticky Top px)",
+      "min": 50,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "sidebar_bg",
+      "label": "Yan Panel Arka Plan Rengi",
+      "default": "#151019"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_border",
+      "label": "Yan Panel Kenarlık Rengi",
+      "default": "#261a29"
+    },
+    {
+      "type": "range",
+      "id": "sidebar_radius",
+      "label": "Yan Panel Köşe Yuvarlama (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "sidebar_blur",
+      "label": "Cam Bulanıklık Efekti (Backdrop Blur px)",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "sidebar_padding",
+      "label": "Yan Panel İç Boşluk (Padding px)",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
     }
   ],
   "blocks": [
+    {
+      "type": "sidebar_header",
+      "name": "Yan Panel Başlık & Temizle",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Panel Başlığı",
+          "default": "FİLTRELER"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Başlık İkonu / Sembol",
+          "default": "✦"
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "İkon Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Başlık Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "title_font_size",
+          "label": "Başlık Yazı Boyutu (px)",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "default": 14
+        },
+        {
+          "type": "range",
+          "id": "title_letter_spacing",
+          "label": "Harf Aralığı (px)",
+          "min": 0,
+          "max": 6,
+          "step": 0.5,
+          "unit": "px",
+          "default": 2
+        },
+        {
+          "type": "text",
+          "id": "reset_text",
+          "label": "Temizle Buton Metni",
+          "default": "Temizle"
+        },
+        {
+          "type": "color",
+          "id": "reset_color",
+          "label": "Temizle Metin Rengi",
+          "default": "rgba(255, 255, 255, 0.6)"
+        },
+        {
+          "type": "color",
+          "id": "reset_bg",
+          "label": "Temizle Arka Plan",
+          "default": "transparent"
+        },
+        {
+          "type": "color",
+          "id": "reset_border",
+          "label": "Temizle Kenarlık",
+          "default": "rgba(255, 255, 255, 0.15)"
+        },
+        {
+          "type": "color",
+          "id": "reset_hover_bg",
+          "label": "Temizle Hover Arka Plan",
+          "default": "rgba(194, 91, 130, 0.2)"
+        },
+        {
+          "type": "color",
+          "id": "reset_hover_border",
+          "label": "Temizle Hover Kenarlık",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Alt Ayraç Çizgi Rengi",
+          "default": "rgba(255, 255, 255, 0.08)"
+        }
+      ]
+    },
+    {
+      "type": "category_filter",
+      "name": "Yan Panel Kategori",
+      "settings": [
+        {
+          "type": "text",
+          "id": "block_title",
+          "label": "Kategori Blok Başlığı",
+          "default": "KATEGORİLER"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Kategori Adı",
+          "default": "Serumlar"
+        },
+        {
+          "type": "select",
+          "id": "category",
+          "label": "Kategori Kodu (Handle)",
+          "options": [
+            { "value": "all", "label": "Tüm Ürünler" },
+            { "value": "serum", "label": "Serumlar" },
+            { "value": "moisturizer", "label": "Nemlendiriciler" },
+            { "value": "mask", "label": "Yüz Maskeleri" },
+            { "value": "eye-care", "label": "Göz Bakımı" }
+          ],
+          "default": "all"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_active",
+          "label": "Varsayılan Olarak Seçili",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "🎨 Tipografi & Renk Ayarları"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Blok Başlık Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "range",
+          "id": "title_font_size",
+          "label": "Başlık Yazı Boyutu (px)",
+          "min": 10,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 12
+        },
+        {
+          "type": "range",
+          "id": "title_letter_spacing",
+          "label": "Harf Aralığı (px)",
+          "min": 0,
+          "max": 5,
+          "step": 0.5,
+          "unit": "px",
+          "default": 1.5
+        },
+        {
+          "type": "color",
+          "id": "item_bg",
+          "label": "Öğe Arka Plan Rengi",
+          "default": "rgba(255, 255, 255, 0.03)"
+        },
+        {
+          "type": "color",
+          "id": "item_border",
+          "label": "Öğe Kenarlık Rengi",
+          "default": "rgba(255, 255, 255, 0.08)"
+        },
+        {
+          "type": "color",
+          "id": "item_text_color",
+          "label": "Öğe Metin Rengi",
+          "default": "rgba(255, 255, 255, 0.75)"
+        },
+        {
+          "type": "color",
+          "id": "active_bg_start",
+          "label": "Aktif Gradyan Başlangıç",
+          "default": "#c25b82"
+        },
+        {
+          "type": "color",
+          "id": "active_bg_end",
+          "label": "Aktif Gradyan Bitiş",
+          "default": "#a24367"
+        },
+        {
+          "type": "color",
+          "id": "active_border",
+          "label": "Aktif Kenarlık Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "color",
+          "id": "active_text_color",
+          "label": "Aktif Metin Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "dot_color",
+          "label": "Nokta Rengi",
+          "default": "transparent"
+        },
+        {
+          "type": "color",
+          "id": "active_dot_color",
+          "label": "Aktif Nokta Rengi",
+          "default": "#f7cad0"
+        }
+      ]
+    },
+    {
+      "type": "availability_filter",
+      "name": "Yan Panel Stok Durumu",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "📝 Metinler & Başlık"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Blok Başlığı",
+          "default": "STOK DURUMU"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Başlık Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "range",
+          "id": "title_font_size",
+          "label": "Başlık Yazı Boyutu (px)",
+          "min": 10,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 12
+        },
+        {
+          "type": "text",
+          "id": "in_stock_label",
+          "label": "Stokta Var Metni",
+          "default": "Stokta Var"
+        },
+        {
+          "type": "text",
+          "id": "out_of_stock_label",
+          "label": "Tükendi Metni",
+          "default": "Tükendi / Stokta Yok"
+        },
+        {
+          "type": "header",
+          "content": "🎨 Durum Noktası (Dot) Renkleri"
+        },
+        {
+          "type": "color",
+          "id": "in_stock_dot_color",
+          "label": "Stokta Var Nokta Rengi",
+          "default": "#52c41a"
+        },
+        {
+          "type": "color",
+          "id": "in_stock_dot_glow",
+          "label": "Stokta Var Işıma Rengi",
+          "default": "rgba(82, 196, 26, 0.6)"
+        },
+        {
+          "type": "color",
+          "id": "out_stock_dot_color",
+          "label": "Tükendi Nokta Rengi",
+          "default": "#ff4d4f"
+        },
+        {
+          "type": "color",
+          "id": "out_stock_dot_glow",
+          "label": "Tükendi Işıma Rengi",
+          "default": "rgba(255, 77, 79, 0.6)"
+        },
+        {
+          "type": "header",
+          "content": "☑️ Onay Kutusu (Checkbox) Stili"
+        },
+        {
+          "type": "color",
+          "id": "checkbox_bg",
+          "label": "Kutu Arka Plan Rengi",
+          "default": "rgba(255, 255, 255, 0.05)"
+        },
+        {
+          "type": "color",
+          "id": "checkbox_border",
+          "label": "Kutu Kenarlık Rengi",
+          "default": "rgba(255, 255, 255, 0.2)"
+        },
+        {
+          "type": "color",
+          "id": "checkbox_checked_bg_start",
+          "label": "Seçili Gradyan Başlangıç",
+          "default": "#c25b82"
+        },
+        {
+          "type": "color",
+          "id": "checkbox_checked_bg_end",
+          "label": "Seçili Gradyan Bitiş",
+          "default": "#a24367"
+        },
+        {
+          "type": "color",
+          "id": "checkbox_checked_border",
+          "label": "Seçili Kenarlık Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "color",
+          "id": "checkmark_color",
+          "label": "Onay İkonu Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "label_text_color",
+          "label": "Seçenek Metin Rengi",
+          "default": "rgba(255, 255, 255, 0.85)"
+        },
+        {
+          "type": "range",
+          "id": "checkbox_radius",
+          "label": "Kutu Köşe Yuvarlama (px)",
+          "min": 0,
+          "max": 12,
+          "step": 1,
+          "unit": "px",
+          "default": 6
+        }
+      ]
+    },
+    {
+      "type": "price_filter",
+      "name": "Yan Panel Fiyat Aralığı",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "📝 Metinler & Başlık"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Blok Başlığı",
+          "default": "FİYAT ARALIĞI"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Başlık Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "range",
+          "id": "title_font_size",
+          "label": "Başlık Yazı Boyutu (px)",
+          "min": 10,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 12
+        },
+        {
+          "type": "text",
+          "id": "currency_symbol",
+          "label": "Para Birimi Sembolü",
+          "default": "₺"
+        },
+        {
+          "type": "color",
+          "id": "symbol_color",
+          "label": "Sembol Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "text",
+          "id": "min_placeholder",
+          "label": "Min Yer Tutucu Metin",
+          "default": "Min"
+        },
+        {
+          "type": "text",
+          "id": "max_placeholder",
+          "label": "Max Yer Tutucu Metin",
+          "default": "Max"
+        },
+        {
+          "type": "range",
+          "id": "min_price_default",
+          "label": "Varsayılan Min Fiyat",
+          "min": 0,
+          "max": 1000,
+          "step": 10,
+          "unit": "₺",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "max_price_limit",
+          "label": "Varsayılan Maks Fiyat",
+          "min": 200,
+          "max": 5000,
+          "step": 100,
+          "unit": "₺",
+          "default": 1000
+        },
+        {
+          "type": "header",
+          "content": "🎨 Giriş Kutuları (Input) Stili"
+        },
+        {
+          "type": "color",
+          "id": "input_bg",
+          "label": "Giriş Kutusu Arka Plan",
+          "default": "rgba(255, 255, 255, 0.05)"
+        },
+        {
+          "type": "color",
+          "id": "input_border",
+          "label": "Giriş Kutusu Kenarlık",
+          "default": "rgba(255, 255, 255, 0.12)"
+        },
+        {
+          "type": "color",
+          "id": "input_focus_border",
+          "label": "Odaklanma Kenarlık Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "color",
+          "id": "input_text_color",
+          "label": "Yazı Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "input_radius",
+          "label": "Giriş Kutusu Köşe Yuvarlama (px)",
+          "min": 0,
+          "max": 16,
+          "step": 1,
+          "unit": "px",
+          "default": 8
+        },
+        {
+          "type": "color",
+          "id": "dash_color",
+          "label": "Ayraç Çizgi Rengi (-)",
+          "default": "rgba(255, 255, 255, 0.4)"
+        }
+      ]
+    },
+    {
+      "type": "vendor_filter",
+      "name": "Yan Panel Marka Filtresi",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Blok Başlığı",
+          "default": "MARKALAR"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Başlık Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "text",
+          "id": "vendors",
+          "label": "Markalar (Virgülle Ayırın)",
+          "default": "Lumière, Haute Cosmetics, Rose Infusion, Bio-Active"
+        },
+        {
+          "type": "color",
+          "id": "item_text_color",
+          "label": "Marka Yazı Rengi",
+          "default": "rgba(255, 255, 255, 0.85)"
+        },
+        {
+          "type": "color",
+          "id": "checkbox_bg",
+          "label": "Kutu Arka Plan",
+          "default": "rgba(255, 255, 255, 0.05)"
+        },
+        {
+          "type": "color",
+          "id": "checkbox_border",
+          "label": "Kutu Kenarlık",
+          "default": "rgba(255, 255, 255, 0.2)"
+        },
+        {
+          "type": "color",
+          "id": "checkbox_checked_bg",
+          "label": "Seçili Arka Plan",
+          "default": "#c25b82"
+        }
+      ]
+    },
+    {
+      "type": "tag_filter",
+      "name": "Yan Panel Etiket Filtresi",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Blok Başlığı",
+          "default": "ÖNE ÇIKAN ETİKETLER"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Başlık Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "text",
+          "id": "tags",
+          "label": "Etiketler (Virgülle Ayırın)",
+          "default": "Organik, Anti-Aging, Leke Karşıtı, Vegan, Hyalüronik"
+        },
+        {
+          "type": "color",
+          "id": "pill_bg",
+          "label": "Rozet Arka Plan",
+          "default": "rgba(255, 255, 255, 0.05)"
+        },
+        {
+          "type": "color",
+          "id": "pill_border",
+          "label": "Rozet Kenarlık",
+          "default": "rgba(255, 255, 255, 0.12)"
+        },
+        {
+          "type": "color",
+          "id": "pill_text",
+          "label": "Rozet Yazı Rengi",
+          "default": "rgba(255, 255, 255, 0.75)"
+        },
+        {
+          "type": "color",
+          "id": "active_pill_bg",
+          "label": "Aktif Rozet Arka Plan",
+          "default": "#c25b82"
+        },
+        {
+          "type": "color",
+          "id": "active_pill_text",
+          "label": "Aktif Rozet Yazı Rengi",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "sidebar_trust",
+      "name": "Yan Panel Lüks Bilgi",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "İkon",
+          "default": "✦"
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "İkon Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Başlık Metni",
+          "default": "%100 Orijinal Ürün"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Başlık Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Alt Başlık",
+          "default": "Resmi Distribütör Garantili"
+        },
+        {
+          "type": "color",
+          "id": "subtitle_color",
+          "label": "Alt Başlık Rengi",
+          "default": "rgba(255, 255, 255, 0.65)"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Kart Arka Plan Rengi",
+          "default": "rgba(194, 91, 130, 0.12)"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Kart Kenarlık Rengi",
+          "default": "rgba(247, 202, 208, 0.25)"
+        },
+        {
+          "type": "range",
+          "id": "border_radius",
+          "label": "Köşe Yuvarlama (px)",
+          "min": 0,
+          "max": 30,
+          "step": 2,
+          "unit": "px",
+          "default": 12
+        }
+      ]
+    },
+    {
+      "type": "sidebar_banner",
+      "name": "Yan Panel Afiş / Promo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Afiş Görseli"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Afiş Başlığı",
+          "default": "Özel Fırsat"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Başlık Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Alt Açıklama",
+          "default": "Tüm serumlarda sepette %15 indirim"
+        },
+        {
+          "type": "color",
+          "id": "subtitle_color",
+          "label": "Açıklama Rengi",
+          "default": "rgba(255, 255, 255, 0.8)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Afiş Linki"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Arka Plan Rengi",
+          "default": "#1a121d"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Kenarlık Rengi",
+          "default": "rgba(194, 91, 130, 0.3)"
+        },
+        {
+          "type": "range",
+          "id": "border_radius",
+          "label": "Köşe Yuvarlama (px)",
+          "min": 0,
+          "max": 30,
+          "step": 2,
+          "unit": "px",
+          "default": 16
+        }
+      ]
+    },
     {
       "type": "product_card",
       "name": "Ürün Kartı",
@@ -1087,123 +2052,23 @@
           "default": 16
         }
       ]
-    },
-    {
-      "type": "category_filter",
-      "name": "Yan Panel Kategori",
-      "settings": [
-        {
-          "type": "text",
-          "id": "label",
-          "label": "Kategori Adı",
-          "default": "Serumlar"
-        },
-        {
-          "type": "select",
-          "id": "category",
-          "label": "Kategori Kodu (Handle)",
-          "options": [
-            { "value": "all", "label": "Tüm Ürünler" },
-            { "value": "serum", "label": "Serumlar" },
-            { "value": "moisturizer", "label": "Nemlendiriciler" },
-            { "value": "mask", "label": "Yüz Maskeleri" },
-            { "value": "eye-care", "label": "Göz Bakımı" }
-          ],
-          "default": "all"
-        },
-        {
-          "type": "checkbox",
-          "id": "is_active",
-          "label": "Varsayılan Olarak Seçili",
-          "default": false
-        }
-      ]
-    },
-    {
-      "type": "availability_filter",
-      "name": "Yan Panel Stok Durumu",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Blok Başlığı",
-          "default": "STOK DURUMU"
-        },
-        {
-          "type": "text",
-          "id": "in_stock_label",
-          "label": "Stokta Var Metni",
-          "default": "Stokta Var"
-        },
-        {
-          "type": "text",
-          "id": "out_of_stock_label",
-          "label": "Tükendi Metni",
-          "default": "Tükendi / Stokta Yok"
-        }
-      ]
-    },
-    {
-      "type": "price_filter",
-      "name": "Yan Panel Fiyat",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Blok Başlığı",
-          "default": "FİYAT ARALIĞI"
-        },
-        {
-          "type": "range",
-          "id": "max_price_limit",
-          "label": "Varsayılan Maks Fiyat",
-          "min": 200,
-          "max": 5000,
-          "step": 100,
-          "unit": "₺",
-          "default": 1000
-        }
-      ]
-    },
-    {
-      "type": "sidebar_trust",
-      "name": "Yan Panel Lüks Bilgi",
-      "settings": [
-        {
-          "type": "text",
-          "id": "icon",
-          "label": "İkon",
-          "default": "✦"
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Başlık Metni",
-          "default": "%100 Orijinal Ürün"
-        },
-        {
-          "type": "text",
-          "id": "subtitle",
-          "label": "Alt Başlık",
-          "default": "Resmi Distribütör Garantili"
-        }
-      ]
     }
   ],
   "presets": [
     {
       "name": "Koleksiyon Ürün Izgarası",
       "blocks": [
+        { "type": "sidebar_header", "settings": { "title": "FİLTRELER" } },
         { "type": "category_filter", "settings": { "label": "Tüm Ürünler", "category": "all", "is_active": true } },
         { "type": "category_filter", "settings": { "label": "Serumlar", "category": "serum" } },
         { "type": "category_filter", "settings": { "label": "Nemlendiriciler", "category": "moisturizer" } },
         { "type": "category_filter", "settings": { "label": "Yüz Maskeleri", "category": "mask" } },
         { "type": "category_filter", "settings": { "label": "Göz Bakımı", "category": "eye-care" } },
-        { "type": "availability_filter" },
-        { "type": "price_filter" },
-        { "type": "sidebar_trust" }
+        { "type": "availability_filter", "settings": { "title": "STOK DURUMU" } },
+        { "type": "price_filter", "settings": { "title": "FİYAT ARALIĞI" } },
+        { "type": "vendor_filter", "settings": { "title": "MARKALAR" } },
+        { "type": "tag_filter", "settings": { "title": "ÖNE ÇIKAN ETİKETLER" } },
+        { "type": "sidebar_trust", "settings": { "title": "%100 Orijinal Ürün" } }
       ]
     }
   ]
