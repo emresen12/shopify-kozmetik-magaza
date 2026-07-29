@@ -64,6 +64,29 @@
             "category": "eye-care"
           }
         },
+        "avail_1": {
+          "type": "availability_filter",
+          "settings": {
+            "title": "STOK DURUMU",
+            "in_stock_label": "Stokta Var",
+            "out_of_stock_label": "Tükendi / Stokta Yok"
+          }
+        },
+        "price_1": {
+          "type": "price_filter",
+          "settings": {
+            "title": "FİYAT ARALIĞI",
+            "max_price_limit": 1000
+          }
+        },
+        "trust_1": {
+          "type": "sidebar_trust",
+          "settings": {
+            "icon": "✦",
+            "title": "%100 Orijinal Ürün",
+            "subtitle": "Resmi Distribütör Garantili"
+          }
+        },
         "switcher_1": {
           "type": "grid_switcher",
           "settings": {
@@ -83,6 +106,9 @@
         "filter_3",
         "filter_4",
         "filter_5",
+        "avail_1",
+        "price_1",
+        "trust_1",
         "switcher_1",
         "sort_1"
       ],

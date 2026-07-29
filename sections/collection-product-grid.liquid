@@ -1,5 +1,6 @@
 {% comment %}
-  Modular Collection Product Grid Section (Realtime Sorting & Category Filtering Ready)
+  Modular Collection Product Grid Section with Sticky Left Side Filter Panel
+  Includes Theme Blocks for Product Cards, Category Filters, Availability Filters, Price Range, and Trust Cards.
 {% endcomment %}
 
 <div class="collection-product-grid-section full-width" style="
@@ -11,120 +12,231 @@
   --padding-bottom: {{ section.settings.padding_bottom }}px;
 ">
   <div class="grid-section-container">
-    {% assign card_blocks = section.blocks | where: "type", "product_card" %}
+    
+    <div class="collection-main-side-layout">
+      
+      <!-- Sol Yan Ekran Filtre Paneli (Sticky Side Filter Panel) -->
+      <aside class="collection-sidebar-panel" id="collectionSidebarPanel">
+        <div class="sidebar-header">
+          <div class="sidebar-title-group">
+            <span class="sidebar-sparkle">✦</span>
+            <h3 class="sidebar-main-title">FİLTRELER</h3>
+          </div>
+          <button type="button" class="sidebar-reset-btn" id="resetSidebarFiltersBtn">
+            <span>Temizle</span>
+          </button>
+        </div>
 
-    <div class="collection-products-grid">
-      {% if card_blocks.size > 0 %}
-        {% for block in card_blocks %}
-          {% assign prod = block.settings.product %}
-          {% if prod != blank %}
-            {% assign raw_price = prod.price | divided_by: 100.0 %}
-            {% assign card_title = prod.title %}
+        <div class="sidebar-blocks-wrapper">
+          
+          <!-- Category Filter Block -->
+          {% assign category_blocks = section.blocks | where: "type", "category_filter" %}
+          {% if category_blocks.size > 0 %}
+            <div class="sidebar-filter-block">
+              <h4 class="sidebar-block-title">KATEGORİLER</h4>
+              <div class="sidebar-category-list" id="categoryFilterPills">
+                {% for block in category_blocks %}
+                  <button type="button" class="filter-pill sidebar-cat-item {% if block.settings.is_active or forloop.first %}active{% endif %}" data-category="{{ block.settings.category | default: 'all' }}" {{ block.shopify_attributes }}>
+                    <span class="cat-label">{{ block.settings.label }}</span>
+                    <span class="cat-dot"></span>
+                  </button>
+                {% endfor %}
+              </div>
+            </div>
           {% else %}
-            {% assign price_str = block.settings.price | default: '0' %}
-            {% assign raw_price = price_str | remove: '₺' | remove: '.' | replace: ',', '.' | plus: 0 %}
-            {% assign card_title = block.settings.title %}
+            <div class="sidebar-filter-block">
+              <h4 class="sidebar-block-title">KATEGORİLER</h4>
+              <div class="sidebar-category-list" id="categoryFilterPills">
+                <button type="button" class="filter-pill sidebar-cat-item active" data-category="all">
+                  <span class="cat-label">Tüm Ürünler</span>
+                  <span class="cat-dot"></span>
+                </button>
+                <button type="button" class="filter-pill sidebar-cat-item" data-category="serum">
+                  <span class="cat-label">Serumlar</span>
+                  <span class="cat-dot"></span>
+                </button>
+                <button type="button" class="filter-pill sidebar-cat-item" data-category="moisturizer">
+                  <span class="cat-label">Nemlendiriciler</span>
+                  <span class="cat-dot"></span>
+                </button>
+                <button type="button" class="filter-pill sidebar-cat-item" data-category="mask">
+                  <span class="cat-label">Yüz Maskeleri</span>
+                  <span class="cat-dot"></span>
+                </button>
+                <button type="button" class="filter-pill sidebar-cat-item" data-category="eye-care">
+                  <span class="cat-label">Göz Bakımı</span>
+                  <span class="cat-dot"></span>
+                </button>
+              </div>
+            </div>
           {% endif %}
 
-          <div class="haute-product-card"
-            data-category="{{ block.settings.category | default: 'all' }}"
-            data-price="{{ raw_price }}"
-            data-index="{{ forloop.index }}"
-            data-title="{{ card_title | escape }}"
-            style="
-              --item-card-bg: {{ block.settings.card_bg_color }};
-              --item-card-border: {{ block.settings.card_border_color }};
-              --item-card-radius: {{ block.settings.card_border_radius }}px;
-              --item-card-blur: {{ block.settings.card_blur }}px;
-              --item-card-padding: {{ block.settings.card_padding }}px;
-              --card-badge-start: {{ block.settings.badge_bg_start }};
-              --card-badge-end: {{ block.settings.badge_bg_end }};
-              --card-badge-text: {{ block.settings.badge_text_color }};
-              --card-title-color: {{ block.settings.title_color }};
-              --card-desc-color: {{ block.settings.desc_color }};
-              --card-price-color: {{ block.settings.price_color }};
-              --card-compare-color: {{ block.settings.compare_price_color }};
-              --card-qadd-bg: {{ block.settings.quick_add_bg }};
-              --card-qadd-text: {{ block.settings.quick_add_text_color }};
-              --card-qadd-border: {{ block.settings.quick_add_border }};
-            " {{ block.shopify_attributes }}>
-            <div class="card-image-wrapper">
-              <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
-                {% if block.settings.image != blank %}
-                  {{ block.settings.image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
-                {% elsif prod != blank and prod.featured_image %}
-                  {{ prod.featured_image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
-                {% else %}
-                  {% assign mod2 = forloop.index | modulo: 2 %}
-                  {% if mod2 == 0 %}
-                    <img src="{{ 'luxury-cream.jpg' | asset_url }}" class="card-img" alt="Demo Ürün" width="400" height="400" loading="lazy">
-                  {% else %}
-                    <img src="{{ 'luxury-serum.jpg' | asset_url }}" class="card-img" alt="Demo Ürün" width="400" height="400" loading="lazy">
-                  {% endif %}
-                {% endif %}
-              </a>
+          <!-- Stock Availability Filter Block -->
+          {% assign avail_blocks = section.blocks | where: "type", "availability_filter" %}
+          {% if avail_blocks.size > 0 %}
+            {% for block in avail_blocks %}
+              <div class="sidebar-filter-block" {{ block.shopify_attributes }}>
+                <h4 class="sidebar-block-title">{{ block.settings.title | default: "STOK DURUMU" }}</h4>
+                <div class="sidebar-stock-options">
+                  <label class="stock-option-label">
+                    <input type="checkbox" class="stock-checkbox-input" value="in_stock" checked>
+                    <span class="custom-check-box"><span class="check-mark">✓</span></span>
+                    <span class="stock-status-dot in-stock-dot"></span>
+                    <span class="stock-text">{{ block.settings.in_stock_label | default: "Stokta Var" }}</span>
+                  </label>
 
-              {% if block.settings.badge_text != blank %}
-                <span class="card-badge">{{ block.settings.badge_text }}</span>
+                  <label class="stock-option-label">
+                    <input type="checkbox" class="stock-checkbox-input" value="out_of_stock" checked>
+                    <span class="custom-check-box"><span class="check-mark">✓</span></span>
+                    <span class="stock-status-dot out-stock-dot"></span>
+                    <span class="stock-text">{{ block.settings.out_of_stock_label | default: "Tükendi / Stokta Yok" }}</span>
+                  </label>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="sidebar-filter-block">
+              <h4 class="sidebar-block-title">STOK DURUMU</h4>
+              <div class="sidebar-stock-options">
+                <label class="stock-option-label">
+                  <input type="checkbox" class="stock-checkbox-input" value="in_stock" checked>
+                  <span class="custom-check-box"><span class="check-mark">✓</span></span>
+                  <span class="stock-status-dot in-stock-dot"></span>
+                  <span class="stock-text">Stokta Var</span>
+                </label>
+
+                <label class="stock-option-label">
+                  <input type="checkbox" class="stock-checkbox-input" value="out_of_stock" checked>
+                  <span class="custom-check-box"><span class="check-mark">✓</span></span>
+                  <span class="stock-status-dot out-stock-dot"></span>
+                  <span class="stock-text">Tükendi / Stokta Yok</span>
+                </label>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- Price Range Filter Block -->
+          {% assign price_blocks = section.blocks | where: "type", "price_filter" %}
+          {% if price_blocks.size > 0 %}
+            {% for block in price_blocks %}
+              <div class="sidebar-filter-block" {{ block.shopify_attributes }}>
+                <h4 class="sidebar-block-title">{{ block.settings.title | default: "FİYAT ARALIĞI" }}</h4>
+                <div class="sidebar-price-controls">
+                  <div class="price-inputs-row">
+                    <div class="price-input-box">
+                      <span class="price-symbol">₺</span>
+                      <input type="number" class="price-num-input" id="minPriceInput" placeholder="Min" value="0" min="0">
+                    </div>
+                    <span class="price-dash">-</span>
+                    <div class="price-input-box">
+                      <span class="price-symbol">₺</span>
+                      <input type="number" class="price-num-input" id="maxPriceInput" placeholder="Max" value="{{ block.settings.max_price_limit | default: 1000 }}" min="0">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="sidebar-filter-block">
+              <h4 class="sidebar-block-title">FİYAT ARALIĞI</h4>
+              <div class="sidebar-price-controls">
+                <div class="price-inputs-row">
+                  <div class="price-input-box">
+                    <span class="price-symbol">₺</span>
+                    <input type="number" class="price-num-input" id="minPriceInput" placeholder="Min" value="0" min="0">
+                  </div>
+                  <span class="price-dash">-</span>
+                  <div class="price-input-box">
+                    <span class="price-symbol">₺</span>
+                    <input type="number" class="price-num-input" id="maxPriceInput" placeholder="Max" value="1000" min="0">
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- Luxury Trust Card -->
+          {% assign trust_blocks = section.blocks | where: "type", "sidebar_trust" %}
+          {% for block in trust_blocks %}
+            <div class="sidebar-trust-card" {{ block.shopify_attributes }}>
+              <span class="trust-card-icon">{{ block.settings.icon | default: "✦" }}</span>
+              <div class="trust-card-info">
+                <h5 class="trust-card-title">{{ block.settings.title | default: "%100 Orijinal Ürün" }}</h5>
+                <p class="trust-card-desc">{{ block.settings.subtitle | default: "Resmi Distribütör Garantili" }}</p>
+              </div>
+            </div>
+          {% endfor %}
+
+        </div>
+      </aside>
+
+      <!-- Sağ Ekran Ürün Izgarası (Right Product Grid Area) -->
+      <main class="collection-products-area">
+        {% assign card_blocks = section.blocks | where: "type", "product_card" %}
+
+        <div class="collection-products-grid">
+          {% if card_blocks.size > 0 %}
+            {% for block in card_blocks %}
+              {% assign prod = block.settings.product %}
+              {% if prod != blank %}
+                {% assign raw_price = prod.price | divided_by: 100.0 %}
+                {% assign card_title = prod.title %}
+              {% else %}
+                {% assign price_str = block.settings.price | default: '0' %}
+                {% assign raw_price = price_str | remove: '₺' | remove: '.' | replace: ',', '.' | plus: 0 %}
+                {% assign card_title = block.settings.title %}
               {% endif %}
 
-              <button type="button" class="card-wishlist-btn" aria-label="Favorilere Ekle">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-              </button>
-            </div>
+              {% assign is_in_stock = true %}
+              {% if prod != blank %}
+                {% assign is_in_stock = prod.available %}
+              {% elsif block.settings.is_in_stock == false or forloop.index == 5 or forloop.index == 9 %}
+                {% assign is_in_stock = false %}
+              {% endif %}
 
-            <div class="card-content-wrapper">
-              <div class="card-rating-stars">★★★★★ <span class="rating-val">5.0</span></div>
-
-              <h3 class="card-title">
-                <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
-                  {% if prod != blank %}{{ prod.title }}{% else %}{{ block.settings.title }}{% endif %}
-                </a>
-              </h3>
-
-              <p class="card-desc">
-                {% if prod != blank and prod.description != blank %}{{ prod.description | strip_html | truncate: 75 }}{% else %}{{ block.settings.description }}{% endif %}
-              </p>
-
-              <div class="card-price-row">
-                <span class="price-main">
-                  {% if prod != blank %}{{ prod.price | money }}{% else %}{{ block.settings.price }}{% endif %}
-                </span>
-                <span class="price-compare">
-                  {% if prod != blank and prod.compare_at_price %}{{ prod.compare_at_price | money }}{% else %}{{ block.settings.compare_price }}{% endif %}
-                </span>
-              </div>
-
-              <button type="button" class="card-quick-add-btn demo-add-btn">
-                <span>{{ block.settings.quick_add_text }}</span>
-              </button>
-            </div>
-          </div>
-        {% endfor %}
-      {% else %}
-        {% paginate collection.products by section.settings.products_per_page %}
-          {% if collection.products.size > 0 %}
-            {% for product in collection.products %}
-              {% assign raw_price = product.price | divided_by: 100.0 %}
               <div class="haute-product-card"
-                data-category="all"
+                data-category="{{ block.settings.category | default: 'all' }}"
                 data-price="{{ raw_price }}"
                 data-index="{{ forloop.index }}"
-                data-title="{{ product.title | escape }}"
-                {{ section.shopify_attributes }}>
+                data-title="{{ card_title | escape }}"
+                data-stock="{% if is_in_stock %}in_stock{% else %}out_of_stock{% endif %}"
+                style="
+                  --item-card-bg: {{ block.settings.card_bg_color }};
+                  --item-card-border: {{ block.settings.card_border_color }};
+                  --item-card-radius: {{ block.settings.card_border_radius }}px;
+                  --item-card-blur: {{ block.settings.card_blur }}px;
+                  --item-card-padding: {{ block.settings.card_padding }}px;
+                  --card-badge-start: {{ block.settings.badge_bg_start }};
+                  --card-badge-end: {{ block.settings.badge_bg_end }};
+                  --card-badge-text: {{ block.settings.badge_text_color }};
+                  --card-title-color: {{ block.settings.title_color }};
+                  --card-desc-color: {{ block.settings.desc_color }};
+                  --card-price-color: {{ block.settings.price_color }};
+                  --card-compare-color: {{ block.settings.compare_price_color }};
+                  --card-qadd-bg: {{ block.settings.quick_add_bg }};
+                  --card-qadd-text: {{ block.settings.quick_add_text_color }};
+                  --card-qadd-border: {{ block.settings.quick_add_border }};
+                " {{ block.shopify_attributes }}>
                 <div class="card-image-wrapper">
-                  <a href="{{ product.url }}">
-                    {% if product.featured_image %}
-                      {{ product.featured_image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
+                  <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
+                    {% if block.settings.image != blank %}
+                      {{ block.settings.image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
+                    {% elsif prod != blank and prod.featured_image %}
+                      {{ prod.featured_image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
                     {% else %}
-                      <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ product.title }}" class="card-img" width="400" height="400" loading="lazy">
+                      {% assign mod2 = forloop.index | modulo: 2 %}
+                      {% if mod2 == 0 %}
+                        <img src="{{ 'luxury-cream.jpg' | asset_url }}" class="card-img" alt="Demo Ürün" width="400" height="400" loading="lazy">
+                      {% else %}
+                        <img src="{{ 'luxury-serum.jpg' | asset_url }}" class="card-img" alt="Demo Ürün" width="400" height="400" loading="lazy">
+                      {% endif %}
                     {% endif %}
                   </a>
 
-                  {% if product.compare_at_price > product.price %}
-                    <span class="card-badge">%25 İNDİRİM</span>
-                  {% else %}
-                    <span class="card-badge">✦ SEÇKİN</span>
+                  {% if is_in_stock == false %}
+                    <span class="card-badge badge-out-stock">TÜKENDİ</span>
+                  {% elsif block.settings.badge_text != blank %}
+                    <span class="card-badge">{{ block.settings.badge_text }}</span>
                   {% endif %}
 
                   <button type="button" class="card-wishlist-btn" aria-label="Favorilere Ekle">
@@ -136,89 +248,459 @@
                   <div class="card-rating-stars">★★★★★ <span class="rating-val">5.0</span></div>
 
                   <h3 class="card-title">
-                    <a href="{{ product.url }}">{{ product.title }}</a>
+                    <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
+                      {% if prod != blank %}{{ prod.title }}{% else %}{{ block.settings.title }}{% endif %}
+                    </a>
                   </h3>
 
                   <p class="card-desc">
-                    {% if product.description != blank %}{{ product.description | strip_html | truncate: 75 }}{% else %}Lüks ve etkili cilt bakımı formulasyonu.{% endif %}
+                    {% if prod != blank and prod.description != blank %}{{ prod.description | strip_html | truncate: 75 }}{% else %}{{ block.settings.description }}{% endif %}
                   </p>
 
                   <div class="card-price-row">
-                    <span class="price-main">{{ product.price | money }}</span>
-                    {% if product.compare_at_price > product.price %}
-                      <span class="price-compare">{{ product.compare_at_price | money }}</span>
-                    {% endif %}
+                    <span class="price-main">
+                      {% if prod != blank %}{{ prod.price | money }}{% else %}{{ block.settings.price }}{% endif %}
+                    </span>
+                    <span class="price-compare">
+                      {% if prod != blank and prod.compare_at_price %}{{ prod.compare_at_price | money }}{% else %}{{ block.settings.compare_price }}{% endif %}
+                    </span>
                   </div>
 
-                  <button type="button" class="card-quick-add-btn demo-add-btn">
-                    <span>+ Hızlı Sepete Ekle</span>
+                  <button type="button" class="card-quick-add-btn demo-add-btn {% if is_in_stock == false %}disabled{% endif %}" {% if is_in_stock == false %}disabled{% endif %}>
+                    <span>{% if is_in_stock %}{{ block.settings.quick_add_text }}{% else %}Tükendi{% endif %}</span>
                   </button>
                 </div>
               </div>
             {% endfor %}
+          {% else %}
+            <div class="grid-empty-state">
+              <p>Bu koleksiyonda henüz ürün bulunmuyor.</p>
+            </div>
           {% endif %}
-        {% endpaginate %}
-      {% endif %}
+        </div>
+      </main>
+
     </div>
+
   </div>
 </div>
 
-{% stylesheet %}
-  .collection-product-grid-section {
-    position: relative;
-    width: 100%;
-    background: #0b080c;
-    padding-top: var(--padding-top, 40px);
-    padding-bottom: var(--padding-bottom, 80px);
-  }
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function() {
+    function applyUnifiedFilters() {
+      const grid = document.querySelector('.collection-products-grid');
+      if (!grid) return;
 
+      const cards = Array.from(grid.querySelectorAll('.haute-product-card'));
+      
+      const activePill = document.querySelector('#categoryFilterPills .filter-pill.active');
+      const selectedCategory = activePill ? activePill.getAttribute('data-category') : 'all';
+
+      const stockInputs = Array.from(document.querySelectorAll('.stock-checkbox-input:checked')).map(i => i.value);
+
+      const minInput = document.getElementById('minPriceInput');
+      const maxInput = document.getElementById('maxPriceInput');
+      const minPrice = minInput ? (parseFloat(minInput.value) || 0) : 0;
+      const maxPrice = maxInput ? (parseFloat(maxInput.value) || 999999) : 999999;
+
+      cards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category') || 'all';
+        const cardStock = card.getAttribute('data-stock') || 'in_stock';
+        const cardPrice = parseFloat(card.getAttribute('data-price')) || 0;
+
+        const categoryMatch = (selectedCategory === 'all' || cardCategory === selectedCategory);
+        const stockMatch = (stockInputs.length === 0 || stockInputs.includes(cardStock));
+        const priceMatch = (cardPrice >= minPrice && cardPrice <= maxPrice);
+
+        if (categoryMatch && stockMatch && priceMatch) {
+          card.style.display = '';
+          card.style.opacity = '1';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Category Filter Listener
+    const pills = document.querySelectorAll('#categoryFilterPills .filter-pill');
+    pills.forEach(pill => {
+      pill.addEventListener('click', function() {
+        pills.forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        applyUnifiedFilters();
+      });
+    });
+
+    // Stock Availability Listener
+    const stockCheckboxes = document.querySelectorAll('.stock-checkbox-input');
+    stockCheckboxes.forEach(cb => {
+      cb.addEventListener('change', applyUnifiedFilters);
+    });
+
+    // Price Inputs Listener
+    const minInput = document.getElementById('minPriceInput');
+    const maxInput = document.getElementById('maxPriceInput');
+    if (minInput) minInput.addEventListener('input', applyUnifiedFilters);
+    if (maxInput) maxInput.addEventListener('input', applyUnifiedFilters);
+
+    // Reset Filters Listener
+    const resetBtn = document.getElementById('resetSidebarFiltersBtn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function() {
+        pills.forEach((p, index) => {
+          if (index === 0) p.classList.add('active');
+          else p.classList.remove('active');
+        });
+        stockCheckboxes.forEach(cb => cb.checked = true);
+        if (minInput) minInput.value = 0;
+        if (maxInput) maxInput.value = 1000;
+        applyUnifiedFilters();
+      });
+    }
+  });
+{% endjavascript %}
+
+{% stylesheet %}
   .grid-section-container {
     max-width: var(--max-width, 1320px);
     margin: 0 auto;
-    padding: 0 24px;
+    padding: var(--padding-top, 0px) 24px var(--padding-bottom, 60px);
+  }
+
+  /* 2-Column Side-by-Side Main Layout */
+  .collection-main-side-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  @media (max-width: 991px) {
+    .collection-main-side-layout {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+
+  /* Sol Yan Ekran Filtre Paneli (Sticky Side Panel) */
+  .collection-sidebar-panel {
+    position: sticky;
+    top: 100px;
+    background: #151019;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    z-index: 20;
+  }
+
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .sidebar-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sidebar-sparkle {
+    color: #f7cad0;
+    font-size: 14px;
+  }
+
+  .sidebar-main-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #ffffff;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .sidebar-reset-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .sidebar-reset-btn:hover {
+    background: rgba(194, 91, 130, 0.2);
+    border-color: #f7cad0;
+    color: #ffffff;
+  }
+
+  .sidebar-blocks-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .sidebar-filter-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sidebar-block-title {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #f7cad0;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .sidebar-category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .sidebar-cat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 9px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .sidebar-cat-item:hover,
+  .sidebar-cat-item.active {
+    background: linear-gradient(135deg, rgba(194, 91, 130, 0.3) 0%, rgba(162, 67, 103, 0.3) 100%);
+    border-color: #f7cad0;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(194, 91, 130, 0.2);
+  }
+
+  .cat-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: transparent;
+    transition: background 0.25s ease;
+  }
+
+  .sidebar-cat-item.active .cat-dot {
+    background: #f7cad0;
+    box-shadow: 0 0 8px #f7cad0;
+  }
+
+  /* Stock Availability */
+  .sidebar-stock-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .stock-option-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .stock-checkbox-input {
+    display: none;
+  }
+
+  .custom-check-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .check-mark {
+    opacity: 0;
+    font-size: 11px;
+    font-weight: 900;
+    color: #ffffff;
+    transform: scale(0.5);
+    transition: all 0.2s ease;
+  }
+
+  .stock-checkbox-input:checked + .custom-check-box {
+    background: linear-gradient(135deg, #c25b82 0%, #a24367 100%);
+    border-color: #f7cad0;
+  }
+
+  .stock-checkbox-input:checked + .custom-check-box .check-mark {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .stock-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .in-stock-dot {
+    background: #52c41a;
+    box-shadow: 0 0 8px rgba(82, 196, 26, 0.6);
+  }
+
+  .out-stock-dot {
+    background: #ff4d4f;
+    box-shadow: 0 0 8px rgba(255, 77, 79, 0.6);
+  }
+
+  /* Price Range Inputs */
+  .sidebar-price-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .price-inputs-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .price-input-box {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 6px 10px;
+  }
+
+  .price-symbol {
+    color: #f7cad0;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .price-num-input {
+    width: 65px;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    outline: none;
+  }
+
+  .price-dash {
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 700;
+  }
+
+  /* Trust Card */
+  .sidebar-trust-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(194, 91, 130, 0.12);
+    border: 1px solid rgba(247, 202, 208, 0.25);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-top: 6px;
+  }
+
+  .trust-card-icon {
+    font-size: 16px;
+    color: #f7cad0;
+  }
+
+  .trust-card-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  .trust-card-desc {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 2px 0 0 0;
+  }
+
+  /* Product Grid Styling */
+  .collection-products-area {
+    width: 100%;
   }
 
   .collection-products-grid {
     display: grid;
     grid-template-columns: repeat(var(--grid-columns-desktop, 4), 1fr);
     gap: var(--grid-gap, 24px);
-    transition: grid-template-columns 0.3s ease;
+    transition: all 0.3s ease;
   }
 
-  /* Haute Shared Product Card Component Styles */
+  @media (max-width: 768px) {
+    .collection-products-grid {
+      grid-template-columns: repeat(var(--grid-columns-mobile, 2), 1fr);
+    }
+  }
+
   .haute-product-card {
-    position: relative;
-    background: var(--item-card-bg, rgba(255, 255, 255, 0.04));
-    border: 1px solid var(--item-card-border, rgba(255, 255, 255, 0.12));
-    backdrop-filter: blur(var(--item-card-blur, 16px));
+    background: var(--item-card-bg, #151019);
+    border: 1px solid var(--item-card-border, #261a29);
     border-radius: var(--item-card-radius, 20px);
-    padding: var(--item-card-padding, 20px);
+    padding: var(--item-card-padding, 16px);
+    backdrop-filter: blur(var(--item-card-blur, 16px));
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, opacity 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
   .haute-product-card:hover {
     transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(194, 91, 130, 0.25);
     border-color: rgba(247, 202, 208, 0.4);
-    box-shadow: 0 20px 50px rgba(194, 91, 130, 0.2);
   }
 
   .card-image-wrapper {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1;
     border-radius: 14px;
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.02);
   }
 
   .card-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.4s ease;
   }
 
   .haute-product-card:hover .card-img {
@@ -227,66 +709,73 @@
 
   .card-badge {
     position: absolute;
-    top: 12px;
-    left: 12px;
+    top: 10px;
+    left: 10px;
     background: linear-gradient(135deg, var(--card-badge-start, #c25b82) 0%, var(--card-badge-end, #a24367) 100%);
     color: var(--card-badge-text, #ffffff);
-    font-size: 0.68rem;
+    font-size: 10px;
     font-weight: 800;
+    letter-spacing: 0.5px;
     padding: 4px 10px;
-    border-radius: 20px;
-    letter-spacing: 1px;
+    border-radius: 8px;
     text-transform: uppercase;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
+  .badge-out-stock {
+    background: linear-gradient(135deg, #4a4a4a 0%, #2b2b2b 100%);
+    color: #ff4d4f;
+    border: 1px solid rgba(255, 77, 79, 0.3);
+  }
+
   .card-wishlist-btn {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 10px;
+    right: 10px;
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: rgba(15, 11, 16, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background 0.3s ease, color 0.3s ease;
+    transition: all 0.2s ease;
   }
 
   .card-wishlist-btn:hover {
     background: #c25b82;
     color: #ffffff;
+    transform: scale(1.1);
   }
 
   .card-content-wrapper {
-    margin-top: 16px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    margin-top: 14px;
   }
 
   .card-rating-stars {
-    font-size: 0.72rem;
-    color: #f7cad0;
-    letter-spacing: 1px;
+    color: #ffc107;
+    font-size: 11px;
     margin-bottom: 6px;
   }
 
-  .card-rating-stars .rating-val {
+  .rating-val {
     color: rgba(255, 255, 255, 0.6);
-    font-weight: 700;
+    font-size: 10px;
     margin-left: 4px;
   }
 
   .card-title {
-    font-size: 0.95rem;
+    font-size: 14px;
     font-weight: 700;
-    line-height: 1.3;
     margin: 0 0 6px 0;
+    line-height: 1.3;
   }
 
   .card-title a {
@@ -300,67 +789,55 @@
   }
 
   .card-desc {
-    font-size: 0.8rem;
+    font-size: 12px;
     color: var(--card-desc-color, rgba(255, 255, 255, 0.65));
+    margin: 0 0 12px 0;
     line-height: 1.4;
-    margin: 0 0 14px 0;
-    flex-grow: 1;
   }
 
   .card-price-row {
     display: flex;
     align-items: baseline;
     gap: 8px;
-    margin-bottom: 14px;
+    margin-top: auto;
+    margin-bottom: 12px;
   }
 
   .price-main {
-    font-size: 1.1rem;
+    font-size: 16px;
     font-weight: 800;
     color: var(--card-price-color, #f7cad0);
   }
 
   .price-compare {
-    font-size: 0.82rem;
-    color: var(--card-compare-color, rgba(255, 255, 255, 0.45));
+    font-size: 12px;
     text-decoration: line-through;
+    color: var(--card-compare-color, rgba(255, 255, 255, 0.4));
   }
 
   .card-quick-add-btn {
     width: 100%;
-    padding: 10px 16px;
+    padding: 10px;
     border-radius: 12px;
-    background: var(--card-qadd-bg, rgba(194, 91, 130, 0.3));
+    background: var(--card-qadd-bg, #c25b82);
     border: 1px solid var(--card-qadd-border, #f7cad0);
     color: var(--card-qadd-text, #ffffff);
-    font-size: 0.82rem;
+    font-size: 12px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
   }
 
   .card-quick-add-btn:hover {
-    background: linear-gradient(135deg, #c25b82 0%, #a24367 100%);
-    border-color: #c25b82;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(194, 91, 130, 0.4);
+    background: #a24367;
+    box-shadow: 0 4px 14px rgba(194, 91, 130, 0.4);
   }
 
-  @media (max-width: 1024px) {
-    .collection-products-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  @media (max-width: 768px) {
-    .collection-products-grid {
-      grid-template-columns: repeat(var(--grid-columns-mobile, 2), 1fr);
-      gap: 14px;
-    }
-
-    .haute-product-card {
-      padding: 12px;
-    }
+  .card-quick-add-btn.disabled {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.3);
+    cursor: not-allowed;
   }
 {% endstylesheet %}
 
@@ -369,24 +846,11 @@
   "name": "Koleksiyon Ürün Izgarası",
   "settings": [
     {
-      "type": "header",
-      "content": "📐 Izgara & Mizanpaj Ayarları"
-    },
-    {
-      "type": "range",
-      "id": "products_per_page",
-      "label": "Sayfa Başına Gösterilecek Ürün Sayısı",
-      "min": 4,
-      "max": 48,
-      "step": 4,
-      "default": 24
-    },
-    {
       "type": "range",
       "id": "columns_desktop",
-      "label": "Masaüstü Varsayılan Sütun Sayısı",
+      "label": "Masaüstü Sütun Sayısı",
       "min": 2,
-      "max": 6,
+      "max": 4,
       "step": 1,
       "default": 4
     },
@@ -404,7 +868,7 @@
       "type": "range",
       "id": "grid_gap",
       "label": "Kartlar Arası Boşluk (Gap)",
-      "min": 8,
+      "min": 10,
       "max": 40,
       "step": 2,
       "unit": "px",
@@ -421,39 +885,40 @@
       "default": 1320
     },
     {
-      "type": "header",
-      "content": "📐 Bölüm Boşlukları (Section Spacing)"
-    },
-    {
       "type": "range",
       "id": "padding_top",
       "label": "Üst İç Boşluk (Padding Top)",
       "min": 0,
-      "max": 150,
-      "step": 10,
+      "max": 100,
+      "step": 5,
       "unit": "px",
-      "default": 40
+      "default": 0
     },
     {
       "type": "range",
       "id": "padding_bottom",
       "label": "Alt İç Boşluk (Padding Bottom)",
       "min": 0,
-      "max": 150,
-      "step": 10,
+      "max": 100,
+      "step": 5,
       "unit": "px",
-      "default": 80
+      "default": 60
     }
   ],
   "blocks": [
     {
       "type": "product_card",
-      "name": "🛍️ Ürün Kartı Bloğu",
+      "name": "Ürün Kartı",
       "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Gerçek Shopify Ürünü Bağla"
+        },
         {
           "type": "select",
           "id": "category",
-          "label": "Filtrelenecek Kategori Türü",
+          "label": "Ürün Kategorisi",
           "options": [
             { "value": "all", "label": "Tüm Ürünler" },
             { "value": "serum", "label": "Serumlar" },
@@ -461,34 +926,29 @@
             { "value": "mask", "label": "Yüz Maskeleri" },
             { "value": "eye-care", "label": "Göz Bakımı" }
           ],
-          "default": "all"
-        },
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Mağaza Ürünü Bağla (Seçilirse Dinamik Çekilir)"
+          "default": "serum"
         },
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Özel Ürün Görseli"
+          "label": "Ürün Görseli"
         },
         {
           "type": "text",
           "id": "badge_text",
-          "label": "Görsel Üstü Rozet Metni",
-          "default": "✦ SEÇKİN BAKIM"
+          "label": "Rozet Metni",
+          "default": "✦ SEÇKİN"
         },
         {
           "type": "color",
           "id": "badge_bg_start",
-          "label": "Rozet Gradyan Başlangıç Rengi",
+          "label": "Rozet Gradyan Başlangıç",
           "default": "#c25b82"
         },
         {
           "type": "color",
           "id": "badge_bg_end",
-          "label": "Rozet Gradyan Bitiş Rengi",
+          "label": "Rozet Gradyan Bitiş",
           "default": "#a24367"
         },
         {
@@ -519,7 +979,7 @@
           "type": "color",
           "id": "desc_color",
           "label": "Açıklama Rengi",
-          "default": "rgba(255, 255, 255, 0.65)"
+          "default": "#ffffff"
         },
         {
           "type": "text",
@@ -543,7 +1003,7 @@
           "type": "color",
           "id": "compare_price_color",
           "label": "Karşılaştırma Fiyat Rengi",
-          "default": "rgba(255, 255, 255, 0.45)"
+          "default": "#ffffff"
         },
         {
           "type": "text",
@@ -555,7 +1015,7 @@
           "type": "color",
           "id": "quick_add_bg",
           "label": "Buton Arka Plan Rengi",
-          "default": "rgba(194, 91, 130, 0.3)"
+          "default": "#c25b82"
         },
         {
           "type": "color",
@@ -570,25 +1030,31 @@
           "default": "#f7cad0"
         },
         {
+          "type": "checkbox",
+          "id": "is_in_stock",
+          "label": "Stokta Var",
+          "default": true
+        },
+        {
           "type": "url",
           "id": "url",
           "label": "Özel Yönlendirme Linki"
         },
         {
           "type": "header",
-          "content": "🔲 Kart Cam (Glassmorphism) Stili"
+          "content": "Kart Cam (Glassmorphism) Stili"
         },
         {
           "type": "color",
           "id": "card_bg_color",
           "label": "Kart Arka Plan Rengi",
-          "default": "rgba(255, 255, 255, 0.04)"
+          "default": "#151019"
         },
         {
           "type": "color",
           "id": "card_border_color",
           "label": "Kart Kenarlık Rengi",
-          "default": "rgba(255, 255, 255, 0.12)"
+          "default": "#261a29"
         },
         {
           "type": "range",
@@ -603,7 +1069,7 @@
         {
           "type": "range",
           "id": "card_blur",
-          "label": "Cam Bulanıklık Efekti (Blur)",
+          "label": "Cam Bulanıklık Efekti",
           "min": 0,
           "max": 30,
           "step": 2,
@@ -613,19 +1079,132 @@
         {
           "type": "range",
           "id": "card_padding",
-          "label": "Kart İç Boşluğu (Padding)",
-          "min": 8,
-          "max": 40,
+          "label": "Kart İç Boşluk (Padding)",
+          "min": 10,
+          "max": 30,
           "step": 2,
           "unit": "px",
-          "default": 20
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "category_filter",
+      "name": "Yan Panel Kategori",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Kategori Adı",
+          "default": "Serumlar"
+        },
+        {
+          "type": "select",
+          "id": "category",
+          "label": "Kategori Kodu (Handle)",
+          "options": [
+            { "value": "all", "label": "Tüm Ürünler" },
+            { "value": "serum", "label": "Serumlar" },
+            { "value": "moisturizer", "label": "Nemlendiriciler" },
+            { "value": "mask", "label": "Yüz Maskeleri" },
+            { "value": "eye-care", "label": "Göz Bakımı" }
+          ],
+          "default": "all"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_active",
+          "label": "Varsayılan Olarak Seçili",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "availability_filter",
+      "name": "Yan Panel Stok Durumu",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Blok Başlığı",
+          "default": "STOK DURUMU"
+        },
+        {
+          "type": "text",
+          "id": "in_stock_label",
+          "label": "Stokta Var Metni",
+          "default": "Stokta Var"
+        },
+        {
+          "type": "text",
+          "id": "out_of_stock_label",
+          "label": "Tükendi Metni",
+          "default": "Tükendi / Stokta Yok"
+        }
+      ]
+    },
+    {
+      "type": "price_filter",
+      "name": "Yan Panel Fiyat",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Blok Başlığı",
+          "default": "FİYAT ARALIĞI"
+        },
+        {
+          "type": "range",
+          "id": "max_price_limit",
+          "label": "Varsayılan Maks Fiyat",
+          "min": 200,
+          "max": 5000,
+          "step": 100,
+          "unit": "₺",
+          "default": 1000
+        }
+      ]
+    },
+    {
+      "type": "sidebar_trust",
+      "name": "Yan Panel Lüks Bilgi",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "İkon",
+          "default": "✦"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Başlık Metni",
+          "default": "%100 Orijinal Ürün"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Alt Başlık",
+          "default": "Resmi Distribütör Garantili"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Koleksiyon Ürün Izgarası"
+      "name": "Koleksiyon Ürün Izgarası",
+      "blocks": [
+        { "type": "category_filter", "settings": { "label": "Tüm Ürünler", "category": "all", "is_active": true } },
+        { "type": "category_filter", "settings": { "label": "Serumlar", "category": "serum" } },
+        { "type": "category_filter", "settings": { "label": "Nemlendiriciler", "category": "moisturizer" } },
+        { "type": "category_filter", "settings": { "label": "Yüz Maskeleri", "category": "mask" } },
+        { "type": "category_filter", "settings": { "label": "Göz Bakımı", "category": "eye-care" } },
+        { "type": "availability_filter" },
+        { "type": "price_filter" },
+        { "type": "sidebar_trust" }
+      ]
     }
   ]
 }

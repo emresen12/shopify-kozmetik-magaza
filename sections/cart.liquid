@@ -616,7 +616,7 @@
   "blocks": [
     {
       "type": "header_block",
-      "name": "🏷️ Sayfa Başlığı Bloğu",
+      "name": "Sayfa Başlığı Bloğu",
       "limit": 1,
       "settings": [
         {
@@ -647,13 +647,13 @@
           "type": "color",
           "id": "subtitle_color",
           "label": "Alt Başlık Rengi",
-          "default": "rgba(255, 255, 255, 0.7)"
+          "default": "#ffffff"
         }
       ]
     },
     {
       "type": "free_shipping_block",
-      "name": "🚚 Ücretsiz Kargo Barı",
+      "name": "Ücretsiz Kargo Barı",
       "limit": 1,
       "settings": [
         {
@@ -666,19 +666,19 @@
           "type": "color",
           "id": "bar_bg",
           "label": "Kart Arka Plan Rengi",
-          "default": "rgba(194, 91, 130, 0.12)"
+          "default": "#c25b82"
         },
         {
           "type": "color",
           "id": "bar_border",
           "label": "Kart Kenarlık Rengi",
-          "default": "rgba(255, 255, 255, 0.12)"
+          "default": "#261a29"
         }
       ]
     },
     {
       "type": "cart_item_card",
-      "name": "🛍️ Ürün Kartı Bloğu",
+      "name": "Ürün Kartı Bloğu",
       "settings": [
         {
           "type": "product",
@@ -727,26 +727,29 @@
           "default": "₺650,00"
         },
         {
-          "type": "number",
+          "type": "range",
           "id": "quantity",
           "label": "Varsayılan Adet",
+          "min": 1,
+          "max": 10,
+          "step": 1,
           "default": 1
         },
         {
           "type": "header",
-          "content": "🔲 Cam Kart (Glassmorphism) Stili"
+          "content": "Cam Kart (Glassmorphism) Stili"
         },
         {
           "type": "color",
           "id": "card_bg_color",
           "label": "Kart Arka Plan Rengi",
-          "default": "rgba(255, 255, 255, 0.04)"
+          "default": "#151019"
         },
         {
           "type": "color",
           "id": "card_border_color",
           "label": "Kart Kenarlık Rengi",
-          "default": "rgba(255, 255, 255, 0.12)"
+          "default": "#261a29"
         },
         {
           "type": "range",
@@ -772,7 +775,7 @@
     },
     {
       "type": "summary_block",
-      "name": "💳 Sipariş Özeti & Ödeme",
+      "name": "Sipariş Özeti & Ödeme",
       "limit": 1,
       "settings": [
         {
@@ -807,19 +810,19 @@
         },
         {
           "type": "header",
-          "content": "🔲 Kutu Cam Stili"
+          "content": "Kutu Cam Stili"
         },
         {
           "type": "color",
           "id": "card_bg_color",
           "label": "Kutu Arka Plan Rengi",
-          "default": "rgba(255, 255, 255, 0.04)"
+          "default": "#151019"
         },
         {
           "type": "color",
           "id": "card_border_color",
           "label": "Kutu Kenarlık Rengi",
-          "default": "rgba(255, 255, 255, 0.12)"
+          "default": "#261a29"
         },
         {
           "type": "range",
@@ -835,26 +838,26 @@
     },
     {
       "type": "guarantee_badges",
-      "name": "🛡️ Güvenlik Rozetleri",
+      "name": "Güvenlik Rozetleri",
       "limit": 1,
       "settings": [
         {
           "type": "text",
           "id": "badge_1",
           "label": "Rozet 1",
-          "default": "🔒 256-Bit SSL Güvenli Şifreleme"
+          "default": "✦ 256-Bit SSL Güvenli Şifreleme"
         },
         {
           "type": "text",
           "id": "badge_2",
           "label": "Rozet 2",
-          "default": "⚡ Aynı Gün Hızlı Kargo Teslimatı"
+          "default": "✦ Aynı Gün Hızlı Kargo Teslimatı"
         },
         {
           "type": "text",
           "id": "badge_3",
           "label": "Rozet 3",
-          "default": "💯 %100 Orijinal Ürün Garantisi"
+          "default": "✦ %100 Orijinal Ürün Garantisi"
         },
         {
           "type": "text",

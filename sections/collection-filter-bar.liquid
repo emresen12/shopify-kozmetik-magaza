@@ -1,6 +1,6 @@
 {% comment %}
   Modular Collection Filter & Sort Bar Section
-  Includes independent Theme Blocks for Category Pills, Grid View Switcher (2'li, 3'lü, 4'lü), and Sort Box with Realtime Sorting.
+  Renders Top Filter Controls (Görünüm Switcher & Sort Box).
 {% endcomment %}
 
 <div class="collection-filter-bar-section full-width" style="
@@ -11,112 +11,90 @@
   --bar-border: {{ section.settings.bar_border_color }};
   --bar-radius: {{ section.settings.bar_radius }}px;
   --bar-blur: {{ section.settings.bar_blur }}px;
-  --pill-font-size: {{ section.settings.pill_font_size }}px;
-  --pill-font-weight: {{ section.settings.pill_font_weight }};
-  --pill-bg: {{ section.settings.pill_bg }};
-  --pill-color: {{ section.settings.pill_text_color }};
-  --pill-border: {{ section.settings.pill_border_color }};
-  --pill-active-bg: {{ section.settings.pill_active_bg }};
-  --pill-active-color: {{ section.settings.pill_active_text_color }};
-  --pill-active-border: {{ section.settings.pill_active_border_color }};
 ">
   <div class="filter-bar-container">
+    
+    <!-- Top Filter Bar: ONLY Görünüm Switcher (Left) and Sırala (Right) -->
     <div class="collection-filter-bar">
       
-      <!-- Interactive Category Filter Pills -->
-      {% assign pill_blocks = section.blocks | where: "type", "filter_pill" %}
-      <div class="filter-pills" id="categoryFilterPills">
-        {% if pill_blocks.size > 0 %}
-          {% for block in pill_blocks %}
-            <button type="button" class="filter-pill {% if block.settings.is_active or forloop.first %}active{% endif %}" data-category="{{ block.settings.category | default: 'all' }}" {{ block.shopify_attributes }}>
-              {{ block.settings.label }}
-            </button>
-          {% endfor %}
-        {% else %}
-          <button type="button" class="filter-pill active" data-category="all">Tüm Ürünler</button>
-          <button type="button" class="filter-pill" data-category="serum">Serumlar</button>
-          <button type="button" class="filter-pill" data-category="moisturizer">Nemlendiriciler</button>
-          <button type="button" class="filter-pill" data-category="mask">Yüz Maskeleri</button>
-          <button type="button" class="filter-pill" data-category="eye-care">Göz Bakımı</button>
-        {% endif %}
+      <!-- Left: Grid View Switcher -->
+      <div class="filter-left-controls">
+        {% for block in section.blocks %}
+          {% if block.type == 'grid_switcher' %}
+            <div class="grid-layout-switcher" id="gridLayoutSwitcher" style="
+              --switcher-label-color: {{ block.settings.label_color }};
+              --btn-bg: {{ block.settings.btn_bg }};
+              --btn-color: {{ block.settings.btn_text_color }};
+              --btn-border: {{ block.settings.btn_border_color }};
+              --active-bg: {{ block.settings.active_bg }};
+              --active-color: {{ block.settings.active_text_color }};
+              --active-border: {{ block.settings.active_border_color }};
+            " {{ block.shopify_attributes }}>
+              <span class="switcher-label">{{ block.settings.label | default: "Görünüm:" }}</span>
+              <button type="button" class="grid-switch-btn" data-cols="2" title="2 Sütunlu Görünüm">
+                <span>2'li</span>
+              </button>
+              <button type="button" class="grid-switch-btn" data-cols="3" title="3 Sütunlu Görünüm">
+                <span>3'lü</span>
+              </button>
+              <button type="button" class="grid-switch-btn active" data-cols="4" title="4 Sütunlu Görünüm">
+                <span>4'lü</span>
+              </button>
+            </div>
+          {% endif %}
+        {% endfor %}
       </div>
 
-      <!-- Right Controls Group (Grid Switcher & Sort Box Theme Blocks) -->
+      <!-- Right: Sort Box Dropdown -->
       <div class="filter-right-controls">
         {% for block in section.blocks %}
-          {% case block.type %}
-            {% when 'grid_switcher' %}
-              <div class="grid-layout-switcher" id="gridLayoutSwitcher" style="
-                --switcher-label-color: {{ block.settings.label_color }};
-                --btn-bg: {{ block.settings.btn_bg }};
-                --btn-color: {{ block.settings.btn_text_color }};
-                --btn-border: {{ block.settings.btn_border_color }};
-                --active-bg: {{ block.settings.active_bg }};
-                --active-color: {{ block.settings.active_text_color }};
-                --active-border: {{ block.settings.active_border_color }};
-              " {{ block.shopify_attributes }}>
-                <span class="switcher-label">{{ block.settings.label | default: "Görünüm:" }}</span>
-                <button type="button" class="grid-switch-btn" data-cols="2" title="2 Sütunlu Görünüm">
-                  <span>2'li</span>
+          {% if block.type == 'sort_box' %}
+            <div class="collection-sort-box custom-sort-container" style="
+              --sort-label-color: {{ block.settings.label_color }};
+              --sort-select-bg: {{ block.settings.select_bg }};
+              --sort-select-color: {{ block.settings.select_text_color }};
+              --sort-select-border: {{ block.settings.select_border_color }};
+            " {{ block.shopify_attributes }}>
+              
+              <button type="button" class="custom-sort-trigger" id="customSortBtn" aria-expanded="false" aria-haspopup="true">
+                <span class="sort-label">{{ block.settings.label | default: "Sırala" }}</span>
+                <svg class="sort-arrow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+
+              <div class="custom-sort-menu" id="customSortMenu" role="menu" aria-hidden="true">
+                <button type="button" class="sort-option-btn active" data-sort="manual" role="menuitem">
+                  <span class="sort-option-text">Öne Çıkanlar</span>
+                  <span class="sort-option-check">✓</span>
                 </button>
-                <button type="button" class="grid-switch-btn" data-cols="3" title="3 Sütunlu Görünüm">
-                  <span>3'lü</span>
+                <button type="button" class="sort-option-btn" data-sort="price-ascending" role="menuitem">
+                  <span class="sort-option-text">Fiyat: Düşükten Yükseğe</span>
+                  <span class="sort-option-check">✓</span>
                 </button>
-                <button type="button" class="grid-switch-btn active" data-cols="4" title="4 Sütunlu Görünüm">
-                  <span>4'lü</span>
+                <button type="button" class="sort-option-btn" data-sort="price-descending" role="menuitem">
+                  <span class="sort-option-text">Fiyat: Yüksekten Düşüğe</span>
+                  <span class="sort-option-check">✓</span>
+                </button>
+                <button type="button" class="sort-option-btn" data-sort="created-descending" role="menuitem">
+                  <span class="sort-option-text">En Yeniler</span>
+                  <span class="sort-option-check">✓</span>
                 </button>
               </div>
 
-            {% when 'sort_box' %}
-              <div class="collection-sort-box" style="
-                --sort-label-color: {{ block.settings.label_color }};
-                --sort-select-bg: {{ block.settings.select_bg }};
-                --sort-select-color: {{ block.settings.select_text_color }};
-                --sort-select-border: {{ block.settings.select_border_color }};
-              " {{ block.shopify_attributes }}>
-                <span class="sort-label">{{ block.settings.label | default: "Sırala:" }}</span>
-                <select class="dark-sort-select">
-                  <option value="manual">Öne Çıkanlar</option>
-                  <option value="price-ascending">Fiyat: Düşükten Yükseğe</option>
-                  <option value="price-descending">Fiyat: Yüksekten Düşüğe</option>
-                  <option value="created-descending">En Yeniler</option>
-                </select>
-              </div>
-          {% endcase %}
+            </div>
+          {% endif %}
         {% endfor %}
       </div>
 
     </div>
+
   </div>
 </div>
 
 {% javascript %}
   document.addEventListener('DOMContentLoaded', function() {
-    // 1. Category Filter Interaction
-    const pills = document.querySelectorAll('#categoryFilterPills .filter-pill');
-    const cards = document.querySelectorAll('.haute-product-card');
-
-    pills.forEach(pill => {
-      pill.addEventListener('click', function() {
-        const selectedCategory = this.getAttribute('data-category');
-
-        pills.forEach(p => p.classList.remove('active'));
-        this.classList.add('active');
-
-        cards.forEach(card => {
-          const cardCategory = card.getAttribute('data-category') || 'all';
-          if (selectedCategory === 'all' || cardCategory === selectedCategory || cardCategory === 'all') {
-            card.style.display = 'flex';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
-    });
-
-    // 2. Grid Columns Switcher (2'li, 3'lü, 4'lü)
+    // 1. Grid Columns Switcher (2'li, 3'lü, 4'lü)
     const switchBtns = document.querySelectorAll('#gridLayoutSwitcher .grid-switch-btn');
     const productGrid = document.querySelector('.collection-products-grid');
 
@@ -132,44 +110,94 @@
       });
     });
 
-    // 3. Realtime Sorting Interaction
-    const sortSelects = document.querySelectorAll('.dark-sort-select');
-    sortSelects.forEach(sortSelect => {
-      sortSelect.addEventListener('change', function() {
-        const value = this.value;
-        const grid = document.querySelector('.collection-products-grid');
-        if (!grid) return;
+    // 2. Custom Sort Dropdown & Realtime Sorting Interaction
+    const customSortContainers = document.querySelectorAll('.custom-sort-container');
 
-        const cardsArray = Array.from(grid.querySelectorAll('.haute-product-card'));
+    customSortContainers.forEach(container => {
+      const trigger = container.querySelector('.custom-sort-trigger');
+      const menu = container.querySelector('.custom-sort-menu');
+      const options = container.querySelectorAll('.sort-option-btn');
 
-        cardsArray.sort((a, b) => {
-          const priceA = parseFloat(a.getAttribute('data-price')) || 0;
-          const priceB = parseFloat(b.getAttribute('data-price')) || 0;
-          const indexA = parseInt(a.getAttribute('data-index')) || 0;
-          const indexB = parseInt(b.getAttribute('data-index')) || 0;
+      if (trigger && menu) {
+        trigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = container.classList.contains('open');
 
-          if (value === 'price-ascending') {
-            return priceA - priceB;
-          } else if (value === 'price-descending') {
-            return priceB - priceA;
-          } else if (value === 'created-descending') {
-            return indexB - indexA;
+          customSortContainers.forEach(c => {
+            if (c !== container) {
+              c.classList.remove('open');
+              const trg = c.querySelector('.custom-sort-trigger');
+              if (trg) trg.setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          if (!isOpen) {
+            container.classList.add('open');
+            trigger.setAttribute('aria-expanded', 'true');
           } else {
-            // manual / featured
-            return indexA - indexB;
+            container.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
           }
         });
 
-        cardsArray.forEach(card => grid.appendChild(card));
+        options.forEach(opt => {
+          opt.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const sortVal = this.getAttribute('data-sort');
+
+            options.forEach(o => o.classList.remove('active'));
+            this.classList.add('active');
+
+            container.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+
+            sortProducts(sortVal);
+          });
+        });
+      }
+    });
+
+    // Close sort menu when clicking outside
+    document.addEventListener('click', () => {
+      customSortContainers.forEach(c => {
+        c.classList.remove('open');
+        const trigger = c.querySelector('.custom-sort-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
       });
     });
+
+    function sortProducts(value) {
+      const grid = document.querySelector('.collection-products-grid');
+      if (!grid) return;
+
+      const cardsArray = Array.from(grid.querySelectorAll('.haute-product-card'));
+
+      cardsArray.sort((a, b) => {
+        const priceA = parseFloat(a.getAttribute('data-price')) || 0;
+        const priceB = parseFloat(b.getAttribute('data-price')) || 0;
+        const indexA = parseInt(a.getAttribute('data-index')) || 0;
+        const indexB = parseInt(b.getAttribute('data-index')) || 0;
+
+        if (value === 'price-ascending') {
+          return priceA - priceB;
+        } else if (value === 'price-descending') {
+          return priceB - priceA;
+        } else if (value === 'created-descending') {
+          return indexB - indexA;
+        } else {
+          return indexA - indexB;
+        }
+      });
+
+      cardsArray.forEach(card => grid.appendChild(card));
+    }
   });
 {% endjavascript %}
 
 {% stylesheet %}
   .filter-bar-container {
     max-width: var(--bar-max-width, 1320px);
-    margin: var(--margin-top, 40px) auto var(--margin-bottom, 36px);
+    margin: var(--margin-top, 40px) auto var(--margin-bottom, 20px);
     padding: 0 24px;
   }
 
@@ -186,37 +214,11 @@
     border-radius: var(--bar-radius, 20px);
   }
 
-  .filter-pills {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .filter-pill {
-    padding: 8px 18px;
-    background: var(--pill-bg, transparent);
-    border: 1px solid var(--pill-border, rgba(255, 255, 255, 0.15));
-    border-radius: 12px;
-    color: var(--pill-color, rgba(255, 255, 255, 0.75));
-    font-size: var(--pill-font-size, 14px);
-    font-weight: var(--pill-font-weight, 700);
-    cursor: pointer;
-    transition: all 0.25s ease;
-  }
-
-  .filter-pill:hover,
-  .filter-pill.active {
-    background: var(--pill-active-bg, rgba(194, 91, 130, 0.3));
-    border-color: var(--pill-active-border, #f7cad0);
-    color: var(--pill-active-color, #ffffff);
-    box-shadow: 0 4px 14px rgba(194, 91, 130, 0.2);
-  }
-
+  .filter-left-controls,
   .filter-right-controls {
     display: flex;
     align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
+    gap: 16px;
   }
 
   .grid-layout-switcher {
@@ -261,26 +263,108 @@
     gap: 10px;
   }
 
-  .sort-label {
-    font-size: 14px;
-    color: var(--sort-label-color, rgba(255, 255, 255, 0.7));
-    font-weight: 600;
+  .custom-sort-container {
+    position: relative;
+    display: inline-block;
   }
 
-  .dark-sort-select {
+  .custom-sort-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     background: var(--sort-select-bg, rgba(255, 255, 255, 0.08));
     border: 1px solid var(--sort-select-border, rgba(255, 255, 255, 0.2));
-    border-radius: 10px;
+    border-radius: 12px;
+    padding: 8px 16px;
     color: var(--sort-select-color, #ffffff);
-    padding: 8px 14px;
     font-size: 14px;
-    outline: none;
+    font-weight: 700;
     cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
   }
 
-  .dark-sort-select option {
-    background: #130d16;
+  .custom-sort-trigger:hover {
+    background: rgba(194, 91, 130, 0.25);
+    border-color: #f7cad0;
+    box-shadow: 0 4px 14px rgba(194, 91, 130, 0.2);
+  }
+
+  .sort-arrow-icon {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .custom-sort-container.open .sort-arrow-icon {
+    transform: rotate(180deg);
+  }
+
+  .custom-sort-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 230px;
+    background: #151019;
+    border: 1px solid rgba(247, 202, 208, 0.3);
+    border-radius: 16px;
+    padding: 8px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px) scale(0.96);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1000;
+  }
+
+  .custom-sort-container.open .custom-sort-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  .sort-option-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 11px 16px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .sort-option-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
     color: #ffffff;
+  }
+
+  .sort-option-btn.active {
+    background: linear-gradient(135deg, rgba(194, 91, 130, 0.3) 0%, rgba(162, 67, 103, 0.3) 100%);
+    color: #f7cad0;
+    font-weight: 700;
+  }
+
+  .sort-option-check {
+    opacity: 0;
+    font-size: 14px;
+    font-weight: 800;
+    color: #f7cad0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    transform: scale(0.6);
+  }
+
+  .sort-option-btn.active .sort-option-check {
+    opacity: 1;
+    transform: scale(1);
   }
 {% endstylesheet %}
 
@@ -320,7 +404,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "default": 36
+      "default": 20
     },
     {
       "type": "header",
@@ -330,13 +414,13 @@
       "type": "color",
       "id": "bar_bg",
       "label": "Çubuk Arka Plan Rengi",
-      "default": "rgba(255, 255, 255, 0.04)"
+      "default": "#151019"
     },
     {
       "type": "color",
       "id": "bar_border_color",
       "label": "Çubuk Kenarlık Rengi",
-      "default": "rgba(255, 255, 255, 0.1)"
+      "default": "#261a29"
     },
     {
       "type": "range",
@@ -357,105 +441,12 @@
       "step": 2,
       "unit": "px",
       "default": 16
-    },
-    {
-      "type": "header",
-      "content": "Filtre Butonları Tipografi & Renkler"
-    },
-    {
-      "type": "range",
-      "id": "pill_font_size",
-      "label": "Buton Yazı Boyutu",
-      "min": 10,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": 14
-    },
-    {
-      "type": "select",
-      "id": "pill_font_weight",
-      "label": "Buton Yazı Kalınlığı",
-      "options": [
-        { "value": "400", "label": "Normal (400)" },
-        { "value": "600", "label": "Yarı Kalın (600)" },
-        { "value": "700", "label": "Kalın (700)" },
-        { "value": "800", "label": "Ekstra Kalın (800)" }
-      ],
-      "default": "700"
-    },
-    {
-      "type": "color",
-      "id": "pill_bg",
-      "label": "Buton Arka Plan Rengi",
-      "default": "rgba(0, 0, 0, 0)"
-    },
-    {
-      "type": "color",
-      "id": "pill_text_color",
-      "label": "Buton Yazı Rengi",
-      "default": "rgba(255, 255, 255, 0.75)"
-    },
-    {
-      "type": "color",
-      "id": "pill_border_color",
-      "label": "Buton Kenarlık Rengi",
-      "default": "rgba(255, 255, 255, 0.15)"
-    },
-    {
-      "type": "color",
-      "id": "pill_active_bg",
-      "label": "Aktif Buton Arka Plan Rengi",
-      "default": "rgba(194, 91, 130, 0.3)"
-    },
-    {
-      "type": "color",
-      "id": "pill_active_text_color",
-      "label": "Aktif Buton Yazı Rengi",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "pill_active_border_color",
-      "label": "Aktif Buton Kenarlık Rengi",
-      "default": "#f7cad0"
     }
   ],
   "blocks": [
     {
-      "type": "filter_pill",
-      "name": "🏷️ Kategori Butonu",
-      "settings": [
-        {
-          "type": "text",
-          "id": "label",
-          "label": "Buton Başlığı",
-          "default": "Kategori Adı"
-        },
-        {
-          "type": "select",
-          "id": "category",
-          "label": "Filtrelenecek Kategori Türü",
-          "options": [
-            { "value": "all", "label": "Tüm Ürünler" },
-            { "value": "serum", "label": "Serumlar" },
-            { "value": "moisturizer", "label": "Nemlendiriciler" },
-            { "value": "mask", "label": "Yüz Maskeleri" },
-            { "value": "eye-care", "label": "Göz Bakımı" }
-          ],
-          "default": "all"
-        },
-        {
-          "type": "checkbox",
-          "id": "is_active",
-          "label": "Varsayılan Olarak Seçili (Aktif)",
-          "default": false
-        }
-      ]
-    },
-    {
       "type": "grid_switcher",
-      "name": "📐 Görünüm Seçici Bloğu",
+      "name": "Görünüm Seçici",
       "limit": 1,
       "settings": [
         {
@@ -468,31 +459,31 @@
           "type": "color",
           "id": "label_color",
           "label": "Etiket Metin Rengi",
-          "default": "rgba(255, 255, 255, 0.6)"
+          "default": "#ffffff"
         },
         {
           "type": "color",
           "id": "btn_bg",
           "label": "Buton Arka Plan Rengi",
-          "default": "rgba(0, 0, 0, 0)"
+          "default": "#000000"
         },
         {
           "type": "color",
           "id": "btn_text_color",
           "label": "Buton Metin Rengi",
-          "default": "rgba(255, 255, 255, 0.7)"
+          "default": "#ffffff"
         },
         {
           "type": "color",
           "id": "btn_border_color",
           "label": "Buton Kenarlık Rengi",
-          "default": "rgba(0, 0, 0, 0)"
+          "default": "#000000"
         },
         {
           "type": "color",
           "id": "active_bg",
           "label": "Aktif Buton Arka Plan Rengi",
-          "default": "rgba(194, 91, 130, 0.3)"
+          "default": "#c25b82"
         },
         {
           "type": "color",
@@ -510,7 +501,7 @@
     },
     {
       "type": "sort_box",
-      "name": "↕️ Sıralama Kutusu Bloğu",
+      "name": "Sıralama Kutusu",
       "limit": 1,
       "settings": [
         {
@@ -523,13 +514,13 @@
           "type": "color",
           "id": "label_color",
           "label": "Etiket Metin Rengi",
-          "default": "rgba(255, 255, 255, 0.7)"
+          "default": "#ffffff"
         },
         {
           "type": "color",
           "id": "select_bg",
           "label": "Seçim Kutusu Arka Plan Rengi",
-          "default": "rgba(255, 255, 255, 0.08)"
+          "default": "#151019"
         },
         {
           "type": "color",
@@ -541,7 +532,7 @@
           "type": "color",
           "id": "select_border_color",
           "label": "Seçim Kutusu Kenarlık Rengi",
-          "default": "rgba(255, 255, 255, 0.2)"
+          "default": "#261a29"
         }
       ]
     }
@@ -550,11 +541,6 @@
     {
       "name": "Koleksiyon Filtre Barı",
       "blocks": [
-        { "type": "filter_pill", "settings": { "label": "Tüm Ürünler", "category": "all", "is_active": true } },
-        { "type": "filter_pill", "settings": { "label": "Serumlar", "category": "serum" } },
-        { "type": "filter_pill", "settings": { "label": "Nemlendiriciler", "category": "moisturizer" } },
-        { "type": "filter_pill", "settings": { "label": "Yüz Maskeleri", "category": "mask" } },
-        { "type": "filter_pill", "settings": { "label": "Göz Bakımı", "category": "eye-care" } },
         { "type": "grid_switcher", "settings": { "label": "Görünüm:" } },
         { "type": "sort_box", "settings": { "label": "Sırala:" } }
       ]
