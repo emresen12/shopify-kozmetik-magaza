@@ -38,7 +38,9 @@
     <div class="featured-product__gallery">
       <div class="luxury-image-frame">
         <div class="frame-aura-glow"></div>
-        {% if display_product and display_product.featured_image %}
+        {% if section.settings.custom_image != blank %}
+          {{ section.settings.custom_image | image_url: width: 800 | image_tag: class: 'featured-product__img', loading: 'lazy' }}
+        {% elsif display_product and display_product.featured_image %}
           {{ display_product.featured_image | image_url: width: 800 | image_tag: class: 'featured-product__img', loading: 'lazy' }}
         {% else %}
           <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Gençleştirici Serum" class="featured-product__img" width="600" height="600" loading="lazy">
@@ -648,6 +650,11 @@
 {
   "name": "Öne Çıkan Ürün Paneli",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "custom_image",
+      "label": "Öne Çıkan Serum / Özel Görsel Yükle"
+    },
     {
       "type": "product",
       "id": "featured_product",

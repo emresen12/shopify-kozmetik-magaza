@@ -69,6 +69,52 @@
       ],
       "settings": {}
     },
+    "featured_serum_showcase": {
+      "type": "featured-product",
+      "blocks": {
+        "subheading_1": {
+          "type": "subheading",
+          "settings": {
+            "text": "LUMIÈRE BOTANICALS • HAUTE COUTURE BEAUTY"
+          }
+        },
+        "title_1": {
+          "type": "title",
+          "settings": {
+            "text": "Radiance Glow Hyalüronik Serum"
+          }
+        },
+        "rating_1": {
+          "type": "rating",
+          "settings": {
+            "stars": "★★★★★",
+            "score": "4.9 / 5.0 (128 Değerlendirme)"
+          }
+        },
+        "price_1": {
+          "type": "price",
+          "settings": {
+            "price": "₺450,00",
+            "compare_price": "₺650,00",
+            "savings_text": "₺200 Tasarruf"
+          }
+        },
+        "description_1": {
+          "type": "description",
+          "settings": {
+            "text": "Cildinize anında doğal ışıltı ve derinlemesine nem kazandıran 3'lü saf hyalüronik asit kompleksi, pembe kuvars özü ve Fransız gül suyu ile zenginleştirilmiş konsantre gençlik iksiri."
+          }
+        }
+      },
+      "block_order": [
+        "subheading_1",
+        "title_1",
+        "rating_1",
+        "price_1",
+        "description_1"
+      ],
+      "settings": {}
+    },
     "product_grid": {
       "type": "collection-product-grid",
       "settings": {}
@@ -77,6 +123,7 @@
   "order": [
     "hero_banner",
     "filter_bar",
+    "featured_serum_showcase",
     "product_grid"
   ]
 }

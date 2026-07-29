@@ -1,21 +1,21 @@
 {% comment %}
-  Dark Luxury Combined Collection Page Section
-  Renders the Hero Banner, Filter Bar, and Product Grid components together in a single section.
+  Koleksiyon Şablonu Kapsayıcı Bölümü
+  Not: Shopify'da bir section içerisinden başka bir section çağrılamayacağı için
+  her bir modül (Hero Banner, Filtre Barı, Öne Çıkan Serum ve Ürün Izgarası)
+  templates/collection.json şablonu üzerinden bağımsız birer Shopify Bölümü (Section) olarak yüklenir.
 {% endcomment %}
 
-<div class="collection-master-section full-width">
+<div class="collection-page-wrapper">
   {% section 'collection-hero-banner' %}
-  {% section 'collection-filter-bar' %}
-  {% section 'collection-product-grid' %}
 </div>
 
 {% schema %}
 {
-  "name": "Koleksiyon Ana Sayfası",
+  "name": "Koleksiyon Sayfası",
   "settings": [],
   "presets": [
     {
-      "name": "Koleksiyon Ana Sayfası (Tüm Yapı)"
+      "name": "Koleksiyon Sayfası"
     }
   ]
 }
