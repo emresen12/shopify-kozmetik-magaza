@@ -32,31 +32,36 @@
           "type": "filter_pill",
           "settings": {
             "label": "Tüm Ürünler",
+            "category": "all",
             "is_active": true
           }
         },
         "filter_2": {
           "type": "filter_pill",
           "settings": {
-            "label": "Serumlar"
+            "label": "Serumlar",
+            "category": "serum"
           }
         },
         "filter_3": {
           "type": "filter_pill",
           "settings": {
-            "label": "Nemlendiriciler"
+            "label": "Nemlendiriciler",
+            "category": "moisturizer"
           }
         },
         "filter_4": {
           "type": "filter_pill",
           "settings": {
-            "label": "Yüz Maskeleri"
+            "label": "Yüz Maskeleri",
+            "category": "mask"
           }
         },
         "filter_5": {
           "type": "filter_pill",
           "settings": {
-            "label": "Göz Bakımı"
+            "label": "Göz Bakımı",
+            "category": "eye-care"
           }
         }
       },
@@ -67,77 +72,9 @@
         "filter_4",
         "filter_5"
       ],
-      "settings": {}
-    },
-    "serum_showcase": {
-      "type": "serum-showcase",
-      "blocks": {
-        "image_1": {
-          "type": "image",
-          "settings": {
-            "badge_text": "✦ ÖNE ÇIKAN SAF HYALÜRONİK SERUM",
-            "caption_title": "Radiance Glow Hyalüronik Serum",
-            "caption_subtitle": "%100 Saf Hyalüronik Asit & Pembe Kuvars Özlü Gençlik İksiri"
-          }
-        }
-      },
-      "block_order": [
-        "image_1"
-      ],
-      "settings": {}
-    },
-    "featured_product_details": {
-      "type": "featured-product",
-      "blocks": {
-        "image_1": {
-          "type": "image",
-          "settings": {
-            "badge_text": "✦ %30 ÖZEL İNDİRİM"
-          }
-        },
-        "subheading_1": {
-          "type": "subheading",
-          "settings": {
-            "text": "LUMIÈRE BOTANICALS • HAUTE COUTURE BEAUTY"
-          }
-        },
-        "title_1": {
-          "type": "title",
-          "settings": {
-            "text": "Radiance Glow Hyalüronik Serum"
-          }
-        },
-        "rating_1": {
-          "type": "rating",
-          "settings": {
-            "stars": "★★★★★",
-            "score": "4.9 / 5.0 (128 Değerlendirme)"
-          }
-        },
-        "price_1": {
-          "type": "price",
-          "settings": {
-            "price": "₺450,00",
-            "compare_price": "₺650,00",
-            "savings_text": "₺200 Tasarruf"
-          }
-        },
-        "description_1": {
-          "type": "description",
-          "settings": {
-            "text": "Cildinize anında doğal ışıltı ve derinlemesine nem kazandıran 3'lü saf hyalüronik asit kompleksi, pembe kuvars özü ve Fransız gül suyu ile zenginleştirilmiş konsantre gençlik iksiri."
-          }
-        }
-      },
-      "block_order": [
-        "image_1",
-        "subheading_1",
-        "title_1",
-        "rating_1",
-        "price_1",
-        "description_1"
-      ],
-      "settings": {}
+      "settings": {
+        "show_grid_switcher": true
+      }
     },
     "product_grid": {
       "type": "collection-product-grid",
@@ -145,9 +82,10 @@
         "card_1": {
           "type": "product_card",
           "settings": {
+            "category": "serum",
             "badge_text": "✦ EN ÇOK SATAN",
             "title": "Radiance Glow Hyalüronik Serum 30ml",
-            "description": "Cilt bariyerini yenileyici ve derinlemesine nemlendirici lüks gençlik iksiri",
+            "description": "3'lü moleküler hyalüronik asit ve pembe kuvars özlü gençlik iksiri",
             "price": "₺450,00",
             "compare_price": "₺650,00"
           }
@@ -155,26 +93,95 @@
         "card_2": {
           "type": "product_card",
           "settings": {
+            "category": "serum",
             "badge_text": "YENİ",
-            "title": "Velvet Hydra Besleyici Gece Kremi 50ml",
-            "description": "Gece boyunca yoğun elastikiyet ve derinlemesine nem bakımı sağlayan krem",
-            "price": "₺520,00",
+            "title": "Pure Vitamin C Brightening Essence 30ml",
+            "description": "Cilt tonunu eşitleyici ve leke karşıtı %15 konsantre C vitamini esansı",
+            "price": "₺550,00",
             "compare_price": "₺700,00"
           }
         },
         "card_3": {
           "type": "product_card",
           "settings": {
-            "badge_text": "ORGANİK",
-            "title": "Isparta Gül Suyu Arındırıcı Tonik 200ml",
-            "description": "Gözenek sıkılaştırıcı %100 doğal Isparta gül suyu özü",
-            "price": "₺280,00",
-            "compare_price": "₺350,00"
+            "category": "serum",
+            "badge_text": "ORGANİK İKSİR",
+            "title": "Midnight Youth Repair Oil 30ml",
+            "description": "Gece boyunca hücresel yenilenme sağlayan skualan ve kuşburnu yağı",
+            "price": "₺740,00",
+            "compare_price": "₺900,00"
           }
         },
         "card_4": {
           "type": "product_card",
           "settings": {
+            "category": "moisturizer",
+            "badge_text": "YOĞUN NEM",
+            "title": "Velvet Hydra Besleyici Gece Kremi 50ml",
+            "description": "Gece boyunca yoğun elastikiyet ve derinlemesine nem bakımı sağlayan krem",
+            "price": "₺520,00",
+            "compare_price": "₺700,00"
+          }
+        },
+        "card_5": {
+          "type": "product_card",
+          "settings": {
+            "category": "moisturizer",
+            "badge_text": "✦ LÜKS BAKIM",
+            "title": "Hydra-Luxe Intensive Day Cream 50ml",
+            "description": "Gün boyu cildi koruyan, ipeksi his bırakan gündüz nemlendiricisi",
+            "price": "₺620,00",
+            "compare_price": "₺750,00"
+          }
+        },
+        "card_6": {
+          "type": "product_card",
+          "settings": {
+            "category": "moisturizer",
+            "badge_text": "DOĞAL GÜL SUYU",
+            "title": "Rose Water Balancing Emulsion 100ml",
+            "description": "%100 doğal Isparta gül suyu içerikli hafif yapılı nemlendirici emülsiyon",
+            "price": "₺340,00",
+            "compare_price": "₺430,00"
+          }
+        },
+        "card_7": {
+          "type": "product_card",
+          "settings": {
+            "category": "mask",
+            "badge_text": "✦ DETOKS MASKESİ",
+            "title": "Pembe Kuvars Canlandırıcı Yüz Maskesi 100ml",
+            "description": "Cildi anında ışıltılı ve taze bir görünüme kavuşturan detoks maskesi",
+            "price": "₺480,00",
+            "compare_price": "₺600,00"
+          }
+        },
+        "card_8": {
+          "type": "product_card",
+          "settings": {
+            "category": "mask",
+            "badge_text": "5'Lİ SET",
+            "title": "Rose Infusion Detox Sheet Mask Set",
+            "description": "Fransız gül suyu konsantresi emdirilmiş 5 adet yoğun nem kağıt maskesi",
+            "price": "₺380,00",
+            "compare_price": "₺460,00"
+          }
+        },
+        "card_9": {
+          "type": "product_card",
+          "settings": {
+            "category": "mask",
+            "badge_text": "GÖZENEK SIKILAŞTIRICI",
+            "title": "Charcoal Purifying Clay Mask 100ml",
+            "description": "Gözeneklerdeki fazla yağı ve kiri arındıran doğal kil maskesi",
+            "price": "₺310,00",
+            "compare_price": "₺390,00"
+          }
+        },
+        "card_10": {
+          "type": "product_card",
+          "settings": {
+            "category": "eye-care",
             "badge_text": "%20 İNDİRİM",
             "title": "Anti-Aging Peptit Göz Çevresi Kremi 15ml",
             "description": "Göz altı morlukları ve şişlik karşıtı konsantre peptit kompleksi",
@@ -182,44 +189,26 @@
             "compare_price": "₺500,00"
           }
         },
-        "card_5": {
+        "card_11": {
           "type": "product_card",
           "settings": {
-            "badge_text": "✦ LÜKS MASKELENME",
-            "title": "Pembe Kuvars Canlandırıcı Yüz Maskesi 100ml",
-            "description": "Cildi anında ışıltılı ve taze bir görünüme kavuşturan detoks maskesi",
-            "price": "₺480,00",
-            "compare_price": "₺600,00"
+            "category": "eye-care",
+            "badge_text": "24K ALTIN ÖZLÜ",
+            "title": "Lumière Gold Eye Contour Elixir 15ml",
+            "description": "Göz çevresine gençlik ve ışıltı veren 24K altın tanecikli serum",
+            "price": "₺590,00",
+            "compare_price": "₺720,00"
           }
         },
-        "card_6": {
+        "card_12": {
           "type": "product_card",
           "settings": {
-            "badge_text": "ORGANİK İKSİR",
-            "title": "Botanical Cleansing Elixir 150ml",
-            "description": "Cildi yıpratmadan derinlemesine arındıran doğal temizleyici iksir",
-            "price": "₺320,00",
-            "compare_price": "₺420,00"
-          }
-        },
-        "card_7": {
-          "type": "product_card",
-          "settings": {
-            "badge_text": "SAF C VİTAMİNİ",
-            "title": "Pure Vitamin C Brightening Essence 30ml",
-            "description": "Cilt tonunu eşitleyici ve leke karşıtı saf C vitamini esansı",
-            "price": "₺550,00",
-            "compare_price": "₺700,00"
-          }
-        },
-        "card_8": {
-          "type": "product_card",
-          "settings": {
-            "badge_text": "SPF 50+ KORUMA",
-            "title": "Satin Finish SPF50+ Güneş Koruyucu 50ml",
-            "description": "İpeksi dokulu yüksek korumalı nemlendirici yüz güneş kremi",
-            "price": "₺410,00",
-            "compare_price": "₺520,00"
+            "category": "eye-care",
+            "badge_text": "ŞİŞLİK KARŞITI",
+            "title": "Revitalizing Eye Gel Complex 15ml",
+            "description": "Yorgun göz çevresini anında ferahlatan ve yatıştıran jel kompleks",
+            "price": "₺420,00",
+            "compare_price": "₺510,00"
           }
         }
       },
@@ -231,16 +220,20 @@
         "card_5",
         "card_6",
         "card_7",
-        "card_8"
+        "card_8",
+        "card_9",
+        "card_10",
+        "card_11",
+        "card_12"
       ],
-      "settings": {}
+      "settings": {
+        "columns_desktop": 4
+      }
     }
   },
   "order": [
     "hero_banner",
     "filter_bar",
-    "serum_showcase",
-    "featured_product_details",
     "product_grid"
   ]
 }

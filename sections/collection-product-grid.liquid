@@ -1,7 +1,6 @@
 {% comment %}
-  Modular Collection Product Grid Section (Independent Theme Block Card Architecture)
+  Modular Collection Product Grid Section (Category Filtering & Grid Mode Switcher Ready)
   Renders product cards as independent, customizable Section Blocks (`product_card`).
-  Each product card block appears in Shopify Theme Editor left sidebar tree and can be individually edited when clicked!
 {% endcomment %}
 
 <div class="collection-product-grid-section full-width" style="
@@ -19,7 +18,7 @@
       {% if card_blocks.size > 0 %}
         {% for block in card_blocks %}
           {% assign prod = block.settings.product %}
-          <div class="haute-product-card" style="
+          <div class="haute-product-card" data-category="{{ block.settings.category | default: 'all' }}" style="
             --item-card-bg: {{ block.settings.card_bg_color }};
             --item-card-border: {{ block.settings.card_border_color }};
             --item-card-radius: {{ block.settings.card_border_radius }}px;
@@ -93,7 +92,7 @@
         {% paginate collection.products by section.settings.products_per_page %}
           {% if collection.products.size > 0 %}
             {% for product in collection.products %}
-              <div class="haute-product-card" {{ section.shopify_attributes }}>
+              <div class="haute-product-card" data-category="all" {{ section.shopify_attributes }}>
                 <div class="card-image-wrapper">
                   <a href="{{ product.url }}">
                     {% if product.featured_image %}
@@ -164,6 +163,7 @@
     display: grid;
     grid-template-columns: repeat(var(--grid-columns-desktop, 4), 1fr);
     gap: var(--grid-gap, 24px);
+    transition: grid-template-columns 0.3s ease;
   }
 
   /* Haute Shared Product Card Component Styles */
@@ -177,7 +177,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, opacity 0.3s ease;
   }
 
   .haute-product-card:hover {
@@ -365,7 +365,7 @@
     {
       "type": "range",
       "id": "columns_desktop",
-      "label": "Masaüstü Sütun Sayısı",
+      "label": "Masaüstü Varsayılan Sütun Sayısı",
       "min": 2,
       "max": 6,
       "step": 1,
@@ -431,6 +431,19 @@
       "type": "product_card",
       "name": "🛍️ Ürün Kartı Bloğu",
       "settings": [
+        {
+          "type": "select",
+          "id": "category",
+          "label": "Filtrelenecek Kategori Türü",
+          "options": [
+            { "value": "all", "label": "Tüm Ürünler" },
+            { "value": "serum", "label": "Serumlar" },
+            { "value": "moisturizer", "label": "Nemlendiriciler" },
+            { "value": "mask", "label": "Yüz Maskeleri" },
+            { "value": "eye-care", "label": "Göz Bakımı" }
+          ],
+          "default": "all"
+        },
         {
           "type": "product",
           "id": "product",

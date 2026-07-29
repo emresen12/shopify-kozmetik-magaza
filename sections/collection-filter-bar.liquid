@@ -1,6 +1,5 @@
 {% comment %}
-  Modular Collection Filter & Sort Bar Section
-  Fully customizable in Shopify Theme Editor (Pills, Sort Options, Colors, Glassmorphism, Typography)
+  Modular Collection Filter & Sort Bar Section with Grid View Switcher & Interactive Category Filters
 {% endcomment %}
 
 <div class="collection-filter-bar-section full-width" style="
@@ -28,41 +27,104 @@
   <div class="filter-bar-container">
     <div class="collection-filter-bar">
       
-      <!-- Filter Pills -->
+      <!-- Interactive Category Filter Pills -->
       {% if section.settings.show_filter_pills %}
-        <div class="filter-pills">
+        <div class="filter-pills" id="categoryFilterPills">
           {% if section.blocks.size > 0 %}
             {% for block in section.blocks %}
-              <button type="button" class="filter-pill {% if block.settings.is_active %}active{% endif %}" {{ block.shopify_attributes }}>
+              <button type="button" class="filter-pill {% if block.settings.is_active or forloop.first %}active{% endif %}" data-category="{{ block.settings.category | default: 'all' }}" {{ block.shopify_attributes }}>
                 {{ block.settings.label }}
               </button>
             {% endfor %}
           {% else %}
-            <button type="button" class="filter-pill active">Tüm Ürünler</button>
-            <button type="button" class="filter-pill">Serumlar</button>
-            <button type="button" class="filter-pill">Nemlendiriciler</button>
-            <button type="button" class="filter-pill">Yüz Maskeleri</button>
-            <button type="button" class="filter-pill">Göz Bakımı</button>
+            <button type="button" class="filter-pill active" data-category="all">Tüm Ürünler</button>
+            <button type="button" class="filter-pill" data-category="serum">Serumlar</button>
+            <button type="button" class="filter-pill" data-category="moisturizer">Nemlendiriciler</button>
+            <button type="button" class="filter-pill" data-category="mask">Yüz Maskeleri</button>
+            <button type="button" class="filter-pill" data-category="eye-care">Göz Bakımı</button>
           {% endif %}
         </div>
       {% endif %}
 
-      <!-- Sort Dropdown Box -->
-      {% if section.settings.show_sort_box %}
-        <div class="collection-sort-box">
-          <span class="sort-label">{{ section.settings.sort_label | default: "Sırala:" }}</span>
-          <select class="dark-sort-select">
-            <option value="manual">Öne Çıkanlar</option>
-            <option value="price-ascending">Fiyat: Düşükten Yükseğe</option>
-            <option value="price-descending">Fiyat: Yüksekten Düşüğe</option>
-            <option value="created-descending">En Yeniler</option>
-          </select>
-        </div>
-      {% endif %}
+      <!-- Right Controls: Grid View Switcher & Sort Box -->
+      <div class="filter-right-controls">
+        <!-- Grid View Mode Switcher (2'li, 3'lü, 4'lü) -->
+        {% if section.settings.show_grid_switcher %}
+          <div class="grid-layout-switcher" id="gridLayoutSwitcher">
+            <span class="switcher-label">Görünüm:</span>
+            <button type="button" class="grid-switch-btn" data-cols="2" title="2 Sütunlu Görünüm">
+              <span>2'li</span>
+            </button>
+            <button type="button" class="grid-switch-btn" data-cols="3" title="3 Sütunlu Görünüm">
+              <span>3'lü</span>
+            </button>
+            <button type="button" class="grid-switch-btn active" data-cols="4" title="4 Sütunlu Görünüm">
+              <span>4'lü</span>
+            </button>
+          </div>
+        {% endif %}
+
+        <!-- Sort Dropdown Box -->
+        {% if section.settings.show_sort_box %}
+          <div class="collection-sort-box">
+            <span class="sort-label">{{ section.settings.sort_label | default: "Sırala:" }}</span>
+            <select class="dark-sort-select">
+              <option value="manual">Öne Çıkanlar</option>
+              <option value="price-ascending">Fiyat: Düşükten Yükseğe</option>
+              <option value="price-descending">Fiyat: Yüksekten Düşüğe</option>
+              <option value="created-descending">En Yeniler</option>
+            </select>
+          </div>
+        {% endif %}
+      </div>
 
     </div>
   </div>
 </div>
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1. Category Filter Interaction
+    const pills = document.querySelectorAll('#categoryFilterPills .filter-pill');
+    const cards = document.querySelectorAll('.haute-product-card');
+
+    pills.forEach(pill => {
+      pill.addEventListener('click', function() {
+        const selectedCategory = this.getAttribute('data-category');
+
+        pills.forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+
+        cards.forEach(card => {
+          const cardCategory = card.getAttribute('data-category') || 'all';
+          if (selectedCategory === 'all' || cardCategory === selectedCategory || cardCategory === 'all') {
+            card.style.display = 'flex';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // 2. Grid Columns Switcher (2'li, 3'lü, 4'lü)
+    const switchBtns = document.querySelectorAll('#gridLayoutSwitcher .grid-switch-btn');
+    const productGrid = document.querySelector('.collection-products-grid');
+
+    switchBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const cols = this.getAttribute('data-cols');
+        switchBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        if (productGrid) {
+          productGrid.style.setProperty('--grid-columns-desktop', cols);
+        }
+      });
+    });
+  });
+{% endjavascript %}
 
 {% stylesheet %}
   .filter-bar-container {
@@ -110,6 +172,49 @@
     box-shadow: 0 4px 14px rgba(194, 91, 130, 0.2);
   }
 
+  .filter-right-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .grid-layout-switcher {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .switcher-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
+  .grid-switch-btn {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .grid-switch-btn.active,
+  .grid-switch-btn:hover {
+    background: rgba(194, 91, 130, 0.3);
+    border-color: #f7cad0;
+    color: #ffffff;
+  }
+
   .collection-sort-box {
     display: flex;
     align-items: center;
@@ -150,7 +255,13 @@
     {
       "type": "checkbox",
       "id": "show_filter_pills",
-      "label": "Filtre Butonlarını Göster",
+      "label": "Kategori Butonlarını Göster",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_grid_switcher",
+      "label": "2'li/3'lü/4'lü Görünüm Seçiciyi Göster",
       "default": true
     },
     {
@@ -335,13 +446,26 @@
   "blocks": [
     {
       "type": "filter_pill",
-      "name": "Filtre Sekmesi / Butonu",
+      "name": "Kategori Butonu",
       "settings": [
         {
           "type": "text",
           "id": "label",
           "label": "Buton Başlığı",
           "default": "Kategori Adı"
+        },
+        {
+          "type": "select",
+          "id": "category",
+          "label": "Filtrelenecek Kategori Türü",
+          "options": [
+            { "value": "all", "label": "Tüm Ürünler" },
+            { "value": "serum", "label": "Serumlar" },
+            { "value": "moisturizer", "label": "Nemlendiriciler" },
+            { "value": "mask", "label": "Yüz Maskeleri" },
+            { "value": "eye-care", "label": "Göz Bakımı" }
+          ],
+          "default": "all"
         },
         {
           "type": "checkbox",
@@ -356,11 +480,11 @@
     {
       "name": "Koleksiyon Filtre Barı",
       "blocks": [
-        { "type": "filter_pill", "settings": { "label": "Tüm Ürünler", "is_active": true } },
-        { "type": "filter_pill", "settings": { "label": "Serumlar" } },
-        { "type": "filter_pill", "settings": { "label": "Nemlendiriciler" } },
-        { "type": "filter_pill", "settings": { "label": "Yüz Maskeleri" } },
-        { "type": "filter_pill", "settings": { "label": "Göz Bakımı" } }
+        { "type": "filter_pill", "settings": { "label": "Tüm Ürünler", "category": "all", "is_active": true } },
+        { "type": "filter_pill", "settings": { "label": "Serumlar", "category": "serum" } },
+        { "type": "filter_pill", "settings": { "label": "Nemlendiriciler", "category": "moisturizer" } },
+        { "type": "filter_pill", "settings": { "label": "Yüz Maskeleri", "category": "mask" } },
+        { "type": "filter_pill", "settings": { "label": "Göz Bakımı", "category": "eye-care" } }
       ]
     }
   ]
