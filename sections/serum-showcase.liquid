@@ -1,6 +1,6 @@
 {% comment %}
-  Standalone Serum Image Showcase Section (Kendi Başına Özelleştirilebilir Serum Görseli Vitrini)
-  Fully clickable in Shopify Theme Editor. Clicking the image opens all settings on the right panel!
+  Standalone Serum Image Showcase Section with Block-Level Inspector Click Support
+  Clicking the image in Shopify Theme Editor selects the Image Block and opens its properties!
 {% endcomment %}
 
 <div class="serum-showcase-section full-width" style="
@@ -19,42 +19,78 @@
   --badge-bg: {{ section.settings.badge_bg }};
   --badge-text-color: {{ section.settings.badge_text_color }};
   --img-radius: {{ section.settings.img_radius }}px;
-" {{ section.shopify_attributes }}>
+">
 
   <!-- Glowing Background Orbs -->
   <div class="serum-orb orb-1"></div>
   <div class="serum-orb orb-2"></div>
 
   <div class="serum-showcase-container">
-    <div class="serum-glass-frame">
-      <div class="serum-aura-glow"></div>
-      
-      <!-- Main Serum Image -->
-      <div class="serum-image-wrapper">
-        {% if section.settings.serum_image != blank %}
-          {{ section.settings.serum_image | image_url: width: 1200 | image_tag: class: 'serum-showcase-img', loading: 'lazy' }}
-        {% else %}
-          <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Lüks Gençleştirici Serum" class="serum-showcase-img" width="800" height="800" loading="lazy">
-        {% endif %}
-      </div>
+    {% if section.blocks.size > 0 %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'image' %}
+            <div class="serum-glass-frame" {{ block.shopify_attributes }}>
+              <div class="serum-aura-glow"></div>
+              
+              <!-- Main Serum Image -->
+              <div class="serum-image-wrapper">
+                {% if block.settings.serum_image != blank %}
+                  {{ block.settings.serum_image | image_url: width: 1200 | image_tag: class: 'serum-showcase-img', loading: 'lazy' }}
+                {% elsif section.settings.serum_image != blank %}
+                  {{ section.settings.serum_image | image_url: width: 1200 | image_tag: class: 'serum-showcase-img', loading: 'lazy' }}
+                {% else %}
+                  <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Lüks Gençleştirici Serum" class="serum-showcase-img" width="800" height="800" loading="lazy">
+                {% endif %}
+              </div>
 
-      <!-- Badge Overlay -->
-      {% if section.settings.show_badge and section.settings.badge_text != blank %}
-        <div class="serum-badge-overlay">
-          <span>{{ section.settings.badge_text }}</span>
-        </div>
-      {% endif %}
+              <!-- Badge Overlay -->
+              {% assign badge_val = block.settings.badge_text | default: section.settings.badge_text %}
+              {% if badge_val != blank %}
+                <div class="serum-badge-overlay">
+                  <span>{{ badge_val }}</span>
+                </div>
+              {% endif %}
 
-      <!-- Optional Title Overlay -->
-      {% if section.settings.show_caption and section.settings.caption_title != blank %}
-        <div class="serum-caption-overlay">
-          <h3>{{ section.settings.caption_title }}</h3>
-          {% if section.settings.caption_subtitle != blank %}
-            <p>{{ section.settings.caption_subtitle }}</p>
+              <!-- Caption Overlay -->
+              {% assign title_val = block.settings.caption_title | default: section.settings.caption_title %}
+              {% if title_val != blank %}
+                <div class="serum-caption-overlay">
+                  <h3>{{ title_val }}</h3>
+                  {% assign sub_val = block.settings.caption_subtitle | default: section.settings.caption_subtitle %}
+                  {% if sub_val != blank %}
+                    <p>{{ sub_val }}</p>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+        {% endcase %}
+      {% endfor %}
+    {% else %}
+      <div class="serum-glass-frame" {{ section.shopify_attributes }}>
+        <div class="serum-aura-glow"></div>
+        <div class="serum-image-wrapper">
+          {% if section.settings.serum_image != blank %}
+            {{ section.settings.serum_image | image_url: width: 1200 | image_tag: class: 'serum-showcase-img', loading: 'lazy' }}
+          {% else %}
+            <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Lüks Gençleştirici Serum" class="serum-showcase-img" width="800" height="800" loading="lazy">
           {% endif %}
         </div>
-      {% endif %}
-    </div>
+        {% if section.settings.badge_text != blank %}
+          <div class="serum-badge-overlay">
+            <span>{{ section.settings.badge_text }}</span>
+          </div>
+        {% endif %}
+        {% if section.settings.caption_title != blank %}
+          <div class="serum-caption-overlay">
+            <h3>{{ section.settings.caption_title }}</h3>
+            {% if section.settings.caption_subtitle != blank %}
+              <p>{{ section.settings.caption_subtitle }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
   </div>
 </div>
 
@@ -233,15 +269,47 @@
 {% schema %}
 {
   "name": "Öne Çıkan Serum Vitrini",
+  "blocks": [
+    {
+      "type": "image",
+      "name": "🖼️ Serum Görsel Bloğu",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "serum_image",
+          "label": "Serum Görselini Seçin / Yükleyin"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Görsel Üstü Rozet Metni",
+          "default": "✦ ÖNE ÇIKAN SAF HYALÜRONİK SERUM"
+        },
+        {
+          "type": "text",
+          "id": "caption_title",
+          "label": "Görsel Altı Vitrin Başlığı",
+          "default": "Radiance Glow Hyalüronik Serum"
+        },
+        {
+          "type": "text",
+          "id": "caption_subtitle",
+          "label": "Görsel Altı Vitrin Açıklaması",
+          "default": "%100 Saf Hyalüronik Asit & Pembe Kuvars Özlü Gençlik İksiri"
+        }
+      ]
+    }
+  ],
   "settings": [
     {
       "type": "header",
-      "content": "🖼️ Serum Görseli Seçimi & Yükleme"
+      "content": "🖼️ Görsel & Konteyner Boyutları"
     },
     {
       "type": "image_picker",
       "id": "serum_image",
-      "label": "Öne Çıkan Serum Görselini Seçin / Yükleyin"
+      "label": "Varsayılan Serum Görseli"
     },
     {
       "type": "range",
@@ -262,56 +330,6 @@
       "step": 2,
       "unit": "px",
       "default": 24
-    },
-    {
-      "type": "header",
-      "content": "🏷️ Üst İndirim / Vurgu Rozeti"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_badge",
-      "label": "Görsel Üstü Rozetini Göster",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "badge_text",
-      "label": "Rozet Metni",
-      "default": "✦ ÖNE ÇIKAN SAF HYALÜRONİK SERUM"
-    },
-    {
-      "type": "color",
-      "id": "badge_bg",
-      "label": "Rozet Arka Plan Rengi",
-      "default": "#c25b82"
-    },
-    {
-      "type": "color",
-      "id": "badge_text_color",
-      "label": "Rozet Metin Rengi",
-      "default": "#ffffff"
-    },
-    {
-      "type": "header",
-      "content": "📝 Görsel Altı Başlık & Açıklama Kartı"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_caption",
-      "label": "Görsel Altı Başlık Kartını Göster",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "caption_title",
-      "label": "Vitrin Başlığı",
-      "default": "Radiance Glow Hyalüronik Serum"
-    },
-    {
-      "type": "text",
-      "id": "caption_subtitle",
-      "label": "Vitrin Açıklaması",
-      "default": "%100 Saf Hyalüronik Asit & Pembe Kuvars Özlü Gençlik İksiri"
     },
     {
       "type": "header",
@@ -418,7 +436,17 @@
   ],
   "presets": [
     {
-      "name": "Öne Çıkan Serum Vitrini"
+      "name": "Öne Çıkan Serum Vitrini",
+      "blocks": [
+        {
+          "type": "image",
+          "settings": {
+            "badge_text": "✦ ÖNE ÇIKAN SAF HYALÜRONİK SERUM",
+            "caption_title": "Radiance Glow Hyalüronik Serum",
+            "caption_subtitle": "%100 Saf Hyalüronik Asit & Pembe Kuvars Özlü Gençlik İksiri"
+          }
+        }
+      ]
     }
   ]
 }

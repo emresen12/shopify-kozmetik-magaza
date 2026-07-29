@@ -35,10 +35,13 @@
     {% assign display_product = section.settings.featured_product %}
 
     <!-- Left: Product Image Gallery -->
-    <div class="featured-product__gallery">
+    {% assign image_block = section.blocks | where: 'type', 'image' | first %}
+    <div class="featured-product__gallery" {% if image_block %}{{ image_block.shopify_attributes }}{% else %}{{ section.shopify_attributes }}{% endif %}>
       <div class="luxury-image-frame">
         <div class="frame-aura-glow"></div>
-        {% if section.settings.custom_image != blank %}
+        {% if image_block and image_block.settings.image != blank %}
+          {{ image_block.settings.image | image_url: width: 800 | image_tag: class: 'featured-product__img', loading: 'lazy' }}
+        {% elsif section.settings.custom_image != blank %}
           {{ section.settings.custom_image | image_url: width: 800 | image_tag: class: 'featured-product__img', loading: 'lazy' }}
         {% elsif display_product and display_product.featured_image %}
           {{ display_product.featured_image | image_url: width: 800 | image_tag: class: 'featured-product__img', loading: 'lazy' }}
@@ -46,8 +49,9 @@
           <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Gençleştirici Serum" class="featured-product__img" width="600" height="600" loading="lazy">
         {% endif %}
 
-        {% if section.settings.badge_text != blank %}
-          <span class="metallic-sale-tag">{{ section.settings.badge_text }}</span>
+        {% assign badge_val = image_block.settings.badge_text | default: section.settings.badge_text %}
+        {% if badge_val != blank %}
+          <span class="metallic-sale-tag">{{ badge_val }}</span>
         {% endif %}
       </div>
       
@@ -826,6 +830,24 @@
     }
   ],
   "blocks": [
+    {
+      "type": "image",
+      "name": "🖼️ Ürün / Serum Görseli",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Öne Çıkan Görsel / Serum Resmi Yükle"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Görsel Üstü İndirim Rozeti",
+          "default": "✦ %30 ÖZEL İNDİRİM"
+        }
+      ]
+    },
     {
       "type": "subheading",
       "name": "Üst Marka Rozeti",

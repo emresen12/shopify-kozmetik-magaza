@@ -52,6 +52,12 @@
     "featured_product_showcase": {
       "type": "featured-product",
       "blocks": {
+        "image_1": {
+          "type": "image",
+          "settings": {
+            "badge_text": "✦ %30 ÖZEL İNDİRİM"
+          }
+        },
         "subheading_1": {
           "type": "subheading",
           "settings": {
@@ -128,6 +134,7 @@
         }
       },
       "block_order": [
+        "image_1",
         "subheading_1",
         "title_1",
         "rating_1",
@@ -217,11 +224,20 @@
     },
     "serum_showcase": {
       "type": "serum-showcase",
-      "settings": {
-        "badge_text": "✦ ÖNE ÇIKAN SAF HYALÜRONİK SERUM",
-        "caption_title": "Radiance Glow Hyalüronik Serum",
-        "caption_subtitle": "%100 Saf Hyalüronik Asit & Pembe Kuvars Özlü Gençlik İksiri"
-      }
+      "blocks": {
+        "image_1": {
+          "type": "image",
+          "settings": {
+            "badge_text": "✦ ÖNE ÇIKAN SAF HYALÜRONİK SERUM",
+            "caption_title": "Radiance Glow Hyalüronik Serum",
+            "caption_subtitle": "%100 Saf Hyalüronik Asit & Pembe Kuvars Özlü Gençlik İksiri"
+          }
+        }
+      },
+      "block_order": [
+        "image_1"
+      ],
+      "settings": {}
     }
   },
   "order": [
