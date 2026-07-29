@@ -44,16 +44,7 @@
             "subtotal_label": "Ara Toplam",
             "shipping_label": "Tahmini Kargo",
             "total_label": "Genel Toplam",
-            "btn_text": "Siparişi Tamamla (Güvenli Ödeme)"
-          }
-        },
-        "guarantee_1": {
-          "type": "guarantee_badges",
-          "settings": {
-            "badge_1": "🔒 256-Bit SSL Güvenli Şifreleme",
-            "badge_2": "⚡ Aynı Gün Hızlı Kargo Teslimatı",
-            "badge_3": "💯 %100 Orijinal Ürün Garantisi",
-            "badge_4": "↺ 14 Gün Koşulsuz Ücretsiz İade"
+            "btn_text": "Siparişi Tamamla"
           }
         }
       },
@@ -62,8 +53,7 @@
         "free_shipping_1",
         "item_1",
         "item_2",
-        "summary_1",
-        "guarantee_1"
+        "summary_1"
       ],
       "settings": {}
     }

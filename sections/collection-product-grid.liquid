@@ -69,32 +69,37 @@
           {% assign category_blocks = section.blocks | where: "type", "category_filter" %}
           {% if category_blocks.size > 0 %}
             {% assign cat_first = category_blocks | first %}
-            <div class="sidebar-filter-block" style="
+            <div class="sidebar-filter-block collapsible-block open" style="
               --blk-title-color: {{ cat_first.settings.title_color | default: '#f7cad0' }};
               --blk-title-size: {{ cat_first.settings.title_font_size | default: 12 }}px;
               --blk-title-spacing: {{ cat_first.settings.title_letter_spacing | default: 1.5 }}px;
             ">
-              <h4 class="sidebar-block-title">{{ cat_first.settings.block_title | default: "KATEGORİLER" }}</h4>
-              <div class="sidebar-category-list" id="categoryFilterPills">
-                {% for block in category_blocks %}
-                  <button type="button" class="filter-pill sidebar-cat-item {% if block.settings.is_active or forloop.first %}active{% endif %}"
-                    data-category="{{ block.settings.category | default: 'all' }}"
-                    style="
-                      --cat-item-bg: {{ block.settings.item_bg | default: 'rgba(255, 255, 255, 0.03)' }};
-                      --cat-item-border: {{ block.settings.item_border | default: 'rgba(255, 255, 255, 0.08)' }};
-                      --cat-item-color: {{ block.settings.item_text_color | default: 'rgba(255, 255, 255, 0.75)' }};
-                      --cat-active-bg-start: {{ block.settings.active_bg_start | default: 'rgba(194, 91, 130, 0.3)' }};
-                      --cat-active-bg-end: {{ block.settings.active_bg_end | default: 'rgba(162, 67, 103, 0.3)' }};
-                      --cat-active-border: {{ block.settings.active_border | default: '#f7cad0' }};
-                      --cat-active-color: {{ block.settings.active_text_color | default: '#ffffff' }};
-                      --cat-dot-color: {{ block.settings.dot_color | default: 'transparent' }};
-                      --cat-active-dot-color: {{ block.settings.active_dot_color | default: '#f7cad0' }};
-                    "
-                    {{ block.shopify_attributes }}>
-                    <span class="cat-label">{{ block.settings.label }}</span>
-                    <span class="cat-dot"></span>
-                  </button>
-                {% endfor %}
+              <div class="sidebar-block-header">
+                <h4 class="sidebar-block-title">{{ cat_first.settings.block_title | default: "KATEGORİLER" }}</h4>
+                <button type="button" class="sidebar-accordion-toggle" aria-label="Aç / Kapat"><span class="accordion-icon">−</span></button>
+              </div>
+              <div class="sidebar-block-content">
+                <div class="sidebar-category-list" id="categoryFilterPills">
+                  {% for block in category_blocks %}
+                    <button type="button" class="filter-pill sidebar-cat-item {% if block.settings.is_active or forloop.first %}active{% endif %}"
+                      data-category="{{ block.settings.category | default: 'all' }}"
+                      style="
+                        --cat-item-bg: {{ block.settings.item_bg | default: 'rgba(255, 255, 255, 0.03)' }};
+                        --cat-item-border: {{ block.settings.item_border | default: 'rgba(255, 255, 255, 0.08)' }};
+                        --cat-item-color: {{ block.settings.item_text_color | default: 'rgba(255, 255, 255, 0.75)' }};
+                        --cat-active-bg-start: {{ block.settings.active_bg_start | default: 'rgba(194, 91, 130, 0.3)' }};
+                        --cat-active-bg-end: {{ block.settings.active_bg_end | default: 'rgba(162, 67, 103, 0.3)' }};
+                        --cat-active-border: {{ block.settings.active_border | default: '#f7cad0' }};
+                        --cat-active-color: {{ block.settings.active_text_color | default: '#ffffff' }};
+                        --cat-dot-color: {{ block.settings.dot_color | default: 'transparent' }};
+                        --cat-active-dot-color: {{ block.settings.active_dot_color | default: '#f7cad0' }};
+                      "
+                      {{ block.shopify_attributes }}>
+                      <span class="cat-label">{{ block.settings.label }}</span>
+                      <span class="cat-dot"></span>
+                    </button>
+                  {% endfor %}
+                </div>
               </div>
             </div>
           {% endif %}
@@ -103,13 +108,9 @@
           {% assign avail_blocks = section.blocks | where: "type", "availability_filter" %}
           {% if avail_blocks.size > 0 %}
             {% for block in avail_blocks %}
-              <div class="sidebar-filter-block" style="
+              <div class="sidebar-filter-block collapsible-block open" style="
                 --blk-title-color: {{ block.settings.title_color | default: '#f7cad0' }};
                 --blk-title-size: {{ block.settings.title_font_size | default: 12 }}px;
-                --stk-in-dot: {{ block.settings.in_stock_dot_color | default: '#52c41a' }};
-                --stk-in-glow: {{ block.settings.in_stock_dot_glow | default: 'rgba(82, 196, 26, 0.6)' }};
-                --stk-out-dot: {{ block.settings.out_stock_dot_color | default: '#ff4d4f' }};
-                --stk-out-glow: {{ block.settings.out_stock_dot_glow | default: 'rgba(255, 77, 79, 0.6)' }};
                 --stk-chk-bg: {{ block.settings.checkbox_bg | default: 'rgba(255, 255, 255, 0.05)' }};
                 --stk-chk-border: {{ block.settings.checkbox_border | default: 'rgba(255, 255, 255, 0.2)' }};
                 --stk-chk-checked-start: {{ block.settings.checkbox_checked_bg_start | default: '#c25b82' }};
@@ -119,21 +120,24 @@
                 --stk-text-color: {{ block.settings.label_text_color | default: 'rgba(255, 255, 255, 0.85)' }};
                 --stk-chk-radius: {{ block.settings.checkbox_radius | default: 6 }}px;
               " {{ block.shopify_attributes }}>
-                <h4 class="sidebar-block-title">{{ block.settings.title | default: "STOK DURUMU" }}</h4>
-                <div class="sidebar-stock-options">
-                  <label class="stock-option-label">
-                    <input type="checkbox" class="stock-checkbox-input" value="in_stock" checked>
-                    <span class="custom-check-box"><span class="check-mark">✓</span></span>
-                    <span class="stock-status-dot in-stock-dot"></span>
-                    <span class="stock-text">{{ block.settings.in_stock_label | default: "Stokta Var" }}</span>
-                  </label>
+                <div class="sidebar-block-header">
+                  <h4 class="sidebar-block-title">{{ block.settings.title | default: "STOK DURUMU" }}</h4>
+                  <button type="button" class="sidebar-accordion-toggle" aria-label="Aç / Kapat"><span class="accordion-icon">−</span></button>
+                </div>
+                <div class="sidebar-block-content">
+                  <div class="sidebar-stock-options">
+                    <label class="stock-option-label">
+                      <input type="checkbox" class="stock-checkbox-input" value="in_stock" checked>
+                      <span class="custom-check-box"><span class="check-mark">✓</span></span>
+                      <span class="stock-text">{{ block.settings.in_stock_label | default: "Stokta Var" }}</span>
+                    </label>
 
-                  <label class="stock-option-label">
-                    <input type="checkbox" class="stock-checkbox-input" value="out_of_stock" checked>
-                    <span class="custom-check-box"><span class="check-mark">✓</span></span>
-                    <span class="stock-status-dot out-stock-dot"></span>
-                    <span class="stock-text">{{ block.settings.out_of_stock_label | default: "Tükendi / Stokta Yok" }}</span>
-                  </label>
+                    <label class="stock-option-label">
+                      <input type="checkbox" class="stock-checkbox-input" value="out_of_stock" checked>
+                      <span class="custom-check-box"><span class="check-mark">✓</span></span>
+                      <span class="stock-text">{{ block.settings.out_of_stock_label | default: "Tükendi / Stokta Yok" }}</span>
+                    </label>
+                  </div>
                 </div>
               </div>
             {% endfor %}
@@ -143,7 +147,7 @@
           {% assign price_blocks = section.blocks | where: "type", "price_filter" %}
           {% if price_blocks.size > 0 %}
             {% for block in price_blocks %}
-              <div class="sidebar-filter-block" style="
+              <div class="sidebar-filter-block collapsible-block open" style="
                 --blk-title-color: {{ block.settings.title_color | default: '#f7cad0' }};
                 --blk-title-size: {{ block.settings.title_font_size | default: 12 }}px;
                 --prc-symbol-color: {{ block.settings.symbol_color | default: '#f7cad0' }};
@@ -154,17 +158,22 @@
                 --prc-input-radius: {{ block.settings.input_radius | default: 8 }}px;
                 --prc-dash-color: {{ block.settings.dash_color | default: 'rgba(255, 255, 255, 0.4)' }};
               " {{ block.shopify_attributes }}>
-                <h4 class="sidebar-block-title">{{ block.settings.title | default: "FİYAT ARALIĞI" }}</h4>
-                <div class="sidebar-price-controls">
-                  <div class="price-inputs-row">
-                    <div class="price-input-box">
-                      <span class="price-symbol">{{ block.settings.currency_symbol | default: "₺" }}</span>
-                      <input type="number" class="price-num-input" id="minPriceInput" placeholder="{{ block.settings.min_placeholder | default: 'Min' }}" value="{{ block.settings.min_price_default | default: 0 }}" min="0">
-                    </div>
-                    <span class="price-dash">-</span>
-                    <div class="price-input-box">
-                      <span class="price-symbol">{{ block.settings.currency_symbol | default: "₺" }}</span>
-                      <input type="number" class="price-num-input" id="maxPriceInput" placeholder="{{ block.settings.max_placeholder | default: 'Max' }}" value="{{ block.settings.max_price_limit | default: 1000 }}" min="0">
+                <div class="sidebar-block-header">
+                  <h4 class="sidebar-block-title">{{ block.settings.title | default: "FİYAT ARALIĞI" }}</h4>
+                  <button type="button" class="sidebar-accordion-toggle" aria-label="Aç / Kapat"><span class="accordion-icon">−</span></button>
+                </div>
+                <div class="sidebar-block-content">
+                  <div class="sidebar-price-controls">
+                    <div class="price-inputs-row">
+                      <div class="price-input-box">
+                        <span class="price-symbol">{{ block.settings.currency_symbol | default: "₺" }}</span>
+                        <input type="number" class="price-num-input" id="minPriceInput" placeholder="{{ block.settings.min_placeholder | default: 'Min' }}" value="{{ block.settings.min_price_default | default: 0 }}" min="0">
+                      </div>
+                      <span class="price-dash">-</span>
+                      <div class="price-input-box">
+                        <span class="price-symbol">{{ block.settings.currency_symbol | default: "₺" }}</span>
+                        <input type="number" class="price-num-input" id="maxPriceInput" placeholder="{{ block.settings.max_placeholder | default: 'Max' }}" value="{{ block.settings.max_price_limit | default: 1000 }}" min="0">
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -175,7 +184,7 @@
           <!-- Vendor Filter Block -->
           {% assign vendor_blocks = section.blocks | where: "type", "vendor_filter" %}
           {% for block in vendor_blocks %}
-            <div class="sidebar-filter-block" style="
+            <div class="sidebar-filter-block collapsible-block open" style="
               --blk-title-color: {{ block.settings.title_color | default: '#f7cad0' }};
               --vnd-text-color: {{ block.settings.item_text_color | default: 'rgba(255, 255, 255, 0.85)' }};
               --stk-chk-bg: {{ block.settings.checkbox_bg | default: 'rgba(255, 255, 255, 0.05)' }};
@@ -185,19 +194,24 @@
               --stk-chk-checked-border: {{ block.settings.title_color | default: '#f7cad0' }};
               --stk-checkmark-color: #ffffff;
             " {{ block.shopify_attributes }}>
-              <h4 class="sidebar-block-title">{{ block.settings.title | default: "MARKALAR" }}</h4>
-              <div class="sidebar-vendor-options">
-                {% assign vendor_array = block.settings.vendors | split: "," %}
-                {% for vendor in vendor_array %}
-                  {% assign clean_vendor = vendor | strip %}
-                  {% if clean_vendor != blank %}
-                    <label class="stock-option-label vendor-option-label">
-                      <input type="checkbox" class="vendor-checkbox-input" value="{{ clean_vendor | escape }}">
-                      <span class="custom-check-box"><span class="check-mark">✓</span></span>
-                      <span class="stock-text" style="color: var(--vnd-text-color);">{{ clean_vendor }}</span>
-                    </label>
-                  {% endif %}
-                {% endfor %}
+              <div class="sidebar-block-header">
+                <h4 class="sidebar-block-title">{{ block.settings.title | default: "MARKALAR" }}</h4>
+                <button type="button" class="sidebar-accordion-toggle" aria-label="Aç / Kapat"><span class="accordion-icon">−</span></button>
+              </div>
+              <div class="sidebar-block-content">
+                <div class="sidebar-vendor-options">
+                  {% assign vendor_array = block.settings.vendors | split: "," %}
+                  {% for vendor in vendor_array %}
+                    {% assign clean_vendor = vendor | strip %}
+                    {% if clean_vendor != blank %}
+                      <label class="stock-option-label vendor-option-label">
+                        <input type="checkbox" class="vendor-checkbox-input" value="{{ clean_vendor | escape }}">
+                        <span class="custom-check-box"><span class="check-mark">✓</span></span>
+                        <span class="stock-text" style="color: var(--vnd-text-color);">{{ clean_vendor }}</span>
+                      </label>
+                    {% endif %}
+                  {% endfor %}
+                </div>
               </div>
             </div>
           {% endfor %}
@@ -205,7 +219,7 @@
           <!-- Tag Filter Block -->
           {% assign tag_blocks = section.blocks | where: "type", "tag_filter" %}
           {% for block in tag_blocks %}
-            <div class="sidebar-filter-block" style="
+            <div class="sidebar-filter-block collapsible-block open" style="
               --blk-title-color: {{ block.settings.title_color | default: '#f7cad0' }};
               --tag-pill-bg: {{ block.settings.pill_bg | default: 'rgba(255, 255, 255, 0.05)' }};
               --tag-pill-border: {{ block.settings.pill_border | default: 'rgba(255, 255, 255, 0.12)' }};
@@ -213,36 +227,22 @@
               --tag-active-bg: {{ block.settings.active_pill_bg | default: '#c25b82' }};
               --tag-active-text: {{ block.settings.active_pill_text | default: '#ffffff' }};
             " {{ block.shopify_attributes }}>
-              <h4 class="sidebar-block-title">{{ block.settings.title | default: "ÖNE ÇIKAN ETİKETLER" }}</h4>
-              <div class="sidebar-tags-wrapper" id="sidebarTagPills">
-                {% assign tag_array = block.settings.tags | split: "," %}
-                {% for tag in tag_array %}
-                  {% assign clean_tag = tag | strip %}
-                  {% if clean_tag != blank %}
-                    <button type="button" class="tag-pill" data-tag="{{ clean_tag | escape }}">
-                      <span>#{{ clean_tag }}</span>
-                    </button>
-                  {% endif %}
-                {% endfor %}
+              <div class="sidebar-block-header">
+                <h4 class="sidebar-block-title">{{ block.settings.title | default: "ÖNE ÇIKAN ETİKETLER" }}</h4>
+                <button type="button" class="sidebar-accordion-toggle" aria-label="Aç / Kapat"><span class="accordion-icon">−</span></button>
               </div>
-            </div>
-          {% endfor %}
-
-          <!-- Luxury Trust Card Block -->
-          {% assign trust_blocks = section.blocks | where: "type", "sidebar_trust" %}
-          {% for block in trust_blocks %}
-            <div class="sidebar-trust-card" style="
-              --trst-icon-color: {{ block.settings.icon_color | default: '#f7cad0' }};
-              --trst-title-color: {{ block.settings.title_color | default: '#ffffff' }};
-              --trst-sub-color: {{ block.settings.subtitle_color | default: 'rgba(255, 255, 255, 0.65)' }};
-              --trst-bg: {{ block.settings.bg_color | default: 'rgba(194, 91, 130, 0.12)' }};
-              --trst-border: {{ block.settings.border_color | default: 'rgba(247, 202, 208, 0.25)' }};
-              --trst-radius: {{ block.settings.border_radius | default: 12 }}px;
-            " {{ block.shopify_attributes }}>
-              <span class="trust-card-icon" style="color: var(--trst-icon-color);">{{ block.settings.icon | default: "✦" }}</span>
-              <div class="trust-card-info">
-                <h5 class="trust-card-title" style="color: var(--trst-title-color);">{{ block.settings.title | default: "%100 Orijinal Ürün" }}</h5>
-                <p class="trust-card-desc" style="color: var(--trst-sub-color);">{{ block.settings.subtitle | default: "Resmi Distribütör Garantili" }}</p>
+              <div class="sidebar-block-content">
+                <div class="sidebar-tags-wrapper" id="sidebarTagPills">
+                  {% assign tag_array = block.settings.tags | split: "," %}
+                  {% for tag in tag_array %}
+                    {% assign clean_tag = tag | strip %}
+                    {% if clean_tag != blank %}
+                      <button type="button" class="tag-pill" data-tag="{{ clean_tag | escape }}">
+                        <span>#{{ clean_tag }}</span>
+                      </button>
+                    {% endif %}
+                  {% endfor %}
+                </div>
               </div>
             </div>
           {% endfor %}
@@ -250,22 +250,27 @@
           <!-- Sidebar Banner / Promo Block -->
           {% assign banner_blocks = section.blocks | where: "type", "sidebar_banner" %}
           {% for block in banner_blocks %}
-            <div class="sidebar-promo-card" style="
+            <div class="sidebar-promo-card collapsible-block open" style="
               --bnr-title-color: {{ block.settings.title_color | default: '#ffffff' }};
               --bnr-sub-color: {{ block.settings.subtitle_color | default: 'rgba(255, 255, 255, 0.8)' }};
               --bnr-bg: {{ block.settings.bg_color | default: '#1a121d' }};
               --bnr-border: {{ block.settings.border_color | default: 'rgba(194, 91, 130, 0.3)' }};
               --bnr-radius: {{ block.settings.border_radius | default: 16 }}px;
             " {{ block.shopify_attributes }}>
-              {% if block.settings.image != blank %}
-                {{ block.settings.image | image_url: width: 300 | image_tag: class: 'promo-card-img', loading: 'lazy' }}
-              {% endif %}
-              <div class="promo-card-content">
-                <h5 class="promo-card-title">{{ block.settings.title }}</h5>
-                <p class="promo-card-desc">{{ block.settings.subtitle }}</p>
-                {% if block.settings.link != blank %}
-                  <a href="{{ block.settings.link }}" class="promo-card-link">İncele →</a>
+              <div class="sidebar-block-header" style="margin-bottom: 8px;">
+                <h5 class="promo-card-title" style="margin: 0; color: var(--bnr-title-color);">{{ block.settings.title }}</h5>
+                <button type="button" class="sidebar-accordion-toggle" aria-label="Aç / Kapat"><span class="accordion-icon">−</span></button>
+              </div>
+              <div class="sidebar-block-content">
+                {% if block.settings.image != blank %}
+                  {{ block.settings.image | image_url: width: 300 | image_tag: class: 'promo-card-img', loading: 'lazy' }}
                 {% endif %}
+                <div class="promo-card-content">
+                  <p class="promo-card-desc">{{ block.settings.subtitle }}</p>
+                  {% if block.settings.link != blank %}
+                    <a href="{{ block.settings.link }}" class="promo-card-link">İncele →</a>
+                  {% endif %}
+                </div>
               </div>
             </div>
           {% endfor %}
@@ -396,6 +401,28 @@
 
 {% javascript %}
   document.addEventListener('DOMContentLoaded', function() {
+    // Accordion Toggle for Sidebar Filter Blocks (+ / -)
+    document.addEventListener('click', function(e) {
+      const header = e.target.closest('.sidebar-block-header');
+      if (!header) return;
+
+      const block = header.closest('.collapsible-block');
+      if (!block) return;
+
+      const icon = header.querySelector('.accordion-icon');
+      const isCollapsed = block.classList.contains('collapsed');
+
+      if (isCollapsed) {
+        block.classList.remove('collapsed');
+        block.classList.add('open');
+        if (icon) icon.textContent = '−';
+      } else {
+        block.classList.remove('open');
+        block.classList.add('collapsed');
+        if (icon) icon.textContent = '+';
+      }
+    });
+
     function applyUnifiedFilters() {
       const grid = document.querySelector('.collection-products-grid');
       if (!grid) return;
@@ -512,14 +539,58 @@
   @media (max-width: 991px) {
     .collection-main-side-layout {
       grid-template-columns: 1fr;
-      gap: 24px;
+      gap: 20px;
+    }
+
+    .collection-sidebar-panel {
+      max-width: 100% !important;
+    }
+
+    .grid-section-container {
+      padding-left: 16px;
+      padding-right: 16px;
     }
   }
 
-  /* Sol Yan Ekran Filtre Paneli (Sticky Side Panel) */
+  @media (max-width: 767px) {
+    .collection-products-grid {
+      grid-template-columns: repeat(var(--columns-mobile, 2), 1fr) !important;
+      gap: 12px !important;
+    }
+
+    .haute-product-card {
+      padding: 10px !important;
+      border-radius: 14px !important;
+    }
+
+    .card-title {
+      font-size: 12px !important;
+      line-height: 1.3 !important;
+    }
+
+    .price-num {
+      font-size: 13px !important;
+    }
+
+    .card-quick-add-btn {
+      padding: 8px 4px !important;
+      font-size: 11px !important;
+      border-radius: 8px !important;
+    }
+
+    .sidebar-filter-block {
+      padding: 2px 0;
+    }
+
+    .sidebar-block-title {
+      font-size: 11px !important;
+    }
+  }
+
+  /* Sol Yan Ekran Filtre Paneli (Sabit / Static Panel) */
   .collection-sidebar-panel {
-    position: sticky;
-    top: var(--sidebar-sticky-top, 100px);
+    position: relative;
+    top: auto;
     width: 100%;
     max-width: var(--sidebar-width, 280px);
     background: var(--sidebar-bg, #151019);
@@ -588,7 +659,21 @@
   .sidebar-filter-block {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 0;
+  }
+
+  .sidebar-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    padding-bottom: 4px;
+    width: 100%;
+  }
+
+  .sidebar-block-header:hover {
+    opacity: 0.85;
   }
 
   .sidebar-block-title {
@@ -598,6 +683,45 @@
     color: var(--blk-title-color, #f7cad0);
     margin: 0;
     text-transform: uppercase;
+  }
+
+  .sidebar-accordion-toggle {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--blk-title-color, #f7cad0);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+  }
+
+  .sidebar-block-header:hover .sidebar-accordion-toggle {
+    background: rgba(194, 91, 130, 0.25);
+    border-color: #f7cad0;
+    color: #ffffff;
+  }
+
+  .sidebar-block-content {
+    overflow: hidden;
+    max-height: 1000px;
+    opacity: 1;
+    margin-top: 10px;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin-top 0.3s ease;
+  }
+
+  .collapsible-block.collapsed .sidebar-block-content {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    margin-top: 0 !important;
+    pointer-events: none;
   }
 
   .sidebar-category-list {
@@ -1181,7 +1305,7 @@
   "blocks": [
     {
       "type": "sidebar_header",
-      "name": "Yan Panel Başlık & Temizle",
+      "name": "Yan Panel Başlık",
       "limit": 1,
       "settings": [
         {
@@ -1395,7 +1519,7 @@
     },
     {
       "type": "availability_filter",
-      "name": "Yan Panel Stok Durumu",
+      "name": "Yan Panel Stok",
       "limit": 1,
       "settings": [
         {
@@ -1524,7 +1648,7 @@
     },
     {
       "type": "price_filter",
-      "name": "Yan Panel Fiyat Aralığı",
+      "name": "Yan Panel Fiyat",
       "limit": 1,
       "settings": [
         {
@@ -1645,7 +1769,7 @@
     },
     {
       "type": "vendor_filter",
-      "name": "Yan Panel Marka Filtresi",
+      "name": "Yan Panel Marka",
       "settings": [
         {
           "type": "text",
@@ -1693,7 +1817,7 @@
     },
     {
       "type": "tag_filter",
-      "name": "Yan Panel Etiket Filtresi",
+      "name": "Yan Panel Etiket",
       "settings": [
         {
           "type": "text",
@@ -1811,7 +1935,7 @@
     },
     {
       "type": "sidebar_banner",
-      "name": "Yan Panel Afiş / Promo",
+      "name": "Yan Panel Afiş",
       "settings": [
         {
           "type": "image_picker",

@@ -28,22 +28,96 @@
     "filter_bar": {
       "type": "collection-filter-bar",
       "blocks": {
-        "switcher_1": {
-          "type": "grid_switcher",
+        "sw_label": {
+          "type": "switcher_header",
           "settings": {
-            "label": "Görünüm:"
+            "label": "Görünüm"
+          }
+        },
+        "grid_2": {
+          "type": "grid_button",
+          "settings": {
+            "label": "2'li",
+            "cols": "2"
+          }
+        },
+        "grid_3": {
+          "type": "grid_button",
+          "settings": {
+            "label": "3'lü",
+            "cols": "3"
+          }
+        },
+        "grid_4": {
+          "type": "grid_button",
+          "settings": {
+            "label": "4'lü",
+            "cols": "4",
+            "is_active": true
+          }
+        },
+        "sort_main": {
+          "type": "sort_dropdown",
+          "settings": {
+            "label": "Sırala"
           }
         },
         "sort_1": {
-          "type": "sort_box",
+          "type": "sort_option",
           "settings": {
-            "label": "Sırala:"
+            "label": "Öne Çıkanlar",
+            "sort_value": "manual",
+            "is_default": true
+          }
+        },
+        "sort_2": {
+          "type": "sort_option",
+          "settings": {
+            "label": "Fiyat: Düşükten Yükseğe",
+            "sort_value": "price-ascending"
+          }
+        },
+        "sort_3": {
+          "type": "sort_option",
+          "settings": {
+            "label": "Fiyat: Yüksekten Düşüğe",
+            "sort_value": "price-descending"
+          }
+        },
+        "sort_4": {
+          "type": "sort_option",
+          "settings": {
+            "label": "En Yeniler",
+            "sort_value": "created-descending"
+          }
+        },
+        "sort_5": {
+          "type": "sort_option",
+          "settings": {
+            "label": "Alfabetik: A-Z",
+            "sort_value": "title-ascending"
+          }
+        },
+        "sort_6": {
+          "type": "sort_option",
+          "settings": {
+            "label": "Alfabetik: Z-A",
+            "sort_value": "title-descending"
           }
         }
       },
       "block_order": [
-        "switcher_1",
-        "sort_1"
+        "sw_label",
+        "grid_2",
+        "grid_3",
+        "grid_4",
+        "sort_main",
+        "sort_1",
+        "sort_2",
+        "sort_3",
+        "sort_4",
+        "sort_5",
+        "sort_6"
       ],
       "settings": {}
     },
@@ -126,14 +200,6 @@
             "tags": "Organik, Anti-Aging, Leke Karşıtı, Vegan, Hyalüronik"
           }
         },
-        "trust_1": {
-          "type": "sidebar_trust",
-          "settings": {
-            "icon": "✦",
-            "title": "%100 Orijinal Ürün",
-            "subtitle": "Resmi Distribütör Garantili"
-          }
-        },
         "card_1": {
           "type": "product_card",
           "settings": {
@@ -160,7 +226,7 @@
           "type": "product_card",
           "settings": {
             "category": "serum",
-            "badge_text": "ORGANİK İKSİR",
+            "badge_text": "ORGANİK",
             "title": "Midnight Youth Repair Oil 30ml",
             "description": "Gece boyunca hücresel yenilenme sağlayan skualan ve kuşburnu yağı",
             "price": "₺740,00",
@@ -182,7 +248,7 @@
           "type": "product_card",
           "settings": {
             "category": "moisturizer",
-            "badge_text": "✦ LÜKS BAKIM",
+            "badge_text": "✦ SEÇKİN",
             "title": "Hydra-Luxe Intensive Day Cream 50ml",
             "description": "Gün boyu cildi koruyan, ipeksi his bırakan gündüz nemlendiricisi",
             "price": "₺620,00",
@@ -193,7 +259,7 @@
           "type": "product_card",
           "settings": {
             "category": "moisturizer",
-            "badge_text": "DOĞAL GÜL SUYU",
+            "badge_text": "DOĞAL",
             "title": "Rose Water Balancing Emulsion 100ml",
             "description": "%100 doğal Isparta gül suyu içerikli hafif yapılı nemlendirici emülsiyon",
             "price": "₺340,00",
@@ -204,7 +270,7 @@
           "type": "product_card",
           "settings": {
             "category": "mask",
-            "badge_text": "✦ DETOKS MASKESİ",
+            "badge_text": "DETOKS",
             "title": "Pembe Kuvars Canlandırıcı Yüz Maskesi 100ml",
             "description": "Cildi anında ışıltılı ve taze bir görünüme kavuşturan detoks maskesi",
             "price": "₺480,00",
@@ -215,7 +281,7 @@
           "type": "product_card",
           "settings": {
             "category": "mask",
-            "badge_text": "5'Lİ SET",
+            "badge_text": "ÖZEL SET",
             "title": "Rose Infusion Detox Sheet Mask Set",
             "description": "Fransız gül suyu konsantresi emdirilmiş 5 adet yoğun nem kağıt maskesi",
             "price": "₺380,00",
@@ -226,7 +292,7 @@
           "type": "product_card",
           "settings": {
             "category": "mask",
-            "badge_text": "GÖZENEK SIKILAŞTIRICI",
+            "badge_text": "ARINDIRICI",
             "title": "Charcoal Purifying Clay Mask 100ml",
             "description": "Gözeneklerdeki fazla yağı ve kiri arındıran doğal kil maskesi",
             "price": "₺310,00",
@@ -237,7 +303,7 @@
           "type": "product_card",
           "settings": {
             "category": "eye-care",
-            "badge_text": "%20 İNDİRİM",
+            "badge_text": "İNDİRİM",
             "title": "Anti-Aging Peptit Göz Çevresi Kremi 15ml",
             "description": "Göz altı morlukları ve şişlik karşıtı konsantre peptit kompleksi",
             "price": "₺390,00",
@@ -248,7 +314,7 @@
           "type": "product_card",
           "settings": {
             "category": "eye-care",
-            "badge_text": "24K ALTIN ÖZLÜ",
+            "badge_text": "✦ ÖZEL",
             "title": "Lumière Gold Eye Contour Elixir 15ml",
             "description": "Göz çevresine gençlik ve ışıltı veren 24K altın tanecikli serum",
             "price": "₺590,00",
@@ -259,7 +325,7 @@
           "type": "product_card",
           "settings": {
             "category": "eye-care",
-            "badge_text": "ŞİŞLİK KARŞITI",
+            "badge_text": "SEÇKİN BAKIM",
             "title": "Revitalizing Eye Gel Complex 15ml",
             "description": "Yorgun göz çevresini anında ferahlatan ve yatıştıran jel kompleks",
             "price": "₺420,00",
@@ -278,7 +344,6 @@
         "price_1",
         "vendor_1",
         "tag_1",
-        "trust_1",
         "card_1",
         "card_2",
         "card_3",
