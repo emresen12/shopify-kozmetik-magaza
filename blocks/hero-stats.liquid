@@ -1,0 +1,198 @@
+{% doc %}
+  Hero Stats block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'hero-stats', id: 'hero-stats-1' %}
+{% enddoc %}
+
+<div class="hero-stats-block" style="
+  --num-size: {{ block.settings.number_font_size }}px;
+  --num-color: {{ block.settings.number_color }};
+  --label-size: {{ block.settings.label_font_size }}px;
+  --label-color: {{ block.settings.label_color }};
+  --divider-color: {{ block.settings.divider_color }};
+  --stats-mt: {{ block.settings.margin_top }}px;
+" {{ block.shopify_attributes }}>
+  <div class="hero-stats-grid">
+    <div class="stat-item">
+      <span class="stat-num">{{ block.settings.stat_1_number | default: "%100" }}</span>
+      <span class="stat-text">{{ block.settings.stat_1_label | default: "Doğal İçerik" }}</span>
+    </div>
+    
+    <div class="stat-divider"></div>
+
+    <div class="stat-item">
+      <span class="stat-num">{{ block.settings.stat_2_number | default: "50k+" }}</span>
+      <span class="stat-text">{{ block.settings.stat_2_label | default: "Mutlu Müşteri" }}</span>
+    </div>
+
+    <div class="stat-divider"></div>
+
+    <div class="stat-item">
+      <span class="stat-num">{{ block.settings.stat_3_number | default: "4.9★" }}</span>
+      <span class="stat-text">{{ block.settings.stat_3_label | default: "Müşteri Puanı" }}</span>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .hero-stats-block {
+    margin-top: var(--stats-mt, 24px);
+    width: 100%;
+  }
+
+  .hero-stats-grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .hero-stats-grid .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hero-stats-grid .stat-num {
+    font-size: var(--num-size, 24px);
+    font-weight: 800;
+    color: var(--num-color, #f7cad0);
+    line-height: 1;
+  }
+
+  .hero-stats-grid .stat-text {
+    font-size: var(--label-size, 12px);
+    color: var(--label-color, rgba(255, 255, 255, 0.7));
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-stats-grid .stat-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--divider-color, rgba(255, 255, 255, 0.15));
+  }
+
+  @media (max-width: 600px) {
+    .hero-stats-grid .stat-divider {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hero İstatistikler",
+  "settings": [
+    {
+      "type": "header",
+      "content": "İstatistik 1"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_number",
+      "label": "Sayı 1",
+      "default": "%100"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Etiket 1",
+      "default": "Doğal İçerik"
+    },
+    {
+      "type": "header",
+      "content": "İstatistik 2"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_number",
+      "label": "Sayı 2",
+      "default": "50k+"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Etiket 2",
+      "default": "Mutlu Müşteri"
+    },
+    {
+      "type": "header",
+      "content": "İstatistik 3"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_number",
+      "label": "Sayı 3",
+      "default": "4.9★"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_label",
+      "label": "Etiket 3",
+      "default": "Müşteri Puanı"
+    },
+    {
+      "type": "header",
+      "content": "Tipografi & Renkler"
+    },
+    {
+      "type": "range",
+      "id": "number_font_size",
+      "label": "Sayı Yazı Boyutu",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "number_color",
+      "label": "Sayı Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "range",
+      "id": "label_font_size",
+      "label": "Etiket Yazı Boyutu",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Etiket Metin Rengi",
+      "default": "rgba(255, 255, 255, 0.7)"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Ayırıcı Çizgi Rengi",
+      "default": "rgba(255, 255, 255, 0.15)"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Üst Dış Boşluk (Margin Top)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero İstatistikler"
+    }
+  ]
+}
+{% endschema %}

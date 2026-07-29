@@ -1,0 +1,164 @@
+{% doc %}
+  Hero Badge block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'hero-badge', id: 'hero-badge-1' %}
+{% enddoc %}
+
+<div class="hero-badge-block" style="
+  --badge-font-size: {{ block.settings.font_size }}px;
+  --badge-font-weight: {{ block.settings.font_weight }};
+  --badge-text-color: {{ block.settings.text_color }};
+  --badge-bg: {{ block.settings.bg_color }};
+  --badge-border: {{ block.settings.border_color }};
+  --badge-radius: {{ block.settings.border_radius }}px;
+  --badge-py: {{ block.settings.padding_vertical }}px;
+  --badge-px: {{ block.settings.padding_horizontal }}px;
+  --badge-mb: {{ block.settings.margin_bottom }}px;
+  --badge-ls: {{ block.settings.letter_spacing }}px;
+" {{ block.shopify_attributes }}>
+  <span class="hero-badge-element">
+    {{ block.settings.text | default: "✦ SEÇKİN KOLEKSİYONLAR" }}
+  </span>
+</div>
+
+{% stylesheet %}
+  .hero-badge-block {
+    margin-bottom: var(--badge-mb, 16px);
+    display: inline-block;
+  }
+
+  .hero-badge-element {
+    display: inline-block;
+    font-size: var(--badge-font-size, 12px);
+    font-weight: var(--badge-font-weight, 700);
+    color: var(--badge-text-color, #f7cad0);
+    background: var(--badge-bg, rgba(255, 255, 255, 0.08));
+    border: 1px solid var(--badge-border, rgba(255, 255, 255, 0.2));
+    backdrop-filter: blur(12px);
+    border-radius: var(--badge-radius, 30px);
+    padding: var(--badge-py, 6px) var(--badge-px, 18px);
+    letter-spacing: var(--badge-ls, 1.5px);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hero Rozet (Badge)",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Rozet Metni",
+      "default": "✦ SEÇKİN KOLEKSİYONLAR"
+    },
+    {
+      "type": "header",
+      "content": "Tipografi"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Yazı Boyutu",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Yazı Kalınlığı",
+      "options": [
+        { "value": "400", "label": "Normal (400)" },
+        { "value": "600", "label": "Yarı Kalın (600)" },
+        { "value": "700", "label": "Kalın (700)" },
+        { "value": "800", "label": "Ekstra Kalın (800)" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Harf Aralığı",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "default": 1.5
+    },
+    {
+      "type": "header",
+      "content": "Renkler & Kenarlık"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Metin Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Arka Plan Rengi",
+      "default": "rgba(255, 255, 255, 0.08)"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.2)"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Köşe Yuvarlama (Radius)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Boşluklar"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Dikey İç Boşluk (Padding Y)",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "label": "Yatay İç Boşluk (Padding X)",
+      "min": 6,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Alt Dış Boşluk (Margin Bottom)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Rozet (Badge)"
+    }
+  ]
+}
+{% endschema %}

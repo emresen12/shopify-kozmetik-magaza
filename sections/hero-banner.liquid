@@ -1,5 +1,7 @@
 {% comment %}
-  Kozmetik Hero Banner Section (100% Block-Based & Fully Customizable Design System)
+  Kozmetik Hero Banner Main Section (Nested Theme Blocks Enabled)
+  Each element (Badge, Title, Subtitle, Button, Stats) is a separate Liquid Theme Block file!
+  Clicking on any element in Shopify Theme Editor directly selects its own block settings.
 {% endcomment %}
 
 <div class="hero-banner-section full-width" style="
@@ -7,15 +9,13 @@
   --padding-bottom: {{ section.settings.padding_bottom }}px;
   --mobile-padding-top: {{ section.settings.mobile_padding_top }}px;
   --mobile-padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
-  --badge-color: {{ section.settings.badge_color }};
-  --title-color-start: {{ section.settings.title_color_start }};
-  --title-color-end: {{ section.settings.title_color_end }};
   --card-bg-color: {{ section.settings.card_bg_color }};
   --card-border-color: {{ section.settings.card_border_color }};
   --card-border-radius: {{ section.settings.card_border_radius }}px;
   --card-blur: {{ section.settings.card_blur }}px;
-  --btn-primary-bg-start: {{ section.settings.btn_primary_bg_start }};
-  --btn-primary-bg-end: {{ section.settings.btn_primary_bg_end }};
+  --card-padding: {{ section.settings.card_padding }}px;
+  --min-height: {{ section.settings.min_height }}vh;
+  --overlay-opacity: {{ section.settings.overlay_opacity }};
 ">
   <div class="hero-banner__image-container">
     {% if section.settings.image != blank %}
@@ -28,66 +28,23 @@
 
   <div class="hero-banner__content-wrapper">
     <div class="hero-banner__card">
-      
-      <!-- Render Header Blocks Dynamically -->
-      {% for block in section.blocks %}
-        {% case block.type %}
-          {% when 'badge' %}
-            <span class="hero-badge" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
-
-          {% when 'title' %}
-            <h1 class="hero-title" {{ block.shopify_attributes }}>
-              {{ block.settings.text }}
-            </h1>
-
-          {% when 'subtitle' %}
-            <p class="hero-subtitle" {{ block.shopify_attributes }}>
-              {{ block.settings.text }}
-            </p>
-
-          {% when 'button' %}
-            <div class="hero-button-wrapper" {{ block.shopify_attributes }}>
-              <a href="{{ block.settings.url | default: routes.all_products_collection_url }}" class="hero-btn {% if block.settings.style == 'secondary' %}secondary-btn{% else %}primary-btn{% endif %}">
-                <span>{{ block.settings.text }}</span>
-                {% if block.settings.style != 'secondary' %}
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                {% endif %}
-              </a>
-            </div>
-
-        {% endcase %}
-      {% endfor %}
-
-      <!-- Feature Stats Blocks -->
-      {% assign stat_blocks = section.blocks | where: "type", "stat_item" %}
-      {% if stat_blocks.size > 0 %}
-        <div class="hero-stats">
-          {% for block in stat_blocks %}
-            {% if forloop.index > 1 %}
-              <div class="stat-divider"></div>
-            {% endif %}
-            <div class="stat-item" {{ block.shopify_attributes }}>
-              <span class="stat-num">{{ block.settings.number }}</span>
-              <span class="stat-text">{{ block.settings.label }}</span>
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-
+      {% content_for 'blocks' %}
     </div>
   </div>
 </div>
 
-<style>
+{% stylesheet %}
   .hero-banner-section {
     position: relative;
     width: 100%;
-    min-height: 82vh;
+    min-height: var(--min-height, 82vh);
     display: flex;
     align-items: center;
     overflow: hidden;
     margin-bottom: 0;
     background: #0f0b10;
+    padding-top: var(--padding-top, 60px);
+    padding-bottom: var(--padding-bottom, 60px);
   }
 
   .hero-banner__image-container {
@@ -108,454 +65,186 @@
     animation: heroZoom 15s infinite alternate ease-in-out;
   }
 
+  @keyframes heroZoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.06); }
+  }
+
   .hero-banner__overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, rgba(15, 11, 16, 0.78) 0%, rgba(15, 11, 16, 0.38) 60%, rgba(15, 11, 16, 0.12) 100%);
+    background: linear-gradient(90deg, rgba(15, 11, 16, var(--overlay-opacity, 0.78)) 0%, rgba(15, 11, 16, 0.4) 60%, rgba(15, 11, 16, 0.15) 100%);
   }
 
   .hero-banner__content-wrapper {
     position: relative;
     z-index: 2;
-    max-width: 1300px;
     width: 100%;
+    max-width: 1320px;
     margin: 0 auto;
-    padding-top: var(--padding-top, 130px);
-    padding-bottom: var(--padding-bottom, 70px);
-    padding-left: 24px;
-    padding-right: 24px;
+    padding: 0 24px;
   }
 
   .hero-banner__card {
-    max-width: 620px;
-    background: var(--card-bg-color, rgba(255, 255, 255, 0.12));
+    max-width: 680px;
+    background: var(--card-bg-color, rgba(15, 11, 16, 0.45));
+    border: 1px solid var(--card-border-color, rgba(255, 255, 255, 0.12));
     backdrop-filter: blur(var(--card-blur, 16px));
-    -webkit-backdrop-filter: blur(var(--card-blur, 16px));
-    border: 1px solid var(--card-border-color, rgba(255, 255, 255, 0.22));
-    border-radius: var(--card-border-radius, 28px);
-    padding: 44px;
-    color: #ffffff;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-    animation: heroFadeUp 0.8s ease forwards;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    border-radius: var(--card-border-radius, 24px);
+    padding: var(--card-padding, 40px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
   }
 
-  .hero-badge {
-    display: inline-block;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    color: var(--badge-color, #f7cad0);
-    text-transform: uppercase;
-  }
-
-  .hero-title {
-    font-size: 3rem;
-    font-weight: 800;
-    line-height: 1.15;
-    margin: 0;
-    background: linear-gradient(135deg, var(--title-color-start, #ffffff) 0%, var(--title-color-end, #ffdfeb) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .hero-subtitle {
-    font-size: 1.05rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.88);
-    margin: 0;
-  }
-
-  .hero-button-wrapper {
-    display: inline-block;
-    margin-top: 8px;
-  }
-
-  .hero-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 14px 28px;
-    border-radius: 14px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition: all 0.3s ease;
-  }
-
-  .primary-btn {
-    background: linear-gradient(135deg, var(--btn-primary-bg-start, #c25b82) 0%, var(--btn-primary-bg-end, #a44267) 100%);
-    color: #ffffff;
-    box-shadow: 0 8px 24px rgba(194, 91, 130, 0.4);
-  }
-
-  .primary-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(194, 91, 130, 0.5);
-  }
-
-  .secondary-btn {
-    background: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-  }
-
-  .secondary-btn:hover {
-    background: rgba(255, 255, 255, 0.28);
-    transform: translateY(-2px);
-  }
-
-  .hero-stats {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.18);
-    padding-top: 24px;
-    margin-top: 16px;
-    flex-wrap: wrap;
-  }
-
-  .stat-item {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .stat-num {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: var(--badge-color, #f7cad0);
-  }
-
-  .stat-text {
-    font-size: 0.78rem;
-    color: rgba(255, 255, 255, 0.75);
-  }
-
-  .stat-divider {
-    width: 1px;
-    height: 30px;
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  @keyframes heroZoom {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.06); }
-  }
-
-  @keyframes heroFadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Pixel-Perfect Mobile Optimization */
   @media (max-width: 768px) {
     .hero-banner-section {
-      min-height: 75vh;
-    }
-    .hero-banner__content-wrapper {
-      padding-top: var(--mobile-padding-top, 90px);
+      padding-top: var(--mobile-padding-top, 40px);
       padding-bottom: var(--mobile-padding-bottom, 40px);
-      padding-left: 16px;
-      padding-right: 16px;
+      min-height: 70vh;
     }
+
     .hero-banner__card {
-      padding: 24px 20px;
-      border-radius: 20px;
-      gap: 12px;
-    }
-    .hero-title {
-      font-size: 2.1rem;
-      line-height: 1.2;
-    }
-    .hero-subtitle {
-      font-size: 0.94rem;
-    }
-    .hero-button-wrapper {
-      width: 100%;
-    }
-    .hero-btn {
-      width: 100%;
-    }
-    .hero-stats {
-      gap: 12px;
-      padding-top: 16px;
-    }
-    .stat-num {
-      font-size: 1.1rem;
-    }
-    .stat-text {
-      font-size: 0.72rem;
+      padding: 24px;
+      text-align: center;
     }
   }
-</style>
+{% endstylesheet %}
 
 {% schema %}
 {
   "name": "Kozmetik Hero Banner",
+  "blocks": [{ "type": "@theme" }],
   "settings": [
+    {
+      "type": "header",
+      "content": "Arka Plan Görseli & Karartma"
+    },
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Arka Plan Resmi"
+      "label": "Hero Arka Plan Görseli"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Görsel Karartma Oranı (Overlay Opacity)",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.8
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum Banner Yüksekliği (vh)",
+      "min": 50,
+      "max": 100,
+      "step": 2,
+      "unit": "vh",
+      "default": 82
     },
     {
       "type": "header",
-      "content": "🎨 Renk ve Tasarım Ayarları"
-    },
-    {
-      "type": "color",
-      "id": "badge_color",
-      "label": "Rozet Metni Rengi",
-      "default": "#f7cad0"
-    },
-    {
-      "type": "color",
-      "id": "title_color_start",
-      "label": "Başlık Başlangıç Rengi",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "title_color_end",
-      "label": "Başlık Bitiş Rengi (Gradient)",
-      "default": "#ffdfeb"
+      "content": "Cam Kart (Glass Card) Ayarları"
     },
     {
       "type": "color",
       "id": "card_bg_color",
-      "label": "Cam Kart Arka Plan Rengi",
-      "default": "rgba(255, 255, 255, 0.12)"
+      "label": "Kart Arka Plan Rengi",
+      "default": "rgba(15, 11, 16, 0.45)"
     },
     {
       "type": "color",
       "id": "card_border_color",
-      "label": "Cam Kart Kenarlık Rengi",
-      "default": "rgba(255, 255, 255, 0.22)"
+      "label": "Kart Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.12)"
     },
     {
       "type": "range",
       "id": "card_border_radius",
-      "label": "Cam Kart Köşe Yuvarlama (px)",
+      "label": "Kart Köşe Yuvarlama (Radius)",
       "min": 0,
-      "max": 50,
+      "max": 40,
       "step": 2,
       "unit": "px",
-      "default": 28
+      "default": 24
     },
     {
       "type": "range",
       "id": "card_blur",
-      "label": "Cam Bulanıklık Düzeyi (Blur px)",
+      "label": "Cam Bulanıklık Efekti (Backdrop Blur)",
       "min": 0,
-      "max": 40,
+      "max": 30,
       "step": 2,
       "unit": "px",
       "default": 16
     },
     {
-      "type": "color",
-      "id": "btn_primary_bg_start",
-      "label": "Ana Buton Başlangıç Rengi",
-      "default": "#c25b82"
-    },
-    {
-      "type": "color",
-      "id": "btn_primary_bg_end",
-      "label": "Ana Buton Bitiş Rengi",
-      "default": "#a44267"
+      "type": "range",
+      "id": "card_padding",
+      "label": "Kart İç Boşluğu (Padding)",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 40
     },
     {
       "type": "header",
-      "content": "📐 İç Boşluk (Padding) Ayarları"
+      "content": "Bölüm Boşlukları (Section Spacing)"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Üst İç Boşluk (Masaüstü px)",
-      "min": 40,
-      "max": 200,
-      "step": 5,
+      "label": "Üst İç Boşluk (Masaüstü)",
+      "min": 0,
+      "max": 150,
+      "step": 10,
       "unit": "px",
-      "default": 130
+      "default": 60
     },
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Alt İç Boşluk (Masaüstü px)",
-      "min": 20,
-      "max": 160,
-      "step": 5,
+      "label": "Alt İç Boşluk (Masaüstü)",
+      "min": 0,
+      "max": 150,
+      "step": 10,
       "unit": "px",
-      "default": 70
+      "default": 60
     },
     {
       "type": "range",
       "id": "mobile_padding_top",
-      "label": "Üst İç Boşluk (Mobil px)",
-      "min": 20,
-      "max": 160,
+      "label": "Üst İç Boşluk (Mobil)",
+      "min": 0,
+      "max": 100,
       "step": 5,
       "unit": "px",
-      "default": 90
+      "default": 40
     },
     {
       "type": "range",
       "id": "mobile_padding_bottom",
-      "label": "Alt İç Boşluk (Mobil px)",
-      "min": 10,
-      "max": 120,
+      "label": "Alt İç Boşluk (Mobil)",
+      "min": 0,
+      "max": 100,
       "step": 5,
       "unit": "px",
       "default": 40
     }
   ],
-  "blocks": [
-    {
-      "type": "badge",
-      "name": "Üst Rozet / Alt Başlık",
-      "settings": [
-        {
-          "type": "text",
-          "id": "text",
-          "label": "Rozet Metni",
-          "default": "✦ İPEKSİ DOKU & DOĞAL IŞILTI"
-        }
-      ]
-    },
-    {
-      "type": "title",
-      "name": "Ana Başlık",
-      "settings": [
-        {
-          "type": "text",
-          "id": "text",
-          "label": "Başlık Metni",
-          "default": "Cilt Bakımında Yeni Çağ"
-        }
-      ]
-    },
-    {
-      "type": "subtitle",
-      "name": "Açıklama Metni",
-      "settings": [
-        {
-          "type": "textarea",
-          "id": "text",
-          "label": "Açıklama Metni",
-          "default": "Doğanın en değerli özleri ve ileri teknoloji hyalüronik asit kompleksi ile cildinize anında gençlik ve ışıltı kazandırın."
-        }
-      ]
-    },
-    {
-      "type": "button",
-      "name": "Buton",
-      "settings": [
-        {
-          "type": "text",
-          "id": "text",
-          "label": "Buton Etiketi",
-          "default": "Koleksiyonu Keşfet"
-        },
-        {
-          "type": "url",
-          "id": "url",
-          "label": "Buton Bağlantısı"
-        },
-        {
-          "type": "select",
-          "id": "style",
-          "label": "Buton Stili",
-          "options": [
-            { "value": "primary", "label": "Ana Buton (Renkli)" },
-            { "value": "secondary", "label": "İkincil Buton (Şeffaf Cam)" }
-          ],
-          "default": "primary"
-        }
-      ]
-    },
-    {
-      "type": "stat_item",
-      "name": "İstatistik / Özellik",
-      "settings": [
-        {
-          "type": "text",
-          "id": "number",
-          "label": "Sayı veya Oran",
-          "default": "%100"
-        },
-        {
-          "type": "text",
-          "id": "label",
-          "label": "Açıklama Etiketi",
-          "default": "Organik & Vegan"
-        }
-      ]
-    }
-  ],
   "presets": [
     {
       "name": "Kozmetik Hero Banner",
-      "category": "Görsel",
       "blocks": [
-        {
-          "type": "badge",
-          "settings": {
-            "text": "✦ İPEKSİ DOKU & DOĞAL IŞILTI"
-          }
-        },
-        {
-          "type": "title",
-          "settings": {
-            "text": "Cilt Bakımında Yeni Çağ"
-          }
-        },
-        {
-          "type": "subtitle",
-          "settings": {
-            "text": "Doğanın en değerli özleri ve ileri teknoloji hyalüronik asit kompleksi ile cildinize anında gençlik ve ışıltı kazandırın."
-          }
-        },
-        {
-          "type": "button",
-          "settings": {
-            "text": "Koleksiyonu Keşfet",
-            "style": "primary"
-          }
-        },
-        {
-          "type": "button",
-          "settings": {
-            "text": "Öne Çıkan Ürün",
-            "style": "secondary"
-          }
-        },
-        {
-          "type": "stat_item",
-          "settings": {
-            "number": "%100",
-            "label": "Organik & Vegan"
-          }
-        },
-        {
-          "type": "stat_item",
-          "settings": {
-            "number": "24 Sa.",
-            "label": "Kesintisiz Nem"
-          }
-        },
-        {
-          "type": "stat_item",
-          "settings": {
-            "number": "4.9 ★",
-            "label": "Müşteri Puanı"
-          }
-        }
+        { "type": "hero-badge" },
+        { "type": "hero-title" },
+        { "type": "hero-subtitle" },
+        { "type": "hero-button" },
+        { "type": "hero-stats" }
       ]
     }
   ]

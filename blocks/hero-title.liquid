@@ -1,0 +1,147 @@
+{% doc %}
+  Hero Title block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'hero-title', id: 'hero-title-1' %}
+{% enddoc %}
+
+<div class="hero-title-block" style="
+  --title-size: {{ block.settings.font_size_desktop }}px;
+  --title-size-mob: {{ block.settings.font_size_mobile }}px;
+  --title-weight: {{ block.settings.font_weight }};
+  --title-lh: {{ block.settings.line_height }};
+  --title-start: {{ block.settings.color_start }};
+  --title-end: {{ block.settings.color_end }};
+  --title-mb: {{ block.settings.margin_bottom }}px;
+" {{ block.shopify_attributes }}>
+  <h1 class="hero-title-element {% if block.settings.use_gradient %}gradient-title{% endif %}">
+    {{ block.settings.text | default: "Doğal Işıltınızı Ortaya Çıkarın" }}
+  </h1>
+</div>
+
+{% stylesheet %}
+  .hero-title-block {
+    margin-bottom: var(--title-mb, 20px);
+  }
+
+  .hero-title-element {
+    font-size: var(--title-size, 52px);
+    font-weight: var(--title-weight, 800);
+    line-height: var(--title-lh, 1.25);
+    margin: 0;
+    color: var(--title-start, #ffffff);
+  }
+
+  .hero-title-element.gradient-title {
+    background: linear-gradient(135deg, var(--title-start, #ffffff) 0%, var(--title-end, #f7cad0) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @media (max-width: 768px) {
+    .hero-title-element {
+      font-size: var(--title-size-mob, 32px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hero Başlık",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Başlık Metni",
+      "default": "Doğal Işıltınızı Ortaya Çıkarın"
+    },
+    {
+      "type": "header",
+      "content": "Tipografi"
+    },
+    {
+      "type": "range",
+      "id": "font_size_desktop",
+      "label": "Masaüstü Yazı Boyutu",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Mobil Yazı Boyutu",
+      "min": 18,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Yazı Kalınlığı",
+      "options": [
+        { "value": "400", "label": "Normal (400)" },
+        { "value": "600", "label": "Yarı Kalın (600)" },
+        { "value": "700", "label": "Kalın (700)" },
+        { "value": "800", "label": "Ekstra Kalın (800)" },
+        { "value": "900", "label": "Siyah (900)" }
+      ],
+      "default": "800"
+    },
+    {
+      "type": "range",
+      "id": "line_height",
+      "label": "Satır Yüksekliği",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.2
+    },
+    {
+      "type": "header",
+      "content": "Renkler & Gradyan"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Gradyan Renk Efekti Kullan",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "color_start",
+      "label": "Metin Rengi / Gradyan Başlangıcı",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "color_end",
+      "label": "Gradyan Bitiş Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "header",
+      "content": "Boşluklar"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Alt Dış Boşluk (Margin Bottom)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Başlık"
+    }
+  ]
+}
+{% endschema %}

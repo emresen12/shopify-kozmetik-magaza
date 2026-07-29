@@ -4,56 +4,39 @@
       "type": "hero-banner",
       "blocks": {
         "badge_1": {
-          "type": "badge",
+          "type": "hero-badge",
           "settings": {
             "text": "✦ İPEKSİ DOKU & DOĞAL IŞILTI"
           }
         },
         "title_1": {
-          "type": "title",
+          "type": "hero-title",
           "settings": {
             "text": "Cilt Bakımında Yeni Çağ"
           }
         },
         "subtitle_1": {
-          "type": "subtitle",
+          "type": "hero-subtitle",
           "settings": {
             "text": "Doğanın en değerli özleri ve ileri teknoloji hyalüronik asit kompleksi ile cildinize anında gençlik ve ışıltı kazandırın."
           }
         },
         "button_1": {
-          "type": "button",
+          "type": "hero-button",
           "settings": {
             "text": "Koleksiyonu Keşfet",
-            "style": "primary"
+            "button_style": "primary"
           }
         },
-        "button_2": {
-          "type": "button",
+        "stats_1": {
+          "type": "hero-stats",
           "settings": {
-            "text": "Öne Çıkan Ürün",
-            "style": "secondary"
-          }
-        },
-        "stat_1": {
-          "type": "stat_item",
-          "settings": {
-            "number": "%100",
-            "label": "Organik & Vegan"
-          }
-        },
-        "stat_2": {
-          "type": "stat_item",
-          "settings": {
-            "number": "24 Sa.",
-            "label": "Kesintisiz Nem"
-          }
-        },
-        "stat_3": {
-          "type": "stat_item",
-          "settings": {
-            "number": "4.9 ★",
-            "label": "Müşteri Puanı"
+            "stat_1_number": "%100",
+            "stat_1_label": "Organik & Vegan",
+            "stat_2_number": "24 Sa.",
+            "stat_2_label": "Kesintisiz Nem",
+            "stat_3_number": "4.9 ★",
+            "stat_3_label": "Müşteri Puanı"
           }
         }
       },
@@ -62,10 +45,7 @@
         "title_1",
         "subtitle_1",
         "button_1",
-        "button_2",
-        "stat_1",
-        "stat_2",
-        "stat_3"
+        "stats_1"
       ],
       "settings": {}
     },

@@ -1,0 +1,135 @@
+{% doc %}
+  Hero Subtitle block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'hero-subtitle', id: 'hero-subtitle-1' %}
+{% enddoc %}
+
+<div class="hero-subtitle-block" style="
+  --sub-size: {{ block.settings.font_size }}px;
+  --sub-size-mob: {{ block.settings.font_size_mobile }}px;
+  --sub-weight: {{ block.settings.font_weight }};
+  --sub-color: {{ block.settings.text_color }};
+  --sub-lh: {{ block.settings.line_height }};
+  --sub-max-w: {{ block.settings.max_width }}px;
+  --sub-mb: {{ block.settings.margin_bottom }}px;
+" {{ block.shopify_attributes }}>
+  <p class="hero-subtitle-element">
+    {{ block.settings.text | default: "Doğal içerikler ve klinik olarak kanıtlanmış peptid formülleri ile hazırlanan yeni lüks cilt bakım serimizi keşfedin." }}
+  </p>
+</div>
+
+{% stylesheet %}
+  .hero-subtitle-block {
+    margin-bottom: var(--sub-mb, 28px);
+  }
+
+  .hero-subtitle-element {
+    font-size: var(--sub-size, 16px);
+    font-weight: var(--sub-weight, 400);
+    color: var(--sub-color, rgba(255, 255, 255, 0.78));
+    line-height: var(--sub-lh, 1.6);
+    max-width: var(--sub-max-w, 650px);
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .hero-subtitle-element {
+      font-size: var(--sub-size-mob, 14px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hero Alt Başlık",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Alt Başlık Metni",
+      "default": "Doğal içerikler ve klinik olarak kanıtlanmış peptid formülleri ile hazırlanan yeni lüks cilt bakım serimizi keşfedin."
+    },
+    {
+      "type": "header",
+      "content": "Tipografi"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Yazı Boyutu (Masaüstü)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Yazı Boyutu (Mobil)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Yazı Kalınlığı",
+      "options": [
+        { "value": "300", "label": "İnce (300)" },
+        { "value": "400", "label": "Normal (400)" },
+        { "value": "500", "label": "Orta (500)" },
+        { "value": "600", "label": "Yarı Kalın (600)" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "range",
+      "id": "line_height",
+      "label": "Satır Yüksekliği",
+      "min": 1.2,
+      "max": 2.2,
+      "step": 0.1,
+      "default": 1.6
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Metin Rengi",
+      "default": "rgba(255, 255, 255, 0.78)"
+    },
+    {
+      "type": "header",
+      "content": "Genişlik & Boşluklar"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maksimum Genişlik",
+      "min": 300,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 650
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Alt Dış Boşluk (Margin Bottom)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Alt Başlık"
+    }
+  ]
+}
+{% endschema %}

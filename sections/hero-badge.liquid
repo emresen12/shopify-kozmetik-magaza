@@ -1,0 +1,31 @@
+{% comment %}
+  Standalone Hero Badge Section
+{% endcomment %}
+
+<div class="hero-badge-section-wrapper full-width" style="text-align: {{ section.settings.alignment }};">
+  {% render 'hero-badge' %}
+</div>
+
+{% schema %}
+{
+  "name": "Hero Rozeti (Section)",
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Hizalama",
+      "options": [
+        { "value": "left", "label": "Sol" },
+        { "value": "center", "label": "Orta" },
+        { "value": "right", "label": "Sağ" }
+      ],
+      "default": "center"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Rozeti (Section)"
+    }
+  ]
+}
+{% endschema %}
