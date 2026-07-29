@@ -8,10 +8,18 @@
 <header class="theme-header full-width">
   <div class="header-container">
     
-    <!-- Left Area: Brand Logo / Shop Name -->
+    <!-- Left Area: Brand Logo / Shop Name & 3-Line Hamburger Menu Icon -->
     <div class="header__left">
+      <button type="button" class="header__icon-btn menu-drawer-toggle-btn" id="navDrawerTrigger" aria-label="Menüyü Aç" title="Menü">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
       <h1 class="header__title">
-        <a href="{{ routes.root_url }}">{{ shop.name | default: "LUMIÈRE BEAUTY" }}</a>
+        <a href="{{ routes.root_url }}">{{ shop.name | default: "EMRE ŞEN" }}</a>
       </h1>
     </div>
 
@@ -88,6 +96,160 @@
 
   </div>
 </header>
+
+<!-- ==========================================
+     SIDE NAV MENU DRAWER (3 Çizgili Yan Açılır Menü)
+========================================== -->
+<div class="side-drawer" id="navDrawer" aria-hidden="true">
+  <div class="side-drawer__backdrop" data-close-drawer></div>
+  <div class="side-drawer__panel nav-drawer-panel">
+    
+    {% assign b_n_head = section.blocks | where: "type", "drawer_nav_header" %}
+    {% assign b_n_menu = section.blocks | where: "type", "drawer_nav_menu" %}
+    {% assign b_n_acts = section.blocks | where: "type", "drawer_nav_actions" %}
+    {% assign b_n_prm  = section.blocks | where: "type", "drawer_nav_promo" %}
+    {% assign nav_blocks_size = b_n_head.size | plus: b_n_menu.size | plus: b_n_acts.size | plus: b_n_prm.size %}
+
+    {% if nav_blocks_size > 0 %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          
+          {% when 'drawer_nav_header' %}
+            <div class="side-drawer__header" {{ block.shopify_attributes }}>
+              <h3 class="drawer-title" style="color: {{ block.settings.title_color | default: '#ffffff' }};">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+                <span>{{ block.settings.title | default: "Menü" }}</span>
+              </h3>
+              <button type="button" class="side-drawer__close" data-close-drawer aria-label="Kapat">✕</button>
+            </div>
+
+          {% when 'drawer_nav_menu' %}
+            <div class="side-drawer__body nav-drawer-body" {{ block.shopify_attributes }}>
+              <nav class="nav-drawer-links-wrapper">
+                {% assign nav_linklist_handle = block.settings.menu | default: section.settings.menu %}
+                {% if nav_linklist_handle != blank and linklists[nav_linklist_handle].links.size > 0 %}
+                  {% for link in linklists[nav_linklist_handle].links %}
+                    <a href="{{ link.url }}" class="nav-drawer-link-item {% if link.active %}active{% endif %}">
+                      <span class="link-bullet">✦</span>
+                      <span>{{ link.title }}</span>
+                    </a>
+                  {% endfor %}
+                {% else %}
+                  <a href="{{ routes.root_url }}" class="nav-drawer-link-item active">
+                    <span class="link-bullet">✦</span>
+                    <span>Ana Sayfa</span>
+                  </a>
+                  <a href="{{ routes.all_products_collection_url }}" class="nav-drawer-link-item">
+                    <span class="link-bullet">✦</span>
+                    <span>Ürünler</span>
+                  </a>
+                  <a href="{{ routes.collections_url }}" class="nav-drawer-link-item">
+                    <span class="link-bullet">✦</span>
+                    <span>Katalog / Koleksiyonlar</span>
+                  </a>
+                {% endif %}
+              </nav>
+            </div>
+
+          {% when 'drawer_nav_actions' %}
+            <div class="nav-drawer-actions-wrapper" style="
+              --btn-bg: {{ block.settings.btn_bg | default: 'rgba(255, 255, 255, 0.05)' }};
+              --btn-border: {{ block.settings.btn_border | default: 'rgba(255, 255, 255, 0.12)' }};
+              --btn-color: {{ block.settings.btn_text_color | default: '#ffffff' }};
+            " {{ block.shopify_attributes }}>
+              <button type="button" class="nav-action-btn account-action-btn" id="navDrawerAuthBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>{{ block.settings.account_label | default: "Hesabım" }}</span>
+              </button>
+
+              <button type="button" class="nav-action-btn cart-action-btn" id="navDrawerCartBtn">
+                <div class="nav-cart-icon-wrap">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="9" cy="21" r="1"/>
+                    <circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                  </svg>
+                  <span class="nav-cart-count">{{ cart.item_count }}</span>
+                </div>
+                <span>{{ block.settings.cart_label | default: "Sepetim" }}</span>
+              </button>
+            </div>
+
+          {% when 'drawer_nav_promo' %}
+            <div class="nav-drawer-promo-card" style="
+              background: {{ block.settings.bg_color | default: 'rgba(194, 91, 130, 0.15)' }};
+              border: 1px solid {{ block.settings.border_color | default: '#f7cad0' }};
+            " {{ block.shopify_attributes }}>
+              <span class="promo-icon">{{ block.settings.icon | default: "✨" }}</span>
+              <p class="promo-text">{{ block.settings.text | default: "Özel Teklifler ve Yeni Ürünleri Keşfedin" }}</p>
+            </div>
+
+        {% endcase %}
+      {% endfor %}
+
+    {% else %}
+      <!-- Fallback when no blocks added -->
+      <div class="side-drawer__header">
+        <h3 class="drawer-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <span>Menü</span>
+        </h3>
+        <button type="button" class="side-drawer__close" data-close-drawer aria-label="Kapat">✕</button>
+      </div>
+
+      <div class="side-drawer__body nav-drawer-body">
+        <nav class="nav-drawer-links-wrapper">
+          <a href="{{ routes.root_url }}" class="nav-drawer-link-item active">
+            <span class="link-bullet">✦</span>
+            <span>Ana Sayfa</span>
+          </a>
+          <a href="{{ routes.all_products_collection_url }}" class="nav-drawer-link-item">
+            <span class="link-bullet">✦</span>
+            <span>Ürünler</span>
+          </a>
+          <a href="{{ routes.collections_url }}" class="nav-drawer-link-item">
+            <span class="link-bullet">✦</span>
+            <span>Katalog</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="nav-drawer-actions-wrapper">
+        <button type="button" class="nav-action-btn account-action-btn" id="navDrawerAuthBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span>Hesabım</span>
+        </button>
+
+        <button type="button" class="nav-action-btn cart-action-btn" id="navDrawerCartBtn">
+          <div class="nav-cart-icon-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="nav-cart-count">{{ cart.item_count }}</span>
+          </div>
+          <span>Sepetim</span>
+        </button>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
 
 <!-- ==========================================
      SIDE AUTH DRAWER (Giriş Yap / Kayıt Ol Yan Açılır Penceresi)
@@ -544,6 +706,131 @@
   .header__left {
     display: flex;
     align-items: center;
+    gap: 12px;
+  }
+
+  .menu-drawer-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    width: 38px;
+    height: 38px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .menu-drawer-toggle-btn:hover {
+    background: rgba(194, 91, 130, 0.25);
+    border-color: #f7cad0;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(194, 91, 130, 0.3);
+  }
+
+  .nav-drawer-links-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 0;
+  }
+
+  .nav-drawer-link-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nav-drawer-link-item:hover,
+  .nav-drawer-link-item.active {
+    background: linear-gradient(135deg, rgba(194, 91, 130, 0.3) 0%, rgba(162, 67, 103, 0.3) 100%);
+    border-color: #f7cad0;
+    color: #ffffff;
+    transform: translateX(4px);
+    box-shadow: 0 4px 14px rgba(194, 91, 130, 0.25);
+  }
+
+  .link-bullet {
+    color: #f7cad0;
+    font-size: 11px;
+    transition: transform 0.2s ease;
+  }
+
+  .nav-drawer-link-item:hover .link-bullet {
+    transform: scale(1.3);
+  }
+
+  .nav-drawer-actions-wrapper {
+    padding: 20px 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+  }
+
+  .nav-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: 14px;
+    background: var(--btn-bg, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--btn-border, rgba(255, 255, 255, 0.12));
+    color: var(--btn-color, #ffffff);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    width: 100%;
+  }
+
+  .nav-action-btn:hover {
+    background: linear-gradient(135deg, rgba(194, 91, 130, 0.35) 0%, rgba(162, 67, 103, 0.35) 100%);
+    border-color: #f7cad0;
+    box-shadow: 0 6px 18px rgba(194, 91, 130, 0.3);
+  }
+
+  .nav-cart-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-cart-count {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #c25b82;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 1px solid #f7cad0;
+  }
+
+  .nav-drawer-promo-card {
+    margin: 10px 24px 20px 24px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: #ffffff;
   }
 
   .header__title {
@@ -686,6 +973,17 @@
   .header__search-wrapper.active .header__search-form {
     transform: translateY(-50%) scaleX(1);
     opacity: 1;
+    z-index: 10;
+  }
+
+  .search-toggle-btn {
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  .header__search-wrapper.active .search-toggle-btn {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .header__search-input {
@@ -756,6 +1054,20 @@
   }
 
   .side-drawer.active .side-drawer__panel {
+    transform: translateX(0);
+  }
+
+  /* Left Side Drawer for Hamburger Navigation Menu */
+  #navDrawer .side-drawer__panel {
+    right: auto;
+    left: 0;
+    border-left: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 15px 0 50px rgba(0, 0, 0, 0.6);
+    transform: translateX(-100%);
+  }
+
+  #navDrawer.active .side-drawer__panel {
     transform: translateX(0);
   }
 
@@ -1240,11 +1552,37 @@
       });
     }
 
-    // --- SIDE DRAWERS LOGIC (AUTH & CART) ---
+    // --- SIDE DRAWERS LOGIC (NAV MENU, AUTH & CART) ---
+    const navDrawer = document.getElementById('navDrawer');
     const authDrawer = document.getElementById('authDrawer');
     const cartDrawer = document.getElementById('cartDrawer');
+    
+    const navTrigger = document.getElementById('navDrawerTrigger');
     const authTrigger = document.getElementById('authDrawerTrigger');
     const cartTrigger = document.getElementById('cartDrawerTrigger');
+
+    const navAuthBtn = document.getElementById('navDrawerAuthBtn');
+    const navCartBtn = document.getElementById('navDrawerCartBtn');
+
+    if (navDrawer && navTrigger) {
+      navTrigger.addEventListener('click', () => {
+        openDrawer(navDrawer);
+      });
+    }
+
+    if (navAuthBtn) {
+      navAuthBtn.addEventListener('click', () => {
+        closeDrawer(navDrawer);
+        if (authDrawer) openDrawer(authDrawer);
+      });
+    }
+
+    if (navCartBtn) {
+      navCartBtn.addEventListener('click', () => {
+        closeDrawer(navDrawer);
+        if (cartDrawer) openDrawer(cartDrawer);
+      });
+    }
 
     function openDrawer(drawer) {
       if (drawer) {
@@ -1280,6 +1618,7 @@
     const closeBtns = document.querySelectorAll('[data-close-drawer]');
     closeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
+        closeDrawer(navDrawer);
         closeDrawer(authDrawer);
         closeDrawer(cartDrawer);
       });
@@ -1552,7 +1891,7 @@
   "blocks": [
     {
       "type": "drawer_cart_header",
-      "name": "🛒 Sepet Başlığı & Sayaç",
+      "name": "Sepet Başlığı & Sayaç",
       "settings": [
         { "type": "text", "id": "title", "label": "Başlık Metni", "default": "Alışveriş Sepetiniz" },
         { "type": "color", "id": "title_color", "label": "Metin Rengi", "default": "#ffffff" },
@@ -1561,7 +1900,7 @@
     },
     {
       "type": "drawer_shipping_bar",
-      "name": "🚚 Ücretsiz Kargo Çubuğu",
+      "name": "Ücretsiz Kargo Çubuğu",
       "settings": [
         { "type": "text", "id": "icon", "label": "İkon / Emoji", "default": "🎉" },
         { "type": "text", "id": "text", "label": "Kargo Bedava Metni", "default": "₺500 üzeri alışverişlerde Kargo Bedava!" },
@@ -1572,12 +1911,12 @@
     },
     {
       "type": "drawer_cart_items",
-      "name": "🛍️ Sepet Ürün Listesi",
+      "name": "Sepet Ürün Listesi",
       "settings": []
     },
     {
       "type": "drawer_empty_cart",
-      "name": "🛒 Boş Sepet Metni",
+      "name": "Boş Sepet Metni",
       "settings": [
         { "type": "text", "id": "icon", "label": "İkon / Emoji", "default": "🛒" },
         { "type": "text", "id": "title", "label": "Başlık Cümlesi", "default": "Sepetiniz henüz boş" },
@@ -1728,6 +2067,42 @@
         { "type": "text", "id": "badge_2", "label": "2. Rozet", "default": "VIP Ayrıcalıklar" },
         { "type": "text", "id": "badge_3", "label": "3. Rozet", "default": "Hızlı Üyelik" },
         { "type": "color", "id": "bg_color", "label": "Arka Plan Rengi", "default": "#120d15" }
+      ]
+    },
+    {
+      "type": "drawer_nav_header",
+      "name": "Yan Menü Başlığı",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Başlık Metni", "default": "Menü" },
+        { "type": "color", "id": "title_color", "label": "Metin Rengi", "default": "#ffffff" }
+      ]
+    },
+    {
+      "type": "drawer_nav_menu",
+      "name": "Yan Menü Linkleri",
+      "settings": [
+        { "type": "link_list", "id": "menu", "label": "Gezinti Menüsü (Varsayılan: Ana Menü)" }
+      ]
+    },
+    {
+      "type": "drawer_nav_actions",
+      "name": "Hesabım & Sepetim",
+      "settings": [
+        { "type": "text", "id": "account_label", "label": "Hesabım Buton Metni", "default": "Hesabım" },
+        { "type": "text", "id": "cart_label", "label": "Sepetim Buton Metni", "default": "Sepetim" },
+        { "type": "color", "id": "btn_bg", "label": "Buton Arka Plan Rengi", "default": "rgba(255, 255, 255, 0.05)" },
+        { "type": "color", "id": "btn_border", "label": "Buton Kenarlık Rengi", "default": "rgba(255, 255, 255, 0.12)" },
+        { "type": "color", "id": "btn_text_color", "label": "Metin Rengi", "default": "#ffffff" }
+      ]
+    },
+    {
+      "type": "drawer_nav_promo",
+      "name": "Yan Menü Duyurusu",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "İkon", "default": "✨" },
+        { "type": "textarea", "id": "text", "label": "Kampanya Cümlesi", "default": "Yeni Sezon Özel Koleksiyonları Keşfedin!" },
+        { "type": "color", "id": "bg_color", "label": "Arka Plan Rengi", "default": "rgba(194, 91, 130, 0.15)" },
+        { "type": "color", "id": "border_color", "label": "Kenarlık Rengi", "default": "#f7cad0" }
       ]
     }
   ]

@@ -5,6 +5,24 @@
     "header": {
       "type": "header",
       "blocks": {
+        "nav_header_1": {
+          "type": "drawer_nav_header",
+          "settings": {
+            "title": "Menü",
+            "title_color": "#ffffff"
+          }
+        },
+        "nav_menu_1": {
+          "type": "drawer_nav_menu",
+          "settings": {}
+        },
+        "nav_actions_1": {
+          "type": "drawer_nav_actions",
+          "settings": {
+            "account_label": "Hesabım",
+            "cart_label": "Sepetim"
+          }
+        },
         "cart_header_1": {
           "type": "drawer_cart_header",
           "settings": {
@@ -101,6 +119,9 @@
         }
       },
       "block_order": [
+        "nav_header_1",
+        "nav_menu_1",
+        "nav_actions_1",
         "cart_header_1",
         "cart_shipping_1",
         "cart_items_1",
