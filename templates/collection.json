@@ -69,7 +69,15 @@
       ],
       "settings": {}
     },
-    "featured_serum_showcase": {
+    "serum_showcase": {
+      "type": "serum-showcase",
+      "settings": {
+        "badge_text": "✦ ÖNE ÇIKAN SAF HYALÜRONİK SERUM",
+        "caption_title": "Radiance Glow Hyalüronik Serum",
+        "caption_subtitle": "%100 Saf Hyalüronik Asit & Pembe Kuvars Özlü Gençlik İksiri"
+      }
+    },
+    "featured_product_details": {
       "type": "featured-product",
       "blocks": {
         "subheading_1": {
@@ -123,7 +131,8 @@
   "order": [
     "hero_banner",
     "filter_bar",
-    "featured_serum_showcase",
+    "serum_showcase",
+    "featured_product_details",
     "product_grid"
   ]
 }

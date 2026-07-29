@@ -1,0 +1,425 @@
+{% comment %}
+  Standalone Serum Image Showcase Section (Kendi Başına Özelleştirilebilir Serum Görseli Vitrini)
+  Fully clickable in Shopify Theme Editor. Clicking the image opens all settings on the right panel!
+{% endcomment %}
+
+<div class="serum-showcase-section full-width" style="
+  --padding-top: {{ section.settings.padding_top }}px;
+  --padding-bottom: {{ section.settings.padding_bottom }}px;
+  --mobile-padding-top: {{ section.settings.mobile_padding_top }}px;
+  --mobile-padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  --max-width: {{ section.settings.max_width }}px;
+  --bg-color: {{ section.settings.bg_color }};
+  --orb-1-color: {{ section.settings.orb_1_color }};
+  --orb-2-color: {{ section.settings.orb_2_color }};
+  --frame-bg: {{ section.settings.frame_bg }};
+  --frame-border: {{ section.settings.frame_border }};
+  --frame-radius: {{ section.settings.frame_radius }}px;
+  --frame-blur: {{ section.settings.frame_blur }}px;
+  --badge-bg: {{ section.settings.badge_bg }};
+  --badge-text-color: {{ section.settings.badge_text_color }};
+  --img-radius: {{ section.settings.img_radius }}px;
+" {{ section.shopify_attributes }}>
+
+  <!-- Glowing Background Orbs -->
+  <div class="serum-orb orb-1"></div>
+  <div class="serum-orb orb-2"></div>
+
+  <div class="serum-showcase-container">
+    <div class="serum-glass-frame">
+      <div class="serum-aura-glow"></div>
+      
+      <!-- Main Serum Image -->
+      <div class="serum-image-wrapper">
+        {% if section.settings.serum_image != blank %}
+          {{ section.settings.serum_image | image_url: width: 1200 | image_tag: class: 'serum-showcase-img', loading: 'lazy' }}
+        {% else %}
+          <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Lüks Gençleştirici Serum" class="serum-showcase-img" width="800" height="800" loading="lazy">
+        {% endif %}
+      </div>
+
+      <!-- Badge Overlay -->
+      {% if section.settings.show_badge and section.settings.badge_text != blank %}
+        <div class="serum-badge-overlay">
+          <span>{{ section.settings.badge_text }}</span>
+        </div>
+      {% endif %}
+
+      <!-- Optional Title Overlay -->
+      {% if section.settings.show_caption and section.settings.caption_title != blank %}
+        <div class="serum-caption-overlay">
+          <h3>{{ section.settings.caption_title }}</h3>
+          {% if section.settings.caption_subtitle != blank %}
+            <p>{{ section.settings.caption_subtitle }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .serum-showcase-section {
+    position: relative;
+    width: 100%;
+    background: var(--bg-color, #0b080c);
+    padding-top: var(--padding-top, 80px);
+    padding-bottom: var(--padding-bottom, 80px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .serum-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .serum-orb.orb-1 {
+    top: -10%;
+    left: 20%;
+    width: 500px;
+    height: 500px;
+    background: var(--orb-1-color, rgba(194, 91, 130, 0.2));
+  }
+
+  .serum-orb.orb-2 {
+    bottom: -10%;
+    right: 20%;
+    width: 450px;
+    height: 450px;
+    background: var(--orb-2-color, rgba(247, 202, 208, 0.15));
+  }
+
+  .serum-showcase-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: var(--max-width, 1000px);
+    padding: 0 24px;
+    margin: 0 auto;
+  }
+
+  .serum-glass-frame {
+    position: relative;
+    background: var(--frame-bg, rgba(255, 255, 255, 0.04));
+    border: 1px solid var(--frame-border, rgba(255, 255, 255, 0.15));
+    backdrop-filter: blur(var(--frame-blur, 20px));
+    border-radius: var(--frame-radius, 32px);
+    padding: 24px;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    cursor: pointer;
+  }
+
+  .serum-glass-frame:hover {
+    transform: translateY(-6px);
+    border-color: rgba(247, 202, 208, 0.4);
+    box-shadow: 0 40px 90px rgba(194, 91, 130, 0.25);
+  }
+
+  .serum-aura-glow {
+    position: absolute;
+    inset: -2px;
+    border-radius: var(--frame-radius, 32px);
+    background: linear-gradient(135deg, rgba(247, 202, 208, 0.2) 0%, transparent 50%, rgba(194, 91, 130, 0.2) 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .serum-image-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    border-radius: var(--img-radius, 24px);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .serum-showcase-img {
+    width: 100%;
+    max-height: 650px;
+    object-fit: cover;
+    display: block;
+    border-radius: var(--img-radius, 24px);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .serum-glass-frame:hover .serum-showcase-img {
+    transform: scale(1.03);
+  }
+
+  .serum-badge-overlay {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    z-index: 3;
+    background: var(--badge-bg, linear-gradient(135deg, #c25b82 0%, #a24367 100%));
+    color: var(--badge-text-color, #ffffff);
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .serum-caption-overlay {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    right: 40px;
+    z-index: 3;
+    background: rgba(15, 11, 16, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 20px 28px;
+    color: #ffffff;
+  }
+
+  .serum-caption-overlay h3 {
+    margin: 0 0 6px 0;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  .serum-caption-overlay p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  @media (max-width: 768px) {
+    .serum-showcase-section {
+      padding-top: var(--mobile-padding-top, 40px);
+      padding-bottom: var(--mobile-padding-bottom, 40px);
+    }
+
+    .serum-glass-frame {
+      padding: 14px;
+      border-radius: 20px;
+    }
+
+    .serum-badge-overlay {
+      top: 24px;
+      left: 24px;
+      padding: 8px 14px;
+      font-size: 0.72rem;
+    }
+
+    .serum-caption-overlay {
+      bottom: 24px;
+      left: 24px;
+      right: 24px;
+      padding: 14px 18px;
+    }
+
+    .serum-caption-overlay h3 {
+      font-size: 1.1rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Öne Çıkan Serum Vitrini",
+  "settings": [
+    {
+      "type": "header",
+      "content": "🖼️ Serum Görseli Seçimi & Yükleme"
+    },
+    {
+      "type": "image_picker",
+      "id": "serum_image",
+      "label": "Öne Çıkan Serum Görselini Seçin / Yükleyin"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maksimum Görsel Vitrin Genişliği (px)",
+      "min": 500,
+      "max": 1400,
+      "step": 20,
+      "unit": "px",
+      "default": 1000
+    },
+    {
+      "type": "range",
+      "id": "img_radius",
+      "label": "Görsel Köşe Yuvarlama (Radius)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "🏷️ Üst İndirim / Vurgu Rozeti"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Görsel Üstü Rozetini Göster",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Rozet Metni",
+      "default": "✦ ÖNE ÇIKAN SAF HYALÜRONİK SERUM"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg",
+      "label": "Rozet Arka Plan Rengi",
+      "default": "#c25b82"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Rozet Metin Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "📝 Görsel Altı Başlık & Açıklama Kartı"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption",
+      "label": "Görsel Altı Başlık Kartını Göster",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "caption_title",
+      "label": "Vitrin Başlığı",
+      "default": "Radiance Glow Hyalüronik Serum"
+    },
+    {
+      "type": "text",
+      "id": "caption_subtitle",
+      "label": "Vitrin Açıklaması",
+      "default": "%100 Saf Hyalüronik Asit & Pembe Kuvars Özlü Gençlik İksiri"
+    },
+    {
+      "type": "header",
+      "content": "✨ Cam Efekti (Glassmorphism) & Arka Plan"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Bölüm Arka Plan Rengi",
+      "default": "#0b080c"
+    },
+    {
+      "type": "color",
+      "id": "frame_bg",
+      "label": "Cam Çerçeve Arka Plan Rengi",
+      "default": "rgba(255, 255, 255, 0.04)"
+    },
+    {
+      "type": "color",
+      "id": "frame_border",
+      "label": "Cam Çerçeve Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.15)"
+    },
+    {
+      "type": "range",
+      "id": "frame_radius",
+      "label": "Çerçeve Köşe Yuvarlama (Radius)",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "frame_blur",
+      "label": "Cam Bulanıklık Efekti (Blur)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "🔮 Arka Plan Işık Küreleri (Aura Orbs)"
+    },
+    {
+      "type": "color",
+      "id": "orb_1_color",
+      "label": "Üst-Sol Işık Rengi",
+      "default": "rgba(194, 91, 130, 0.2)"
+    },
+    {
+      "type": "color",
+      "id": "orb_2_color",
+      "label": "Alt-Sağ Işık Rengi",
+      "default": "rgba(247, 202, 208, 0.15)"
+    },
+    {
+      "type": "header",
+      "content": "📐 Bölüm Boşlukları (Section Spacing)"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Üst İç Boşluk (Masaüstü)",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Alt İç Boşluk (Masaüstü)",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Üst İç Boşluk (Mobil)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Alt İç Boşluk (Mobil)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Öne Çıkan Serum Vitrini"
+    }
+  ]
+}
+{% endschema %}
