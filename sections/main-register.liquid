@@ -1,0 +1,612 @@
+{% comment %}
+  Modular Customer Registration Section (Full Block Architecture)
+  Every sentence, input box, title, button, and banner is a selectable, reorderable Theme Block.
+{% endcomment %}
+
+<div class="customer-register-section full-width" style="
+  --bg-color: {{ section.settings.bg_color | default: '#0b080c' }};
+  --card-bg: {{ section.settings.card_bg | default: 'rgba(255, 255, 255, 0.04)' }};
+  --card-border: {{ section.settings.card_border | default: 'rgba(255, 255, 255, 0.12)' }};
+  --card-radius: {{ section.settings.card_radius | default: 28 }}px;
+  --card-blur: {{ section.settings.card_blur | default: 20 }}px;
+  --max-width: {{ section.settings.max_width | default: 560 }}px;
+  --padding-top: {{ section.settings.padding_top | default: 90 }}px;
+  --padding-bottom: {{ section.settings.padding_bottom | default: 110 }}px;
+">
+  <div class="register-orb orb-1"></div>
+  <div class="register-orb orb-2"></div>
+
+  <div class="customer-register-container">
+    <div class="register-glass-card">
+      {% form 'create_customer', class: 'register-block-form' %}
+
+        {% if form.errors %}
+          <div class="register-error-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>{{ form.errors | default_errors }}</span>
+          </div>
+        {% endif %}
+
+        {% for block in section.blocks %}
+          {% case block.type %}
+
+            {% when 'badge' %}
+              <div class="block-item block-badge-wrapper" style="margin-bottom: {{ block.settings.margin_bottom }}px;" {{ block.shopify_attributes }}>
+                <span class="block-badge" style="
+                  color: {{ block.settings.text_color }};
+                  background: {{ block.settings.bg_color }};
+                  font-size: {{ block.settings.font_size }}px;
+                ">
+                  {{ block.settings.text }}
+                </span>
+              </div>
+
+            {% when 'heading' %}
+              <div class="block-item block-heading-wrapper" style="margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.text_align }};" {{ block.shopify_attributes }}>
+                <h1 class="block-heading" style="
+                  color: {{ block.settings.text_color }};
+                  font-size: {{ block.settings.font_size_desktop }}px;
+                ">
+                  {{ block.settings.text }}
+                </h1>
+              </div>
+
+            {% when 'description' %}
+              <div class="block-item block-desc-wrapper" style="margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.text_align }};" {{ block.shopify_attributes }}>
+                <p class="block-desc" style="
+                  color: {{ block.settings.text_color }};
+                  font-size: {{ block.settings.font_size }}px;
+                ">
+                  {{ block.settings.text }}
+                </p>
+              </div>
+
+            {% when 'name_inputs' %}
+              <div class="block-item block-name-row" {{ block.shopify_attributes }}>
+                <div class="block-input-group">
+                  <label for="FirstNameBlock" class="block-input-label">{{ block.settings.first_name_label }}</label>
+                  <input type="text" name="customer[first_name]" id="FirstNameBlock" placeholder="{{ block.settings.first_name_placeholder }}" required class="block-input">
+                </div>
+                <div class="block-input-group">
+                  <label for="LastNameBlock" class="block-input-label">{{ block.settings.last_name_label }}</label>
+                  <input type="text" name="customer[last_name]" id="LastNameBlock" placeholder="{{ block.settings.last_name_placeholder }}" required class="block-input">
+                </div>
+              </div>
+
+            {% when 'email_input' %}
+              <div class="block-item block-input-group" {{ block.shopify_attributes }}>
+                <label for="RegisterEmailBlock" class="block-input-label">{{ block.settings.label }}</label>
+                <input type="email" name="customer[email]" id="RegisterEmailBlock" placeholder="{{ block.settings.placeholder }}" required class="block-input">
+              </div>
+
+            {% when 'password_input' %}
+              <div class="block-item block-input-group" {{ block.shopify_attributes }}>
+                <label for="RegisterPasswordBlock" class="block-input-label">{{ block.settings.label }}</label>
+                <input type="password" name="customer[password]" id="RegisterPasswordBlock" placeholder="{{ block.settings.placeholder }}" required class="block-input">
+              </div>
+
+            {% when 'terms_checkbox' %}
+              <div class="block-item block-terms-wrapper" {{ block.shopify_attributes }}>
+                <label class="terms-check-label">
+                  <input type="checkbox" required class="terms-checkbox">
+                  <span>{{ block.settings.text }}</span>
+                </label>
+              </div>
+
+            {% when 'submit_button' %}
+              <div class="block-item block-submit-wrapper" {{ block.shopify_attributes }}>
+                <button type="submit" class="block-submit-btn" style="
+                  background: linear-gradient(135deg, {{ block.settings.bg_gradient_start }} 0%, {{ block.settings.bg_gradient_end }} 100%);
+                  color: {{ block.settings.text_color }};
+                  border-radius: {{ block.settings.border_radius }}px;
+                ">
+                  <span>{{ block.settings.text }}</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12" 5 19 12 12 19"/></svg>
+                </button>
+              </div>
+
+            {% when 'login_prompt' %}
+              <div class="block-item block-login-prompt" {{ block.shopify_attributes }}>
+                <span>{{ block.settings.prompt_text }}</span>
+                <a href="{{ block.settings.link_url | default: routes.account_login_url }}" class="prompt-link">
+                  {{ block.settings.link_text }}
+                </a>
+              </div>
+
+            {% when 'notice_banner' %}
+              <div class="block-item block-notice-banner" style="
+                background: {{ block.settings.bg_color }};
+                border: 1px solid {{ block.settings.border_color }};
+                color: {{ block.settings.text_color }};
+              " {{ block.shopify_attributes }}>
+                <span class="notice-icon">{{ block.settings.icon }}</span>
+                <p class="notice-text">{{ block.settings.text }}</p>
+              </div>
+
+          {% endcase %}
+        {% endfor %}
+
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .customer-register-section {
+    position: relative;
+    background: var(--bg-color, #0b080c);
+    padding-top: var(--padding-top, 90px);
+    padding-bottom: var(--padding-bottom, 110px);
+    padding-left: 20px;
+    padding-right: 20px;
+    overflow: hidden;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .register-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    opacity: 0.25;
+  }
+  .register-orb.orb-1 {
+    top: 10%;
+    left: 10%;
+    width: 350px;
+    height: 350px;
+    background: #c25b82;
+  }
+  .register-orb.orb-2 {
+    bottom: 10%;
+    right: 10%;
+    width: 380px;
+    height: 380px;
+    background: #4a2840;
+  }
+
+  .customer-register-container {
+    width: 100%;
+    max-width: var(--max-width, 560px);
+    position: relative;
+    z-index: 2;
+  }
+
+  .register-glass-card {
+    background: var(--card-bg, rgba(255, 255, 255, 0.04));
+    border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12));
+    border-radius: var(--card-radius, 28px);
+    backdrop-filter: blur(var(--card-blur, 20px));
+    -webkit-backdrop-filter: blur(var(--card-blur, 20px));
+    padding: 40px 36px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  }
+
+  .register-block-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .block-name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .terms-check-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.84rem;
+    color: rgba(255, 255, 255, 0.75);
+    cursor: pointer;
+  }
+
+  .terms-checkbox {
+    accent-color: #c25b82;
+    width: 16px;
+    height: 16px;
+  }
+
+  .block-login-prompt {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .register-error-box {
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .block-name-row {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Müşteri Kayıt Sayfası",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Arka Plan Rengi",
+      "default": "#0b080c"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Kart Cam Rengi",
+      "default": "rgba(255, 255, 255, 0.04)"
+    },
+    {
+      "type": "color",
+      "id": "card_border",
+      "label": "Kart Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.12)"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Kart Köşe Yuvarlatma (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_blur",
+      "label": "Bulanıklık Efekti (Blur)",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maksimum Genişlik (px)",
+      "min": 360,
+      "max": 750,
+      "step": 20,
+      "default": 560
+    }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "🏷️ Üst Rozet Etiketi",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Rozet Metni",
+          "default": "✦ ÖZEL ÜYELİK"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Arka Plan Rengi",
+          "default": "rgba(194, 91, 130, 0.2)"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Yazı Boyutu (px)",
+          "min": 10,
+          "max": 20,
+          "step": 1,
+          "default": 12
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Alt Boşluk (px)",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "default": 14
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "👑 Ana Başlık Cümlesi",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Başlık Metni",
+          "default": "Aramıza Katılın"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "font_size_desktop",
+          "label": "Masaüstü Yazı Boyutu (px)",
+          "min": 20,
+          "max": 50,
+          "step": 2,
+          "default": 32
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Hizalama",
+          "options": [
+            { "value": "left", "label": "Sola Hizalı" },
+            { "value": "center", "label": "Ortalı" },
+            { "value": "right", "label": "Sağa Hizalı" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Alt Boşluk (px)",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "default": 10
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "📝 Alt Açıklama Cümlesi",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Açıklama Metni",
+          "default": "Lumière ayrıcalıklar dünyasına adım atın, üyelere özel lansmanlar ve özel fırsatlardan ilk siz haberdar olun."
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "rgba(255, 255, 255, 0.7)"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Yazı Boyutu (px)",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "default": 15
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Hizalama",
+          "options": [
+            { "value": "left", "label": "Sola Hizalı" },
+            { "value": "center", "label": "Ortalı" },
+            { "value": "right", "label": "Sağa Hizalı" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Alt Boşluk (px)",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "default": 24
+        }
+      ]
+    },
+    {
+      "type": "name_inputs",
+      "name": "👤 Ad & Soyad Giriş Kutusu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "first_name_label",
+          "label": "Ad Etiketi",
+          "default": "Adınız"
+        },
+        {
+          "type": "text",
+          "id": "first_name_placeholder",
+          "label": "Ad İpucu Metni",
+          "default": "Adınız"
+        },
+        {
+          "type": "text",
+          "id": "last_name_label",
+          "label": "Soyad Etiketi",
+          "default": "Soyadınız"
+        },
+        {
+          "type": "text",
+          "id": "last_name_placeholder",
+          "label": "Soyad İpucu Metni",
+          "default": "Soyadınız"
+        }
+      ]
+    },
+    {
+      "type": "email_input",
+      "name": "✉️ E-Posta Giriş Kutusu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Kutu Etiketi",
+          "default": "E-Posta Adresi"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "İpucu Metni (Placeholder)",
+          "default": "ornek@email.com"
+        }
+      ]
+    },
+    {
+      "type": "password_input",
+      "name": "🔒 Şifre Giriş Kutusu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Kutu Etiketi",
+          "default": "Şifre Oluşturun"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "İpucu Metni (Placeholder)",
+          "default": "En az 6 karakter"
+        }
+      ]
+    },
+    {
+      "type": "terms_checkbox",
+      "name": "☑️ Sözleşme Onay Kutusu",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Onay Metni",
+          "default": "Üyelik sözleşmesini ve gizlilik politikasını okudum, kabul ediyorum."
+        }
+      ]
+    },
+    {
+      "type": "submit_button",
+      "name": "🚀 Kayıt Ol Butonu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Buton Metni",
+          "default": "Kayıt Ol"
+        },
+        {
+          "type": "color",
+          "id": "bg_gradient_start",
+          "label": "Gradient Başlangıç",
+          "default": "#c25b82"
+        },
+        {
+          "type": "color",
+          "id": "bg_gradient_end",
+          "label": "Gradient Bitiş",
+          "default": "#a24367"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "border_radius",
+          "label": "Köşe Yuvarlama (px)",
+          "min": 4,
+          "max": 30,
+          "step": 2,
+          "default": 14
+        }
+      ]
+    },
+    {
+      "type": "login_prompt",
+      "name": "🔗 Giriş Yap Yönlendirme Kutusu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "prompt_text",
+          "label": "Cümle Metni",
+          "default": "Zaten bir hesabınız var mı?"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link Metni",
+          "default": "Giriş Yapın"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Özel Giriş Linki"
+        }
+      ]
+    },
+    {
+      "type": "notice_banner",
+      "name": "✨ Sürpriz Hoş Geldin Kutusu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "İkon / Emoji",
+          "default": "💎"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Duyuru Cümlesi",
+          "default": "Kayıt olan tüm üyelerimize özel VIP Sadakat Kulübü hoş geldin puanları tanımlanacaktır."
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Arka Plan Rengi",
+          "default": "rgba(194, 91, 130, 0.15)"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Kenarlık Rengi",
+          "default": "rgba(247, 202, 208, 0.3)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Müşteri Kayıt Sayfası"
+    }
+  ]
+}
+{% endschema %}

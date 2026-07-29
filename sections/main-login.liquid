@@ -1,0 +1,918 @@
+{% comment %}
+  Modular Customer Login Section (Full Block Architecture)
+  Every sentence, input box, title, button, and banner is a selectable, reorderable Theme Block.
+{% endcomment %}
+
+<div class="customer-login-section full-width" style="
+  --bg-color: {{ section.settings.bg_color | default: '#0b080c' }};
+  --card-bg: {{ section.settings.card_bg | default: 'rgba(255, 255, 255, 0.04)' }};
+  --card-border: {{ section.settings.card_border | default: 'rgba(255, 255, 255, 0.12)' }};
+  --card-radius: {{ section.settings.card_radius | default: 28 }}px;
+  --card-blur: {{ section.settings.card_blur | default: 20 }}px;
+  --max-width: {{ section.settings.max_width | default: 520 }}px;
+  --padding-top: {{ section.settings.padding_top | default: 100 }}px;
+  --padding-bottom: {{ section.settings.padding_bottom | default: 120 }}px;
+">
+  <div class="login-orb orb-1"></div>
+  <div class="login-orb orb-2"></div>
+
+  <div class="customer-login-container">
+    <div class="login-glass-card">
+      {% form 'customer_login', class: 'login-block-form' %}
+
+        {% if form.errors %}
+          <div class="login-error-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>{{ form.errors | default_errors }}</span>
+          </div>
+        {% endif %}
+
+        {% for block in section.blocks %}
+          {% case block.type %}
+
+            {% when 'badge' %}
+              <div class="block-item block-badge-wrapper" style="margin-bottom: {{ block.settings.margin_bottom }}px;" {{ block.shopify_attributes }}>
+                <span class="block-badge" style="
+                  color: {{ block.settings.text_color }};
+                  background: {{ block.settings.bg_color }};
+                  font-size: {{ block.settings.font_size }}px;
+                ">
+                  {{ block.settings.text }}
+                </span>
+              </div>
+
+            {% when 'heading' %}
+              <div class="block-item block-heading-wrapper" style="margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.text_align }};" {{ block.shopify_attributes }}>
+                <h1 class="block-heading" style="
+                  color: {{ block.settings.text_color }};
+                  font-size: {{ block.settings.font_size_desktop }}px;
+                ">
+                  {{ block.settings.text }}
+                </h1>
+              </div>
+
+            {% when 'description' %}
+              <div class="block-item block-desc-wrapper" style="margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.text_align }};" {{ block.shopify_attributes }}>
+                <p class="block-desc" style="
+                  color: {{ block.settings.text_color }};
+                  font-size: {{ block.settings.font_size }}px;
+                ">
+                  {{ block.settings.text }}
+                </p>
+              </div>
+
+            {% when 'email_input' %}
+              <div class="block-item block-input-group" {{ block.shopify_attributes }}>
+                {% if block.settings.label != blank %}
+                  <label for="CustomerEmailBlock" class="block-input-label">{{ block.settings.label }}</label>
+                {% endif %}
+                <div class="input-with-icon">
+                  {% if block.settings.show_icon %}
+                    <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  {% endif %}
+                  <input
+                    type="email"
+                    name="customer[email]"
+                    id="CustomerEmailBlock"
+                    placeholder="{{ block.settings.placeholder }}"
+                    {% if block.settings.is_required %}required{% endif %}
+                    class="block-input"
+                  >
+                </div>
+              </div>
+
+            {% when 'password_input' %}
+              <div class="block-item block-input-group" {{ block.shopify_attributes }}>
+                <div class="label-row">
+                  {% if block.settings.label != blank %}
+                    <label for="CustomerPasswordBlock" class="block-input-label">{{ block.settings.label }}</label>
+                  {% endif %}
+                  {% if block.settings.show_forgot_link %}
+                    <a href="#recover" class="block-forgot-link">{{ block.settings.forgot_link_text }}</a>
+                  {% endif %}
+                </div>
+                <div class="input-with-icon">
+                  {% if block.settings.show_icon %}
+                    <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  {% endif %}
+                  <input
+                    type="password"
+                    name="customer[password]"
+                    id="CustomerPasswordBlock"
+                    placeholder="{{ block.settings.placeholder }}"
+                    {% if block.settings.is_required %}required{% endif %}
+                    class="block-input"
+                  >
+                </div>
+              </div>
+
+            {% when 'submit_button' %}
+              <div class="block-item block-submit-wrapper" {{ block.shopify_attributes }}>
+                <button type="submit" class="block-submit-btn" style="
+                  background: linear-gradient(135deg, {{ block.settings.bg_gradient_start }} 0%, {{ block.settings.bg_gradient_end }} 100%);
+                  color: {{ block.settings.text_color }};
+                  border-radius: {{ block.settings.border_radius }}px;
+                ">
+                  <span>{{ block.settings.text }}</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12" 5 19 12 12 19"/></svg>
+                </button>
+              </div>
+
+            {% when 'divider' %}
+              <div class="block-item block-divider-wrapper" {{ block.shopify_attributes }}>
+                <div class="block-divider-line"></div>
+                {% if block.settings.text != blank %}
+                  <span class="block-divider-text">{{ block.settings.text }}</span>
+                  <div class="block-divider-line"></div>
+                {% endif %}
+              </div>
+
+            {% when 'demo_login_box' %}
+              <div class="block-item block-demo-box" style="
+                background: {{ block.settings.bg_color }};
+                border: 1px dashed {{ block.settings.border_color }};
+              " {{ block.shopify_attributes }}>
+                <p class="demo-box-title">{{ block.settings.title }}</p>
+                <button type="button" class="demo-fill-btn" id="demoFillBtn">
+                  {{ block.settings.button_text }}
+                </button>
+              </div>
+
+            {% when 'register_prompt' %}
+              <div class="block-item block-register-prompt" {{ block.shopify_attributes }}>
+                <span>{{ block.settings.prompt_text }}</span>
+                <a href="{{ block.settings.link_url | default: routes.account_register_url }}" class="prompt-link">
+                  {{ block.settings.link_text }}
+                </a>
+              </div>
+
+            {% when 'notice_banner' %}
+              <div class="block-item block-notice-banner" style="
+                background: {{ block.settings.bg_color }};
+                border: 1px solid {{ block.settings.border_color }};
+                color: {{ block.settings.text_color }};
+              " {{ block.shopify_attributes }}>
+                <span class="notice-icon">{{ block.settings.icon }}</span>
+                <p class="notice-text">{{ block.settings.text }}</p>
+              </div>
+
+            {% when 'custom_text' %}
+              <div class="block-item block-custom-text" style="
+                color: {{ block.settings.color }};
+                font-size: {{ block.settings.font_size }}px;
+                text-align: {{ block.settings.align }};
+              " {{ block.shopify_attributes }}>
+                {{ block.settings.text }}
+              </div>
+
+          {% endcase %}
+        {% endfor %}
+
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .customer-login-section {
+    position: relative;
+    background: var(--bg-color, #0b080c);
+    padding-top: var(--padding-top, 100px);
+    padding-bottom: var(--padding-bottom, 120px);
+    padding-left: 20px;
+    padding-right: 20px;
+    overflow: hidden;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    opacity: 0.25;
+  }
+  .login-orb.orb-1 {
+    top: 10%;
+    left: 15%;
+    width: 320px;
+    height: 320px;
+    background: #c25b82;
+  }
+  .login-orb.orb-2 {
+    bottom: 10%;
+    right: 15%;
+    width: 360px;
+    height: 360px;
+    background: #4a2840;
+  }
+
+  .customer-login-container {
+    width: 100%;
+    max-width: var(--max-width, 520px);
+    position: relative;
+    z-index: 2;
+  }
+
+  .login-glass-card {
+    background: var(--card-bg, rgba(255, 255, 255, 0.04));
+    border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12));
+    border-radius: var(--card-radius, 28px);
+    backdrop-filter: blur(var(--card-blur, 20px));
+    -webkit-backdrop-filter: blur(var(--card-blur, 20px));
+    padding: 40px 36px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  }
+
+  .login-block-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .block-item {
+    width: 100%;
+  }
+
+  .block-badge-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .block-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(194, 91, 130, 0.2);
+  }
+
+  .block-heading {
+    margin: 0;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .block-desc {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .block-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .block-input-label {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .block-forgot-link {
+    font-size: 0.8rem;
+    color: #f7cad0;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .block-forgot-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+
+  .input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 14px;
+    color: rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+  }
+
+  .block-input {
+    width: 100%;
+    padding: 14px 16px 14px 44px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.25s ease;
+  }
+
+  .block-input:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #c25b82;
+    box-shadow: 0 0 20px rgba(194, 91, 130, 0.3);
+  }
+
+  .block-submit-btn {
+    width: 100%;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(194, 91, 130, 0.35);
+    transition: all 0.3s ease;
+  }
+
+  .block-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 40px rgba(194, 91, 130, 0.5);
+  }
+
+  .block-divider-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 8px 0;
+  }
+
+  .block-divider-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .block-divider-text {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .block-demo-box {
+    padding: 16px;
+    border-radius: 16px;
+    text-align: center;
+  }
+
+  .demo-box-title {
+    margin: 0 0 10px 0;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .demo-fill-btn {
+    padding: 8px 18px;
+    border-radius: 10px;
+    background: rgba(194, 91, 130, 0.3);
+    border: 1px solid #f7cad0;
+    color: #ffffff;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .demo-fill-btn:hover {
+    background: rgba(194, 91, 130, 0.5);
+    transform: scale(1.02);
+  }
+
+  .block-register-prompt {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .prompt-link {
+    color: #f7cad0;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .prompt-link:hover {
+    text-decoration: underline;
+  }
+
+  .block-notice-banner {
+    padding: 14px 18px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.84rem;
+  }
+
+  .notice-text {
+    margin: 0;
+  }
+
+  .login-error-box {
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', () => {
+    const demoBtn = document.getElementById('demoFillBtn');
+    const emailInput = document.getElementById('CustomerEmailBlock');
+    const passInput = document.getElementById('CustomerPasswordBlock');
+
+    if (demoBtn && emailInput && passInput) {
+      demoBtn.addEventListener('click', () => {
+        emailInput.value = 'demo@lumierebeauty.com';
+        passInput.value = '12345678';
+        demoBtn.innerText = '✓ Demo Bilgileri Dolduruldu';
+      });
+    }
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Müşteri Giriş Sayfası",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Arka Plan Rengi",
+      "default": "#0b080c"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Kart Cam Rengi",
+      "default": "rgba(255, 255, 255, 0.04)"
+    },
+    {
+      "type": "color",
+      "id": "card_border",
+      "label": "Kart Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.12)"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Kart Köşe Yuvarlatma (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_blur",
+      "label": "Bulanıklık Efekti (Blur)",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maksimum Genişlik (px)",
+      "min": 360,
+      "max": 700,
+      "step": 20,
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Üst İç Boşluk (px)",
+      "min": 20,
+      "max": 180,
+      "step": 10,
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Alt İç Boşluk (px)",
+      "min": 20,
+      "max": 180,
+      "step": 10,
+      "default": 120
+    }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "🏷️ Üst Rozet Etiketi",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Rozet Metni",
+          "default": "✦ MÜŞTERİ PORTALI"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Arka Plan Rengi",
+          "default": "rgba(194, 91, 130, 0.2)"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Yazı Boyutu (px)",
+          "min": 10,
+          "max": 20,
+          "step": 1,
+          "default": 12
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Alt Boşluk (px)",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "default": 14
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "👑 Ana Başlık Cümlesi",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Başlık Metni",
+          "default": "Hesabınıza Giriş Yapın"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "font_size_desktop",
+          "label": "Masaüstü Yazı Boyutu (px)",
+          "min": 20,
+          "max": 50,
+          "step": 2,
+          "default": 32
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Hizalama",
+          "options": [
+            { "value": "left", "label": "Sola Hizalı" },
+            { "value": "center", "label": "Ortalı" },
+            { "value": "right", "label": "Sağa Hizalı" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Alt Boşluk (px)",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "default": 10
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "📝 Alt Açıklama Cümlesi",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Açıklama Metni",
+          "default": "Seçkin cilt bakım deneyiminize ve kişiye özel avantajlara erişmek için e-posta adresinizle giriş yapın."
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "rgba(255, 255, 255, 0.7)"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Yazı Boyutu (px)",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "default": 15
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Hizalama",
+          "options": [
+            { "value": "left", "label": "Sola Hizalı" },
+            { "value": "center", "label": "Ortalı" },
+            { "value": "right", "label": "Sağa Hizalı" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Alt Boşluk (px)",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "default": 24
+        }
+      ]
+    },
+    {
+      "type": "email_input",
+      "name": "✉️ E-Posta Giriş Kutusu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Kutu Etiketi",
+          "default": "E-Posta Adresi"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "İpucu Metni (Placeholder)",
+          "default": "ornek@email.com"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_icon",
+          "label": "Sol İkon Gösterilsin mi?",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "is_required",
+          "label": "Zorunlu Alan",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "password_input",
+      "name": "🔒 Şifre Giriş Kutusu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Kutu Etiketi",
+          "default": "Şifreniz"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "İpucu Metni (Placeholder)",
+          "default": "••••••••"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_icon",
+          "label": "Sol İkon Gösterilsin mi?",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "is_required",
+          "label": "Zorunlu Alan",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_forgot_link",
+          "label": "'Şifremi Unuttum' Bağlantısı Göster",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "forgot_link_text",
+          "label": "Şifremi Unuttum Metni",
+          "default": "Şifremi Unuttum?"
+        }
+      ]
+    },
+    {
+      "type": "submit_button",
+      "name": "🚀 Giriş Yap Butonu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Buton Metni",
+          "default": "Giriş Yap"
+        },
+        {
+          "type": "color",
+          "id": "bg_gradient_start",
+          "label": "Gradient Başlangıç",
+          "default": "#c25b82"
+        },
+        {
+          "type": "color",
+          "id": "bg_gradient_end",
+          "label": "Gradient Bitiş",
+          "default": "#a24367"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "border_radius",
+          "label": "Köşe Yuvarlama (px)",
+          "min": 4,
+          "max": 30,
+          "step": 2,
+          "default": 14
+        }
+      ]
+    },
+    {
+      "type": "divider",
+      "name": "➖ Ayırıcı Çizgi / Metin",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Ayırıcı Ortasındaki Metin",
+          "default": "VEYA"
+        }
+      ]
+    },
+    {
+      "type": "demo_login_box",
+      "name": "💡 Demo Üye Doldurma Kutusu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Kutu Başlığı Metni",
+          "default": "💡 Hızlı Deneme İçin:"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Buton Metni",
+          "default": "Demo Üye Bilgilerini Doldur"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Arka Plan Rengi",
+          "default": "rgba(255, 255, 255, 0.03)"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Kesikli Kenarlık Rengi",
+          "default": "rgba(255, 255, 255, 0.2)"
+        }
+      ]
+    },
+    {
+      "type": "register_prompt",
+      "name": "🔗 Kayıt Ol Yönlendirme Kutusu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "prompt_text",
+          "label": "Cümle Metni",
+          "default": "Henüz bir hesabınız yok mu?"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link Metni",
+          "default": "Hemen Kaydolun"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Özel Kayıt Linki (Boşsa varsayılan)"
+        }
+      ]
+    },
+    {
+      "type": "notice_banner",
+      "name": "✨ Sürpriz Duyuru Kutusu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "İkon / Emoji",
+          "default": "🎁"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Duyuru Cümlesi",
+          "default": "Üyelere özel ilk alışverişinizde %10 indirim ve sürpriz deneme boy hediyeler!"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Arka Plan Rengi",
+          "default": "rgba(194, 91, 130, 0.15)"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Kenarlık Rengi",
+          "default": "rgba(247, 202, 208, 0.3)"
+        }
+      ]
+    },
+    {
+      "type": "custom_text",
+      "name": "💬 Özel Cümle / Metin Kutusu",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Metin İçeriği",
+          "default": "🔒 Kişisel verileriniz 256-bit SSL güvenlik protokolü ile korunmaktadır."
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Metin Rengi",
+          "default": "rgba(255, 255, 255, 0.5)"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Yazı Boyutu (px)",
+          "min": 10,
+          "max": 24,
+          "step": 1,
+          "default": 13
+        },
+        {
+          "type": "select",
+          "id": "align",
+          "label": "Hizalama",
+          "options": [
+            { "value": "left", "label": "Sola" },
+            { "value": "center", "label": "Ortalı" },
+            { "value": "right", "label": "Sağa" }
+          ],
+          "default": "center"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Müşteri Giriş Sayfası"
+    }
+  ]
+}
+{% endschema %}

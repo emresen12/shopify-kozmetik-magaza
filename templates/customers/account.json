@@ -1,0 +1,63 @@
+{
+  "sections": {
+    "main_account": {
+      "type": "main-account",
+      "blocks": {
+        "badge_1": {
+          "type": "welcome_badge",
+          "settings": {
+            "text": "👑 VIP SEÇKİN ÜYE"
+          }
+        },
+        "heading_1": {
+          "type": "heading",
+          "settings": {
+            "text": "Hesabım & Profilim"
+          }
+        },
+        "vip_1": {
+          "type": "vip_banner",
+          "settings": {
+            "title": "500 VIP Sadakat Puanınız Bulunmaktadır!",
+            "text": "Bir sonraki siparişinizde ₺50 indirim kuponu olarak kullanabilirsiniz."
+          }
+        },
+        "user_info_1": {
+          "type": "user_info_card",
+          "settings": {}
+        },
+        "orders_1": {
+          "type": "order_history",
+          "settings": {
+            "title": "Son Siparişleriniz"
+          }
+        },
+        "addresses_1": {
+          "type": "address_card",
+          "settings": {
+            "title": "Kayıtlı Adresleriniz"
+          }
+        },
+        "logout_1": {
+          "type": "logout_button",
+          "settings": {
+            "text": "Hesaptan Güvenli Çıkış Yap"
+          }
+        }
+      },
+      "block_order": [
+        "badge_1",
+        "heading_1",
+        "vip_1",
+        "user_info_1",
+        "orders_1",
+        "addresses_1",
+        "logout_1"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main_account"
+  ]
+}

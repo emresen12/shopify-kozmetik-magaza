@@ -1,0 +1,99 @@
+{
+  "sections": {
+    "main_login": {
+      "type": "main-login",
+      "blocks": {
+        "badge_1": {
+          "type": "badge",
+          "settings": {
+            "text": "✦ MÜŞTERİ PORTALI"
+          }
+        },
+        "heading_1": {
+          "type": "heading",
+          "settings": {
+            "text": "Hesabınıza Giriş Yapın"
+          }
+        },
+        "desc_1": {
+          "type": "description",
+          "settings": {
+            "text": "Seçkin cilt bakım deneyiminize ve kişiye özel avantajlara erişmek için e-posta adresinizle giriş yapın."
+          }
+        },
+        "notice_1": {
+          "type": "notice_banner",
+          "settings": {
+            "icon": "🎁",
+            "text": "Üyelere özel ilk alışverişinizde %10 indirim ve sürpriz deneme boy hediyeler!"
+          }
+        },
+        "email_1": {
+          "type": "email_input",
+          "settings": {
+            "label": "E-Posta Adresi",
+            "placeholder": "ornek@email.com"
+          }
+        },
+        "password_1": {
+          "type": "password_input",
+          "settings": {
+            "label": "Şifreniz",
+            "placeholder": "••••••••",
+            "show_forgot_link": true,
+            "forgot_link_text": "Şifremi Unuttum?"
+          }
+        },
+        "submit_1": {
+          "type": "submit_button",
+          "settings": {
+            "text": "Giriş Yap"
+          }
+        },
+        "divider_1": {
+          "type": "divider",
+          "settings": {
+            "text": "VEYA"
+          }
+        },
+        "demo_1": {
+          "type": "demo_login_box",
+          "settings": {
+            "title": "💡 Hızlı Deneme İçin:",
+            "button_text": "Demo Üye Bilgilerini Doldur"
+          }
+        },
+        "register_prompt_1": {
+          "type": "register_prompt",
+          "settings": {
+            "prompt_text": "Henüz bir hesabınız yok mu?",
+            "link_text": "Hemen Kaydolun"
+          }
+        },
+        "custom_text_1": {
+          "type": "custom_text",
+          "settings": {
+            "text": "🔒 Kişisel verileriniz 256-bit SSL güvenlik protokolü ile korunmaktadır."
+          }
+        }
+      },
+      "block_order": [
+        "badge_1",
+        "heading_1",
+        "desc_1",
+        "notice_1",
+        "email_1",
+        "password_1",
+        "submit_1",
+        "divider_1",
+        "demo_1",
+        "register_prompt_1",
+        "custom_text_1"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main_login"
+  ]
+}

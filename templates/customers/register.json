@@ -1,0 +1,92 @@
+{
+  "sections": {
+    "main_register": {
+      "type": "main-register",
+      "blocks": {
+        "badge_1": {
+          "type": "badge",
+          "settings": {
+            "text": "✦ ÖZEL ÜYELİK"
+          }
+        },
+        "heading_1": {
+          "type": "heading",
+          "settings": {
+            "text": "Aramıza Katılın"
+          }
+        },
+        "desc_1": {
+          "type": "description",
+          "settings": {
+            "text": "Lumière ayrıcalıklar dünyasına adım atın, üyelere özel lansmanlar ve özel fırsatlardan ilk siz haberdar olun."
+          }
+        },
+        "notice_1": {
+          "type": "notice_banner",
+          "settings": {
+            "icon": "💎",
+            "text": "Kayıt olan tüm üyelerimize özel VIP Sadakat Kulübü hoş geldin puanları tanımlanacaktır."
+          }
+        },
+        "names_1": {
+          "type": "name_inputs",
+          "settings": {
+            "first_name_label": "Adınız",
+            "first_name_placeholder": "Adınız",
+            "last_name_label": "Soyadınız",
+            "last_name_placeholder": "Soyadınız"
+          }
+        },
+        "email_1": {
+          "type": "email_input",
+          "settings": {
+            "label": "E-Posta Adresi",
+            "placeholder": "ornek@email.com"
+          }
+        },
+        "password_1": {
+          "type": "password_input",
+          "settings": {
+            "label": "Şifre Oluşturun",
+            "placeholder": "En az 6 karakter"
+          }
+        },
+        "terms_1": {
+          "type": "terms_checkbox",
+          "settings": {
+            "text": "Üyelik sözleşmesini ve gizlilik politikasını okudum, kabul ediyorum."
+          }
+        },
+        "submit_1": {
+          "type": "submit_button",
+          "settings": {
+            "text": "Kayıt Ol"
+          }
+        },
+        "login_prompt_1": {
+          "type": "login_prompt",
+          "settings": {
+            "prompt_text": "Zaten bir hesabınız var mı?",
+            "link_text": "Giriş Yapın"
+          }
+        }
+      },
+      "block_order": [
+        "badge_1",
+        "heading_1",
+        "desc_1",
+        "notice_1",
+        "names_1",
+        "email_1",
+        "password_1",
+        "terms_1",
+        "submit_1",
+        "login_prompt_1"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main_register"
+  ]
+}

@@ -170,80 +170,212 @@
   <div class="side-drawer__backdrop" data-close-drawer></div>
   <div class="side-drawer__panel">
     
-    <div class="side-drawer__header">
-      <h3 class="drawer-title">
-        <span>Alışveriş Sepetiniz</span>
-        <span class="drawer-count-tag">(<span id="drawerCartItemCount">{{ cart.item_count }}</span> Ürün)</span>
-      </h3>
-      <button type="button" class="side-drawer__close" data-close-drawer aria-label="Kapat">✕</button>
-    </div>
+    {% assign cart_blocks = section.blocks | where: "type", "drawer_cart_header" | concat: (section.blocks | where: "type", "drawer_shipping_bar") | concat: (section.blocks | where: "type", "drawer_cart_items") | concat: (section.blocks | where: "type", "drawer_empty_cart") | concat: (section.blocks | where: "type", "drawer_cart_note") | concat: (section.blocks | where: "type", "drawer_discount_box") | concat: (section.blocks | where: "type", "drawer_subtotal") | concat: (section.blocks | where: "type", "drawer_checkout_btn") | concat: (section.blocks | where: "type", "drawer_view_cart_link") | concat: (section.blocks | where: "type", "drawer_trust_badges") | concat: (section.blocks | where: "type", "drawer_promo_announcement") %}
 
-    <!-- Free Shipping Progress Bar -->
-    <div class="free-shipping-bar">
-      <p class="free-shipping-text" id="freeShippingText">🎉 {{ section.settings.free_shipping_text | default: "₺500 üzeri alışverişlerde Kargo Bedava!" }}</p>
-      <div class="progress-line"><div class="progress-fill" id="freeShippingProgress" style="width: 0%;"></div></div>
-    </div>
+    {% if cart_blocks.size > 0 %}
+      {% for block in section.blocks %}
+        {% case block.type %}
 
-    <div class="side-drawer__body cart-drawer-body">
-      
-      <!-- Cart Items List Container -->
-      <div class="cart-drawer-items" id="cartDrawerItems">
-        {% if cart.item_count > 0 %}
-          {% for item in cart.items %}
-            <div class="drawer-cart-item">
-              {% if item.image %}
-                {{ item.image | image_url: width: 160 | image_tag: class: 'cart-item-img', loading: 'lazy' }}
-              {% else %}
-                <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ item.product.title }}" class="cart-item-img" width="80" height="80">
-              {% endif %}
-              <div class="cart-item-info">
-                <h4 class="cart-item-title">{{ item.product.title }}</h4>
-                <div class="cart-item-bottom">
-                  <div class="drawer-qty-picker">
-                    <button type="button" class="drawer-qty-btn dqty-minus">-</button>
-                    <input type="text" value="{{ item.quantity }}" readonly class="drawer-qty-val">
-                    <button type="button" class="drawer-qty-btn dqty-plus">+</button>
-                  </div>
-                  <span class="cart-item-price">{{ item.final_line_price | money }}</span>
-                </div>
-              </div>
-              <button type="button" class="cart-item-remove" title="Kaldır">✕</button>
+          {% when 'drawer_cart_header' %}
+            <div class="side-drawer__header" {{ block.shopify_attributes }}>
+              <h3 class="drawer-title" style="color: {{ block.settings.title_color }};">
+                <span>{{ block.settings.title | default: "Alışveriş Sepetiniz" }}</span>
+                {% if block.settings.show_count %}
+                  <span class="drawer-count-tag">(<span id="drawerCartItemCount">{{ cart.item_count }}</span> Ürün)</span>
+                {% endif %}
+              </h3>
+              <button type="button" class="side-drawer__close" data-close-drawer aria-label="Kapat">✕</button>
             </div>
-          {% endfor %}
-        {% else %}
-          <div class="empty-cart-msg" id="emptyCartMsg">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-            <h4 class="empty-cart-title">Sepetiniz henüz boş</h4>
-            <p class="empty-cart-subtitle">Seçkin cilt bakım ürünlerimizi keşfetmek için alışverişe başlayın.</p>
-            <a href="{{ routes.all_products_collection_url }}" class="empty-cart-shop-btn">Alışverişe Başla</a>
-          </div>
-        {% endif %}
+
+          {% when 'drawer_shipping_bar' %}
+            <div class="free-shipping-bar" style="background: {{ block.settings.bg_color }};" {{ block.shopify_attributes }}>
+              <p class="free-shipping-text" id="freeShippingText" style="color: {{ block.settings.text_color }};">
+                {{ block.settings.icon }} {{ block.settings.text | default: "₺500 üzeri alışverişlerde Kargo Bedava!" }}
+              </p>
+              <div class="progress-line"><div class="progress-fill" id="freeShippingProgress" style="width: 0%; background: {{ block.settings.progress_color }};"></div></div>
+            </div>
+
+          {% when 'drawer_cart_items' %}
+            <div class="side-drawer__body cart-drawer-body" {{ block.shopify_attributes }}>
+              <div class="cart-drawer-items" id="cartDrawerItems">
+                {% if cart.item_count > 0 %}
+                  {% for item in cart.items %}
+                    <div class="drawer-cart-item">
+                      {% if item.image %}
+                        {{ item.image | image_url: width: 160 | image_tag: class: 'cart-item-img', loading: 'lazy' }}
+                      {% else %}
+                        <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ item.product.title }}" class="cart-item-img" width="80" height="80">
+                      {% endif %}
+                      <div class="cart-item-info">
+                        <h4 class="cart-item-title">{{ item.product.title }}</h4>
+                        <div class="cart-item-bottom">
+                          <div class="drawer-qty-picker">
+                            <button type="button" class="drawer-qty-btn dqty-minus">-</button>
+                            <input type="text" value="{{ item.quantity }}" readonly class="drawer-qty-val">
+                            <button type="button" class="drawer-qty-btn dqty-plus">+</button>
+                          </div>
+                          <span class="cart-item-price">{{ item.final_line_price | money }}</span>
+                        </div>
+                      </div>
+                      <button type="button" class="cart-item-remove" title="Kaldır">✕</button>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="empty-cart-msg" id="emptyCartMsg">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    <h4 class="empty-cart-title">Sepetiniz henüz boş</h4>
+                    <p class="empty-cart-subtitle">Seçkin cilt bakım ürünlerimizi keşfetmek için alışverişe başlayın.</p>
+                    <a href="{{ routes.all_products_collection_url }}" class="empty-cart-shop-btn">Alışverişe Başla</a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+          {% when 'drawer_cart_note' %}
+            <div class="drawer-cart-note-block" {{ block.shopify_attributes }}>
+              <details class="cart-note-details">
+                <summary class="cart-note-summary">
+                  <span>{{ block.settings.label | default: "📝 Sipariş Notu Ekleyin" }}</span>
+                </summary>
+                <textarea name="note" class="drawer-note-input" placeholder="{{ block.settings.placeholder | default: 'Özel hediye notu veya kargo talimatınız...' }}">{{ cart.note }}</textarea>
+              </details>
+            </div>
+
+          {% when 'drawer_discount_box' %}
+            <div class="drawer-discount-block" {{ block.shopify_attributes }}>
+              <div class="discount-input-row">
+                <input type="text" class="drawer-discount-input" placeholder="{{ block.settings.placeholder | default: 'İndirim Kodu' }}">
+                <button type="button" class="drawer-discount-btn">{{ block.settings.btn_text | default: "Uygula" }}</button>
+              </div>
+            </div>
+
+          {% when 'drawer_subtotal' %}
+            <div class="side-drawer__footer" {{ block.shopify_attributes }}>
+              <div class="cart-summary-row">
+                <span>{{ block.settings.subtotal_label | default: "Ara Toplam" }}</span>
+                <span class="summary-val" id="drawerSubtotal">{{ cart.total_price | money }}</span>
+              </div>
+              <div class="cart-summary-row">
+                <span>{{ block.settings.shipping_label | default: "Kargo Ücreti" }}</span>
+                <span class="summary-val free-text">{{ block.settings.free_shipping_label | default: "ÜCRETSİZ" }}</span>
+              </div>
+              <div class="cart-summary-row total-row">
+                <span>{{ block.settings.total_label | default: "Genel Toplam" }}</span>
+                <span class="summary-val total-val" id="drawerTotal">{{ cart.total_price | money }}</span>
+              </div>
+            </div>
+
+          {% when 'drawer_checkout_btn' %}
+            <div class="drawer-checkout-block-wrapper" {{ block.shopify_attributes }}>
+              <a href="{% if cart.item_count > 0 %}/checkout{% else %}{{ routes.cart_url }}{% endif %}" class="checkout-btn" style="
+                background: linear-gradient(135deg, {{ block.settings.bg_gradient_start | default: '#c25b82' }} 0%, {{ block.settings.bg_gradient_end | default: '#a24367' }} 100%);
+                color: {{ block.settings.text_color | default: '#ffffff' }};
+              ">
+                <span>{{ block.settings.text | default: "Siparişi Tamamla (Ödemeye Geç)" }}</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12" 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+
+          {% when 'drawer_view_cart_link' %}
+            <div class="drawer-view-cart-block-wrapper" {{ block.shopify_attributes }}>
+              <a href="{{ routes.cart_url }}" class="view-cart-link" style="color: {{ block.settings.text_color | default: 'rgba(255, 255, 255, 0.6)' }};">
+                {{ block.settings.text | default: "Sepet Sayfasına Git" }}
+              </a>
+            </div>
+
+          {% when 'drawer_trust_badges' %}
+            <div class="drawer-trust-badges-block" style="background: {{ block.settings.bg_color | default: 'rgba(255, 255, 255, 0.03)' }};" {{ block.shopify_attributes }}>
+              <div class="trust-badge-item">🔒 <span>{{ block.settings.badge_1 | default: "256-Bit SSL Ödeme" }}</span></div>
+              <div class="trust-badge-item">⚡ <span>{{ block.settings.badge_2 | default: "24h Hızlı Kargo" }}</span></div>
+              <div class="trust-badge-item">↩️ <span>{{ block.settings.badge_3 | default: "Ücretsiz İade" }}</span></div>
+            </div>
+
+          {% when 'drawer_promo_announcement' %}
+            <div class="drawer-promo-block" style="
+              background: {{ block.settings.bg_color | default: 'rgba(194, 91, 130, 0.15)' }};
+              border: 1px solid {{ block.settings.border_color | default: 'rgba(247, 202, 208, 0.3)' }};
+            " {{ block.shopify_attributes }}>
+              <span class="promo-icon">{{ block.settings.icon | default: "🎁" }}</span>
+              <p class="promo-text" style="color: {{ block.settings.text_color | default: '#f7cad0' }};">{{ block.settings.text | default: "₺750 üzeri alışverişlerde Nemlendirici Gece Maskesi Hediye!" }}</p>
+            </div>
+
+        {% endcase %}
+      {% endfor %}
+
+    {% else %}
+
+      <!-- DEFAULT FALLBACK CART DRAWER ITEMS -->
+      <div class="side-drawer__header">
+        <h3 class="drawer-title">
+          <span>Alışveriş Sepetiniz</span>
+          <span class="drawer-count-tag">(<span id="drawerCartItemCount">{{ cart.item_count }}</span> Ürün)</span>
+        </h3>
+        <button type="button" class="side-drawer__close" data-close-drawer aria-label="Kapat">✕</button>
       </div>
 
-    </div>
-
-    <!-- Cart Footer Summary -->
-    <div class="side-drawer__footer">
-      <div class="cart-summary-row">
-        <span>Ara Toplam</span>
-        <span class="summary-val" id="drawerSubtotal">{{ cart.total_price | money }}</span>
-      </div>
-      <div class="cart-summary-row">
-        <span>Kargo Ücreti</span>
-        <span class="summary-val free-text">ÜCRETSİZ</span>
-      </div>
-      <div class="cart-summary-row total-row">
-        <span>Genel Toplam</span>
-        <span class="summary-val total-val" id="drawerTotal">{{ cart.total_price | money }}</span>
+      <div class="free-shipping-bar">
+        <p class="free-shipping-text" id="freeShippingText">🎉 {{ section.settings.free_shipping_text | default: "₺500 üzeri alışverişlerde Kargo Bedava!" }}</p>
+        <div class="progress-line"><div class="progress-fill" id="freeShippingProgress" style="width: 0%;"></div></div>
       </div>
 
-      <a href="{% if cart.item_count > 0 %}/checkout{% else %}{{ routes.cart_url }}{% endif %}" class="checkout-btn">
-        <span>Siparişi Tamamla (Ödemeye Geç)</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12" 5 19 12 12 19"/></svg>
-      </a>
+      <div class="side-drawer__body cart-drawer-body">
+        <div class="cart-drawer-items" id="cartDrawerItems">
+          {% if cart.item_count > 0 %}
+            {% for item in cart.items %}
+              <div class="drawer-cart-item">
+                {% if item.image %}
+                  {{ item.image | image_url: width: 160 | image_tag: class: 'cart-item-img', loading: 'lazy' }}
+                {% else %}
+                  <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ item.product.title }}" class="cart-item-img" width="80" height="80">
+                {% endif %}
+                <div class="cart-item-info">
+                  <h4 class="cart-item-title">{{ item.product.title }}</h4>
+                  <div class="cart-item-bottom">
+                    <div class="drawer-qty-picker">
+                      <button type="button" class="drawer-qty-btn dqty-minus">-</button>
+                      <input type="text" value="{{ item.quantity }}" readonly class="drawer-qty-val">
+                      <button type="button" class="drawer-qty-btn dqty-plus">+</button>
+                    </div>
+                    <span class="cart-item-price">{{ item.final_line_price | money }}</span>
+                  </div>
+                </div>
+                <button type="button" class="cart-item-remove" title="Kaldır">✕</button>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="empty-cart-msg" id="emptyCartMsg">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              <h4 class="empty-cart-title">Sepetiniz henüz boş</h4>
+              <p class="empty-cart-subtitle">Seçkin cilt bakım ürünlerimizi keşfetmek için alışverişe başlayın.</p>
+              <a href="{{ routes.all_products_collection_url }}" class="empty-cart-shop-btn">Alışverişe Başla</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
 
-      <a href="{{ routes.cart_url }}" class="view-cart-link">Sepet Sayfasına Git</a>
-    </div>
+      <div class="side-drawer__footer">
+        <div class="cart-summary-row">
+          <span>Ara Toplam</span>
+          <span class="summary-val" id="drawerSubtotal">{{ cart.total_price | money }}</span>
+        </div>
+        <div class="cart-summary-row">
+          <span>Kargo Ücreti</span>
+          <span class="summary-val free-text">ÜCRETSİZ</span>
+        </div>
+        <div class="cart-summary-row total-row">
+          <span>Genel Toplam</span>
+          <span class="summary-val total-val" id="drawerTotal">{{ cart.total_price | money }}</span>
+        </div>
+
+        <a href="{% if cart.item_count > 0 %}/checkout{% else %}{{ routes.cart_url }}{% endif %}" class="checkout-btn">
+          <span>Siparişi Tamamla (Ödemeye Geç)</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12" 5 19 12 12 19"/></svg>
+        </a>
+
+        <a href="{{ routes.cart_url }}" class="view-cart-link">Sepet Sayfasına Git</a>
+      </div>
+
+    {% endif %}
 
   </div>
 </div>
@@ -745,6 +877,87 @@
     color: #f7cad0;
   }
 
+  /* Cart Drawer Blocks Styling */
+  .drawer-cart-note-block {
+    padding: 12px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .cart-note-summary {
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .drawer-note-input {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 0.82rem;
+    outline: none;
+    resize: vertical;
+  }
+
+  .drawer-discount-block {
+    padding: 12px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .discount-input-row {
+    display: flex;
+    gap: 8px;
+  }
+  .drawer-discount-input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 0.82rem;
+    outline: none;
+  }
+  .drawer-discount-btn {
+    padding: 8px 14px;
+    border-radius: 10px;
+    background: rgba(194, 91, 130, 0.3);
+    border: 1px solid #f7cad0;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+  }
+
+  .drawer-trust-badges-block {
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.74rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .trust-badge-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .drawer-promo-block {
+    margin: 10px 24px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+  }
+
+  .drawer-checkout-block-wrapper, .drawer-view-cart-block-wrapper {
+    padding: 0 24px 10px 24px;
+  }
+
   /* Auth Tabs */
   .auth-tabs {
     display: flex;
@@ -1186,6 +1399,113 @@
       "id": "free_shipping_text",
       "label": "Ücretsiz Kargo Metni",
       "default": "₺500 üzeri Kargo Bedava!"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "drawer_cart_header",
+      "name": "🛒 Sepet Başlık Cümlesi & Sayaç",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Başlık Metni", "default": "Alışveriş Sepetiniz" },
+        { "type": "color", "id": "title_color", "label": "Metin Rengi", "default": "#ffffff" },
+        { "type": "checkbox", "id": "show_count", "label": "Ürün Sayacı Gösterilsin mi?", "default": true }
+      ]
+    },
+    {
+      "type": "drawer_shipping_bar",
+      "name": "🚚 Ücretsiz Kargo İlerleme Çubuğu",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "İkon / Emoji", "default": "🎉" },
+        { "type": "text", "id": "text", "label": "Kargo Bedava Metni", "default": "₺500 üzeri alışverişlerde Kargo Bedava!" },
+        { "type": "color", "id": "text_color", "label": "Metin Rengi", "default": "#f7cad0" },
+        { "type": "color", "id": "bg_color", "label": "Arka Plan Rengi", "default": "rgba(194, 91, 130, 0.12)" },
+        { "type": "color", "id": "progress_color", "label": "İlerleme Çubuğu Rengi", "default": "#c25b82" }
+      ]
+    },
+    {
+      "type": "drawer_cart_items",
+      "name": "🛍️ Sepet Ürünleri Listesi Kutusu",
+      "settings": []
+    },
+    {
+      "type": "drawer_empty_cart",
+      "name": "🛒 Boş Sepet Cümlesi & Butonu",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "İkon / Emoji", "default": "🛒" },
+        { "type": "text", "id": "title", "label": "Başlık Cümlesi", "default": "Sepetiniz henüz boş" },
+        { "type": "color", "id": "title_color", "label": "Başlık Rengi", "default": "#ffffff" },
+        { "type": "textarea", "id": "subtitle", "label": "Alt Açıklama Cümlesi", "default": "Seçkin cilt bakım ürünlerimizi keşfetmek için alışverişe başlayın." },
+        { "type": "color", "id": "text_color", "label": "Açıklama Rengi", "default": "rgba(255, 255, 255, 0.6)" },
+        { "type": "text", "id": "btn_text", "label": "Buton Metni", "default": "Alışverişe Başla" },
+        { "type": "url", "id": "btn_url", "label": "Buton Yönlendirme Linki" },
+        { "type": "color", "id": "btn_bg", "label": "Buton Arka Plan Rengi", "default": "#c25b82" },
+        { "type": "color", "id": "btn_color", "label": "Buton Metin Rengi", "default": "#ffffff" }
+      ]
+    },
+    {
+      "type": "drawer_cart_note",
+      "name": "📝 Sipariş Notu Kutusu",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Kutu Başlığı", "default": "📝 Sipariş Notu Ekleyin" },
+        { "type": "text", "id": "placeholder", "label": "İpucu Metni", "default": "Özel hediye notu veya kargo talimatınız..." }
+      ]
+    },
+    {
+      "type": "drawer_discount_box",
+      "name": "🏷️ İndirim Kodu Giriş Kutusu",
+      "settings": [
+        { "type": "text", "id": "placeholder", "label": "İpucu Metni", "default": "İndirim Kodu" },
+        { "type": "text", "id": "btn_text", "label": "Buton Metni", "default": "Uygula" }
+      ]
+    },
+    {
+      "type": "drawer_subtotal",
+      "name": "💰 Ara Toplam & Genel Toplam Hesap Özeti",
+      "settings": [
+        { "type": "text", "id": "subtotal_label", "label": "Ara Toplam Metni", "default": "Ara Toplam" },
+        { "type": "text", "id": "shipping_label", "label": "Kargo Ücreti Metni", "default": "Kargo Ücreti" },
+        { "type": "text", "id": "free_shipping_label", "label": "Ücretsiz Metni", "default": "ÜCRETSİZ" },
+        { "type": "text", "id": "total_label", "label": "Genel Toplam Metni", "default": "Genel Toplam" }
+      ]
+    },
+    {
+      "type": "drawer_checkout_btn",
+      "name": "🚀 Ödemeye Geç / Siparişi Tamamla Butonu",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Buton Metni", "default": "Siparişi Tamamla (Ödemeye Geç)" },
+        { "type": "color", "id": "bg_gradient_start", "label": "Gradient Başlangıç", "default": "#c25b82" },
+        { "type": "color", "id": "bg_gradient_end", "label": "Gradient Bitiş", "default": "#a24367" },
+        { "type": "color", "id": "text_color", "label": "Metin Rengi", "default": "#ffffff" }
+      ]
+    },
+    {
+      "type": "drawer_view_cart_link",
+      "name": "🔗 Sepet Sayfasına Git Bağlantısı",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Link Metni", "default": "Sepet Sayfasına Git" },
+        { "type": "color", "id": "text_color", "label": "Link Rengi", "default": "rgba(255, 255, 255, 0.6)" }
+      ]
+    },
+    {
+      "type": "drawer_trust_badges",
+      "name": "🔒 Güvenli Ödeme & Teslimat Rozetleri",
+      "settings": [
+        { "type": "text", "id": "badge_1", "label": "1. Rozet", "default": "256-Bit SSL Ödeme" },
+        { "type": "text", "id": "badge_2", "label": "2. Rozet", "default": "24h Hızlı Kargo" },
+        { "type": "text", "id": "badge_3", "label": "3. Rozet", "default": "Ücretsiz İade" },
+        { "type": "color", "id": "bg_color", "label": "Arka Plan Rengi", "default": "rgba(255, 255, 255, 0.03)" }
+      ]
+    },
+    {
+      "type": "drawer_promo_announcement",
+      "name": "🎁 Özel Hediye Kampanya Duyuru Kutusu",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "İkon", "default": "🎁" },
+        { "type": "textarea", "id": "text", "label": "Kampanya Cümlesi", "default": "₺750 üzeri alışverişlerde Nemlendirici Gece Maskesi Hediye!" },
+        { "type": "color", "id": "text_color", "label": "Metin Rengi", "default": "#f7cad0" },
+        { "type": "color", "id": "bg_color", "label": "Arka Plan Rengi", "default": "rgba(194, 91, 130, 0.15)" },
+        { "type": "color", "id": "border_color", "label": "Kenarlık Rengi", "default": "rgba(247, 202, 208, 0.3)" }
+      ]
     }
   ]
 }

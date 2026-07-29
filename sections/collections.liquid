@@ -14,16 +14,47 @@
     <div class="hero-orb orb-1"></div>
     <div class="hero-orb orb-2"></div>
     <div class="collections-hero-content">
-      {% if section.settings.badge_text != blank %}
-        <span class="collections-badge">{{ section.settings.badge_text }}</span>
-      {% endif %}
-      {% if section.settings.title != blank %}
-        <h1 class="collections-main-title">{{ section.settings.title }}</h1>
-      {% endif %}
-      {% if section.settings.description != blank %}
-        <p class="collections-main-desc">
-          {{ section.settings.description }}
-        </p>
+      {% assign hero_blocks = section.blocks | where: "type", "hero_badge" | concat: (section.blocks | where: "type", "hero_title") | concat: (section.blocks | where: "type", "hero_description") %}
+      {% if hero_blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'hero_badge' %}
+              <span class="collections-badge" style="
+                color: {{ block.settings.text_color | default: '#f7cad0' }};
+                background: {{ block.settings.bg_color | default: 'rgba(194, 91, 130, 0.2)' }};
+                font-size: {{ block.settings.font_size | default: 13 }}px;
+                border: 1px solid {{ block.settings.border_color | default: 'rgba(247, 202, 208, 0.4)' }};
+              " {{ block.shopify_attributes }}>
+                {{ block.settings.text | default: "✦ SEÇKİN KOLEKSİYONLAR" }}
+              </span>
+            {% when 'hero_title' %}
+              <h1 class="collections-main-title" style="
+                color: {{ block.settings.text_color | default: '#ffffff' }};
+                font-size: {{ block.settings.font_size | default: 42 }}px;
+              " {{ block.shopify_attributes }}>
+                {{ block.settings.text | default: "Lüks Cilt Bakım Koleksiyonları" }}
+              </h1>
+            {% when 'hero_description' %}
+              <p class="collections-main-desc" style="
+                color: {{ block.settings.text_color | default: 'rgba(255, 255, 255, 0.7)' }};
+                font-size: {{ block.settings.font_size | default: 16 }}px;
+              " {{ block.shopify_attributes }}>
+                {{ block.settings.text | default: "Doğanın en nadide özleri ve yüksek performanslı dermatolojik bileşenlerle hazırlanmış koleksiyonlarımızı keşfedin." }}
+              </p>
+          {% endcase %}
+        {% endfor %}
+      {% else %}
+        {% if section.settings.badge_text != blank %}
+          <span class="collections-badge">{{ section.settings.badge_text }}</span>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h1 class="collections-main-title">{{ section.settings.title }}</h1>
+        {% endif %}
+        {% if section.settings.description != blank %}
+          <p class="collections-main-desc">
+            {{ section.settings.description }}
+          </p>
+        {% endif %}
       {% endif %}
     </div>
   </div>
@@ -419,6 +450,99 @@
     }
   ],
   "blocks": [
+    {
+      "type": "hero_badge",
+      "name": "🏷️ Üst Rozet Cümlesi",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Rozet Metni",
+          "default": "✦ SEÇKİN KOLEKSİYONLAR"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Arka Plan Rengi",
+          "default": "rgba(194, 91, 130, 0.2)"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Kenarlık Rengi",
+          "default": "rgba(247, 202, 208, 0.4)"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Yazı Boyutu (px)",
+          "min": 10,
+          "max": 24,
+          "step": 1,
+          "default": 13
+        }
+      ]
+    },
+    {
+      "type": "hero_title",
+      "name": "👑 Üst Başlık Cümlesi",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Ana Başlık Metni",
+          "default": "Lüks Cilt Bakım Koleksiyonları"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Başlık Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Yazı Boyutu (px)",
+          "min": 20,
+          "max": 72,
+          "step": 2,
+          "default": 42
+        }
+      ]
+    },
+    {
+      "type": "hero_description",
+      "name": "📝 Üst Açıklama Paragrafı",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Açıklama Metni",
+          "default": "Doğanın en nadide özleri ve yüksek performanslı dermatolojik bileşenlerle hazırlanmış koleksiyonlarımızı keşfedin."
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "rgba(255, 255, 255, 0.7)"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Yazı Boyutu (px)",
+          "min": 12,
+          "max": 28,
+          "step": 1,
+          "default": 16
+        }
+      ]
+    },
     {
       "type": "collection_card",
       "name": "✨ Koleksiyon Kartı Bloğu",

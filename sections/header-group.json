@@ -1,22 +1,95 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "type": "header",
   "name": "t:general.header",
   "sections": {
     "header": {
       "type": "header",
+      "blocks": {
+        "cart_header_1": {
+          "type": "drawer_cart_header",
+          "settings": {
+            "title": "Alışveriş Sepetiniz",
+            "show_count": true
+          }
+        },
+        "cart_shipping_1": {
+          "type": "drawer_shipping_bar",
+          "settings": {
+            "icon": "🎉",
+            "text": "₺500 üzeri alışverişlerde Kargo Bedava!"
+          }
+        },
+        "cart_promo_1": {
+          "type": "drawer_promo_announcement",
+          "settings": {
+            "icon": "🎁",
+            "text": "₺750 üzeri alışverişlerde Nemlendirici Gece Maskesi Hediye!"
+          }
+        },
+        "cart_items_1": {
+          "type": "drawer_cart_items",
+          "settings": {}
+        },
+        "cart_note_1": {
+          "type": "drawer_cart_note",
+          "settings": {
+            "label": "📝 Sipariş Notu Ekleyin",
+            "placeholder": "Özel hediye notu veya kargo talimatınız..."
+          }
+        },
+        "cart_discount_1": {
+          "type": "drawer_discount_box",
+          "settings": {
+            "placeholder": "İndirim Kodu",
+            "btn_text": "Uygula"
+          }
+        },
+        "cart_subtotal_1": {
+          "type": "drawer_subtotal",
+          "settings": {
+            "subtotal_label": "Ara Toplam",
+            "shipping_label": "Kargo Ücreti",
+            "free_shipping_label": "ÜCRETSİZ",
+            "total_label": "Genel Toplam"
+          }
+        },
+        "cart_checkout_1": {
+          "type": "drawer_checkout_btn",
+          "settings": {
+            "text": "Siparişi Tamamla (Ödemeye Geç)"
+          }
+        },
+        "cart_view_1": {
+          "type": "drawer_view_cart_link",
+          "settings": {
+            "text": "Sepet Sayfasına Git"
+          }
+        },
+        "cart_trust_1": {
+          "type": "drawer_trust_badges",
+          "settings": {
+            "badge_1": "256-Bit SSL Ödeme",
+            "badge_2": "24h Hızlı Kargo",
+            "badge_3": "Ücretsiz İade"
+          }
+        }
+      },
+      "block_order": [
+        "cart_header_1",
+        "cart_shipping_1",
+        "cart_promo_1",
+        "cart_items_1",
+        "cart_note_1",
+        "cart_discount_1",
+        "cart_subtotal_1",
+        "cart_checkout_1",
+        "cart_view_1",
+        "cart_trust_1"
+      ],
       "settings": {}
     }
   },
   "order": [
     "header"
-  ],
+  ]
 }
