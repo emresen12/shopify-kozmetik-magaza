@@ -2,10 +2,71 @@
   "sections": {
     "hero_banner": {
       "type": "collection-hero-banner",
+      "blocks": {
+        "badge_1": {
+          "type": "badge",
+          "settings": {
+            "text": "✦ SEÇKİN KOLEKSİYONLAR"
+          }
+        },
+        "title_1": {
+          "type": "title",
+          "settings": {}
+        },
+        "desc_1": {
+          "type": "description",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "badge_1",
+        "title_1",
+        "desc_1"
+      ],
       "settings": {}
     },
     "filter_bar": {
       "type": "collection-filter-bar",
+      "blocks": {
+        "filter_1": {
+          "type": "filter_pill",
+          "settings": {
+            "label": "Tüm Ürünler",
+            "is_active": true
+          }
+        },
+        "filter_2": {
+          "type": "filter_pill",
+          "settings": {
+            "label": "Serumlar"
+          }
+        },
+        "filter_3": {
+          "type": "filter_pill",
+          "settings": {
+            "label": "Nemlendiriciler"
+          }
+        },
+        "filter_4": {
+          "type": "filter_pill",
+          "settings": {
+            "label": "Yüz Maskeleri"
+          }
+        },
+        "filter_5": {
+          "type": "filter_pill",
+          "settings": {
+            "label": "Göz Bakımı"
+          }
+        }
+      },
+      "block_order": [
+        "filter_1",
+        "filter_2",
+        "filter_3",
+        "filter_4",
+        "filter_5"
+      ],
       "settings": {}
     },
     "product_grid": {

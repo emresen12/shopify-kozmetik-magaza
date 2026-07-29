@@ -1,6 +1,6 @@
 {% comment %}
-  Modular Collection Hero Banner Section
-  Fully customizable in Shopify Theme Editor (Typography, Colors, Atmosphere Orbs, Spacing)
+  Modular Collection Hero Banner Section with Block-Level Click Inspector Support
+  Clicking on Badge, Title, or Description in Theme Editor directly selects its block settings.
 {% endcomment %}
 
 <div class="collection-hero-banner-section full-width" style="
@@ -9,43 +9,81 @@
   --orb-2-color: {{ section.settings.orb_2_color }};
   --padding-top: {{ section.settings.padding_top }}px;
   --padding-bottom: {{ section.settings.padding_bottom }}px;
-  --badge-color: {{ section.settings.badge_color }};
-  --badge-bg: {{ section.settings.badge_bg }};
-  --badge-border: {{ section.settings.badge_border_color }};
-  --badge-size: {{ section.settings.badge_font_size }}px;
-  --title-size: {{ section.settings.title_font_size }}px;
-  --title-size-mob: {{ section.settings.title_font_size_mobile }}px;
-  --title-weight: {{ section.settings.title_font_weight }};
-  --title-start: {{ section.settings.title_color_start }};
-  --title-end: {{ section.settings.title_color_end }};
-  --desc-size: {{ section.settings.desc_font_size }}px;
-  --desc-color: {{ section.settings.desc_color }};
 ">
   <div class="hero-orb orb-1"></div>
   <div class="hero-orb orb-2"></div>
 
-  <div class="collection-hero-content">
-    {% if section.settings.show_badge %}
-      <span class="collection-badge">
-        {{ section.settings.badge_text | default: "✦ SEÇKİN KOLEKSİYONLAR" }}
-      </span>
-    {% endif %}
+  <div class="collection-hero-content" style="text-align: {{ section.settings.text_align }};">
+    {% for block in section.blocks %}
+      {% case block.type %}
 
-    <h1 class="collection-main-title">
-      {% if section.settings.custom_title != blank %}
-        {{ section.settings.custom_title }}
-      {% else %}
-        {{ collection.title | default: "Tüm Ürünlerimiz" }}
-      {% endif %}
-    </h1>
+        {% when 'badge' %}
+          <div class="collection-badge-wrapper" style="margin-bottom: {{ block.settings.margin_bottom }}px;" {{ block.shopify_attributes }}>
+            <span class="collection-badge" style="
+              font-size: {{ block.settings.font_size }}px;
+              font-weight: {{ block.settings.font_weight }};
+              letter-spacing: {{ block.settings.letter_spacing }}px;
+              color: {{ block.settings.text_color }};
+              background: {{ block.settings.bg_color }};
+              border: 1px solid {{ block.settings.border_color }};
+              border-radius: {{ block.settings.border_radius }}px;
+              padding: {{ block.settings.padding_vertical }}px {{ block.settings.padding_horizontal }}px;
+            ">
+              {{ block.settings.text }}
+            </span>
+          </div>
 
-    <p class="collection-main-desc">
-      {% if section.settings.custom_description != blank %}
-        {{ section.settings.custom_description }}
-      {% else %}
-        {{ collection.description | default: "Doğanın en saf ve etkili içerikleriyle formüle edilmiş, cildinize anında ışıltı ve canlılık veren ürünlerimizi keşfedin." }}
-      {% endif %}
-    </p>
+        {% when 'title' %}
+          {% assign title_tag = block.settings.heading_tag | default: 'h1' %}
+          <div class="collection-title-wrapper" {{ block.shopify_attributes }}>
+            <{{ title_tag }} class="collection-main-title" style="
+              font-size: {{ block.settings.font_size_desktop }}px;
+              --title-size-mob: {{ block.settings.font_size_mobile }}px;
+              font-weight: {{ block.settings.font_weight }};
+              line-height: {{ block.settings.line_height }};
+              letter-spacing: {{ block.settings.letter_spacing }}px;
+              text-transform: {{ block.settings.text_transform }};
+              margin-bottom: {{ block.settings.margin_bottom }}px;
+              padding: {{ block.settings.padding_top }}px {{ block.settings.padding_right }}px {{ block.settings.padding_bottom }}px {{ block.settings.padding_left }}px;
+              {% if block.settings.use_gradient %}
+                background: linear-gradient(135deg, {{ block.settings.color_start }} 0%, {{ block.settings.color_end }} 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+              {% else %}
+                color: {{ block.settings.color_start }};
+              {% endif %}
+            ">
+              {% if block.settings.custom_title != blank %}
+                {{ block.settings.custom_title }}
+              {% else %}
+                {{ collection.title | default: "Tüm Ürünlerimiz" }}
+              {% endif %}
+            </{{ title_tag }}>
+          </div>
+
+        {% when 'description' %}
+          <div class="collection-desc-wrapper" {{ block.shopify_attributes }}>
+            <p class="collection-main-desc" style="
+              font-size: {{ block.settings.font_size }}px;
+              --desc-size-mob: {{ block.settings.font_size_mobile }}px;
+              font-weight: {{ block.settings.font_weight }};
+              line-height: {{ block.settings.line_height }};
+              color: {{ block.settings.text_color }};
+              max-width: {{ block.settings.max_width }}px;
+              margin-bottom: {{ block.settings.margin_bottom }}px;
+              padding: {{ block.settings.padding_top }}px {{ block.settings.padding_right }}px {{ block.settings.padding_bottom }}px {{ block.settings.padding_left }}px;
+              {% if section.settings.text_align == 'center' %}margin-left: auto; margin-right: auto;{% endif %}
+            ">
+              {% if block.settings.custom_description != blank %}
+                {{ block.settings.custom_description }}
+              {% else %}
+                {{ collection.description | default: "Doğanın en saf ve etkili içerikleriyle formüle edilmiş, cildinize anında ışıltı ve canlılık veren ürünlerimizi keşfedin." }}
+              {% endif %}
+            </p>
+          </div>
+
+      {% endcase %}
+    {% endfor %}
   </div>
 </div>
 
@@ -56,7 +94,6 @@
     padding-bottom: var(--padding-bottom, 50px);
     padding-left: 24px;
     padding-right: 24px;
-    text-align: center;
     background: var(--hero-bg, #0b080c);
     overflow: hidden;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -92,41 +129,29 @@
     margin: 0 auto;
   }
 
+  .collection-badge-wrapper {
+    display: inline-block;
+  }
+
   .collection-badge {
     display: inline-block;
-    background: var(--badge-bg, rgba(255, 255, 255, 0.08));
-    border: 1px solid var(--badge-border, rgba(255, 255, 255, 0.2));
     backdrop-filter: blur(12px);
-    color: var(--badge-color, #f7cad0);
-    font-size: var(--badge-size, 12px);
-    font-weight: 700;
-    padding: 6px 18px;
-    border-radius: 30px;
-    letter-spacing: 1.5px;
-    margin-bottom: 16px;
   }
 
   .collection-main-title {
-    font-size: var(--title-size, 40px);
-    font-weight: var(--title-weight, 800);
-    margin: 0 0 16px;
-    background: linear-gradient(135deg, var(--title-start, #ffffff) 0%, var(--title-end, #f7cad0) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    line-height: 1.2;
+    margin: 0;
   }
 
   .collection-main-desc {
-    font-size: var(--desc-size, 15px);
-    color: var(--desc-color, rgba(255, 255, 255, 0.75));
-    line-height: 1.6;
     margin: 0 auto;
-    max-width: 680px;
   }
 
   @media (max-width: 768px) {
     .collection-main-title {
-      font-size: var(--title-size-mob, 28px);
+      font-size: var(--title-size-mob, 28px) !important;
+    }
+    .collection-main-desc {
+      font-size: var(--desc-size-mob, 14px) !important;
     }
   }
 {% endstylesheet %}
@@ -137,132 +162,18 @@
   "settings": [
     {
       "type": "header",
-      "content": "İçerik Ayarları"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_badge",
-      "label": "Üst Rozeti Göster",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "badge_text",
-      "label": "Rozet Metni",
-      "default": "✦ SEÇKİN KOLEKSİYONLAR"
-    },
-    {
-      "type": "text",
-      "id": "custom_title",
-      "label": "Özel Başlık (Boşsa Otomatik Koleksiyon Adı Alınır)",
-      "placeholder": "Koleksiyon Adı"
-    },
-    {
-      "type": "textarea",
-      "id": "custom_description",
-      "label": "Özel Açıklama Metni (Boşsa Koleksiyon Açıklaması Alınır)",
-      "placeholder": "Koleksiyon açıklaması..."
-    },
-    {
-      "type": "header",
-      "content": "Başlık Tipografisi"
-    },
-    {
-      "type": "range",
-      "id": "title_font_size",
-      "label": "Başlık Boyutu (Masaüstü)",
-      "min": 24,
-      "max": 64,
-      "step": 2,
-      "unit": "px",
-      "default": 40
-    },
-    {
-      "type": "range",
-      "id": "title_font_size_mobile",
-      "label": "Başlık Boyutu (Mobil)",
-      "min": 18,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
-      "default": 28
+      "content": "🎨 Arka Plan & Hizalama"
     },
     {
       "type": "select",
-      "id": "title_font_weight",
-      "label": "Başlık Kalınlığı",
+      "id": "text_align",
+      "label": "Metin Hizalaması",
       "options": [
-        { "value": "400", "label": "Normal (400)" },
-        { "value": "600", "label": "Yarı Kalın (600)" },
-        { "value": "700", "label": "Kalın (700)" },
-        { "value": "800", "label": "Ekstra Kalın (800)" },
-        { "value": "900", "label": "Siyah (900)" }
+        { "value": "left", "label": "Sol" },
+        { "value": "center", "label": "Orta" },
+        { "value": "right", "label": "Sağ" }
       ],
-      "default": "800"
-    },
-    {
-      "type": "color",
-      "id": "title_color_start",
-      "label": "Başlık Gradyan Başlangıç Rengi",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "title_color_end",
-      "label": "Başlık Gradyan Bitiş Rengi",
-      "default": "#f7cad0"
-    },
-    {
-      "type": "header",
-      "content": "Açıklama & Rozet Tipografisi"
-    },
-    {
-      "type": "range",
-      "id": "desc_font_size",
-      "label": "Açıklama Yazı Boyutu",
-      "min": 12,
-      "max": 22,
-      "step": 1,
-      "unit": "px",
-      "default": 15
-    },
-    {
-      "type": "color",
-      "id": "desc_color",
-      "label": "Açıklama Metin Rengi",
-      "default": "rgba(255, 255, 255, 0.75)"
-    },
-    {
-      "type": "range",
-      "id": "badge_font_size",
-      "label": "Rozet Yazı Boyutu",
-      "min": 10,
-      "max": 18,
-      "step": 1,
-      "unit": "px",
-      "default": 12
-    },
-    {
-      "type": "color",
-      "id": "badge_color",
-      "label": "Rozet Metin Rengi",
-      "default": "#f7cad0"
-    },
-    {
-      "type": "color",
-      "id": "badge_bg",
-      "label": "Rozet Arka Plan Rengi",
-      "default": "rgba(255, 255, 255, 0.08)"
-    },
-    {
-      "type": "color",
-      "id": "badge_border_color",
-      "label": "Rozet Kenarlık Rengi",
-      "default": "rgba(255, 255, 255, 0.2)"
-    },
-    {
-      "type": "header",
-      "content": "Arka Plan & Efektler"
+      "default": "center"
     },
     {
       "type": "color",
@@ -281,6 +192,10 @@
       "id": "orb_2_color",
       "label": "Sağ Işıltı Küresi Rengi",
       "default": "rgba(247, 202, 208, 0.15)"
+    },
+    {
+      "type": "header",
+      "content": "📐 Bölüm Boşlukları"
     },
     {
       "type": "range",
@@ -303,9 +218,422 @@
       "default": 50
     }
   ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "🏷️ Koleksiyon Rozeti",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Rozet Metni",
+          "default": "✦ SEÇKİN KOLEKSİYONLAR"
+        },
+        {
+          "type": "header",
+          "content": "🔤 Tipografi & Boyut"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Yazı Boyutu (px)",
+          "min": 10,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "default": 12
+        },
+        {
+          "type": "select",
+          "id": "font_weight",
+          "label": "Yazı Kalınlığı",
+          "options": [
+            { "value": "400", "label": "Normal (400)" },
+            { "value": "600", "label": "Yarı Kalın (600)" },
+            { "value": "700", "label": "Kalın (700)" },
+            { "value": "800", "label": "Ekstra Kalın (800)" }
+          ],
+          "default": "700"
+        },
+        {
+          "type": "range",
+          "id": "letter_spacing",
+          "label": "Harf Aralığı (px)",
+          "min": 0,
+          "max": 5,
+          "step": 0.5,
+          "unit": "px",
+          "default": 1.5
+        },
+        {
+          "type": "header",
+          "content": "🎨 Renkler & Kenarlık"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Arka Plan Rengi",
+          "default": "rgba(255, 255, 255, 0.08)"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Kenarlık Rengi",
+          "default": "rgba(255, 255, 255, 0.2)"
+        },
+        {
+          "type": "range",
+          "id": "border_radius",
+          "label": "Köşe Yuvarlama (Radius)",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "default": 30
+        },
+        {
+          "type": "header",
+          "content": "📐 İç & Dış Boşluklar"
+        },
+        {
+          "type": "range",
+          "id": "padding_vertical",
+          "label": "Dikey İç Boşluk (Padding Y)",
+          "min": 2,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 6
+        },
+        {
+          "type": "range",
+          "id": "padding_horizontal",
+          "label": "Yatay İç Boşluk (Padding X)",
+          "min": 6,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "default": 18
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Alt Dış Boşluk (Margin Bottom)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "✏️ Koleksiyon Başlığı",
+      "settings": [
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Özel Başlık Metni (Boşsa Koleksiyon Adı Alınır)"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "HTML Başlık Etiketi (SEO)",
+          "options": [
+            { "value": "h1", "label": "H1 (Ana Başlık)" },
+            { "value": "h2", "label": "H2 (Alt Başlık)" },
+            { "value": "h3", "label": "H3" },
+            { "value": "div", "label": "DIV" }
+          ],
+          "default": "h1"
+        },
+        {
+          "type": "header",
+          "content": "🔤 Tipografi Ayarları"
+        },
+        {
+          "type": "range",
+          "id": "font_size_desktop",
+          "label": "Masaüstü Yazı Boyutu (px)",
+          "min": 24,
+          "max": 80,
+          "step": 2,
+          "unit": "px",
+          "default": 40
+        },
+        {
+          "type": "range",
+          "id": "font_size_mobile",
+          "label": "Mobil Yazı Boyutu (px)",
+          "min": 18,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 28
+        },
+        {
+          "type": "select",
+          "id": "font_weight",
+          "label": "Yazı Kalınlığı",
+          "options": [
+            { "value": "400", "label": "Normal (400)" },
+            { "value": "600", "label": "Yarı Kalın (600)" },
+            { "value": "700", "label": "Kalın (700)" },
+            { "value": "800", "label": "Ekstra Kalın (800)" },
+            { "value": "900", "label": "Siyah (900)" }
+          ],
+          "default": "800"
+        },
+        {
+          "type": "range",
+          "id": "line_height",
+          "label": "Satır Yüksekliği",
+          "min": 1,
+          "max": 2,
+          "step": 0.1,
+          "default": 1.2
+        },
+        {
+          "type": "range",
+          "id": "letter_spacing",
+          "label": "Harf Aralığı (px)",
+          "min": 0,
+          "max": 10,
+          "step": 0.5,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "text_transform",
+          "label": "Harf Formatı",
+          "options": [
+            { "value": "none", "label": "Normal" },
+            { "value": "uppercase", "label": "TÜMÜ BÜYÜK" },
+            { "value": "capitalize", "label": "Baş Harfler Büyük" }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "header",
+          "content": "🎨 Renk & Gradyan"
+        },
+        {
+          "type": "checkbox",
+          "id": "use_gradient",
+          "label": "Gradyan Renk Efekti Kullan",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "color_start",
+          "label": "Metin Rengi / Gradyan Başlangıcı",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "color_end",
+          "label": "Gradyan Bitiş Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "header",
+          "content": "📐 İç & Dış Boşluklar"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Üst İç Boşluk (Padding Top)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Alt İç Boşluk (Padding Bottom)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_left",
+          "label": "Sol İç Boşluk (Padding Left)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_right",
+          "label": "Sağ İç Boşluk (Padding Right)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Alt Dış Boşluk (Margin Bottom)",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "📝 Koleksiyon Açıklaması",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "custom_description",
+          "label": "Özel Açıklama (Boşsa Koleksiyon Açıklaması Alınır)"
+        },
+        {
+          "type": "header",
+          "content": "🔤 Tipografi Ayarları"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Masaüstü Yazı Boyutu (px)",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "font_size_mobile",
+          "label": "Mobil Yazı Boyutu (px)",
+          "min": 12,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 14
+        },
+        {
+          "type": "select",
+          "id": "font_weight",
+          "label": "Yazı Kalınlığı",
+          "options": [
+            { "value": "300", "label": "İnce (300)" },
+            { "value": "400", "label": "Normal (400)" },
+            { "value": "500", "label": "Orta (500)" },
+            { "value": "600", "label": "Yarı Kalın (600)" }
+          ],
+          "default": "400"
+        },
+        {
+          "type": "range",
+          "id": "line_height",
+          "label": "Satır Yüksekliği",
+          "min": 1.2,
+          "max": 2.2,
+          "step": 0.1,
+          "default": 1.6
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Metin Rengi",
+          "default": "rgba(255, 255, 255, 0.75)"
+        },
+        {
+          "type": "header",
+          "content": "📐 Hizalama & Boşluklar"
+        },
+        {
+          "type": "range",
+          "id": "max_width",
+          "label": "Maksimum Genişlik (px)",
+          "min": 300,
+          "max": 900,
+          "step": 20,
+          "unit": "px",
+          "default": 680
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Üst İç Boşluk (Padding Top)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Alt İç Boşluk (Padding Bottom)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_left",
+          "label": "Sol İç Boşluk (Padding Left)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_right",
+          "label": "Sağ İç Boşluk (Padding Right)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Alt Dış Boşluk (Margin Bottom)",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        }
+      ]
+    }
+  ],
   "presets": [
     {
-      "name": "Koleksiyon Hero Banner"
+      "name": "Koleksiyon Hero Banner",
+      "blocks": [
+        { "type": "badge" },
+        { "type": "title" },
+        { "type": "description" }
+      ]
     }
   ]
 }
