@@ -30,7 +30,25 @@
       {% for block in section.blocks %}
         {% case block.type %}
           {% when 'image' %}
-            <div class="serum-glass-frame" {{ block.shopify_attributes }}>
+            <div class="serum-glass-frame" style="
+              --max-width: {{ block.settings.max_width | default: 1000 }}px;
+              --frame-bg: {{ block.settings.frame_bg | default: 'rgba(255, 255, 255, 0.04)' }};
+              --frame-border: {{ block.settings.frame_border | default: 'rgba(255, 255, 255, 0.15)' }};
+              --frame-radius: {{ block.settings.frame_radius | default: 32 }}px;
+              --frame-blur: {{ block.settings.frame_blur | default: 20 }}px;
+              --aura-glow-color: {{ block.settings.aura_glow_color | default: 'rgba(194, 91, 130, 0.25)' }};
+              --img-radius: {{ block.settings.img_radius | default: 24 }}px;
+              --badge-bg: {{ block.settings.badge_bg | default: '#c25b82' }};
+              --badge-text-color: {{ block.settings.badge_text_color | default: '#ffffff' }};
+              --badge-font-size: {{ block.settings.badge_font_size | default: 13 }}px;
+              --caption-bg: {{ block.settings.caption_bg | default: 'rgba(15, 11, 16, 0.7)' }};
+              --caption-title-color: {{ block.settings.caption_title_color | default: '#ffffff' }};
+              --caption-title-size: {{ block.settings.caption_title_size | default: 22 }}px;
+              --caption-sub-color: {{ block.settings.caption_subtitle_color | default: 'rgba(255, 255, 255, 0.75)' }};
+              --padding-top: {{ block.settings.padding_top | default: 0 }}px;
+              --padding-bottom: {{ block.settings.padding_bottom | default: 0 }}px;
+              --margin-bottom: {{ block.settings.margin_bottom | default: 0 }}px;
+            " {{ block.shopify_attributes }}>
               <div class="serum-aura-glow"></div>
               
               <!-- Main Serum Image -->
@@ -276,9 +294,79 @@
       "limit": 1,
       "settings": [
         {
+          "type": "header",
+          "content": "🖼️ Görsel Seçimi & Vitrin Genişliği"
+        },
+        {
           "type": "image_picker",
           "id": "serum_image",
           "label": "Serum Görselini Seçin / Yükleyin"
+        },
+        {
+          "type": "range",
+          "id": "max_width",
+          "label": "Maksimum Vitrin Genişliği (px)",
+          "min": 400,
+          "max": 1400,
+          "step": 20,
+          "unit": "px",
+          "default": 1000
+        },
+        {
+          "type": "range",
+          "id": "img_radius",
+          "label": "Görsel Köşe Yuvarlama (Radius)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 24
+        },
+        {
+          "type": "header",
+          "content": "✨ Cam Efekti (Glassmorphism) & Çerçeve"
+        },
+        {
+          "type": "color",
+          "id": "frame_bg",
+          "label": "Cam Çerçeve Arka Plan Rengi",
+          "default": "rgba(255, 255, 255, 0.04)"
+        },
+        {
+          "type": "color",
+          "id": "frame_border",
+          "label": "Cam Çerçeve Kenarlık Rengi",
+          "default": "rgba(255, 255, 255, 0.15)"
+        },
+        {
+          "type": "range",
+          "id": "frame_radius",
+          "label": "Çerçeve Köşe Yuvarlama (Radius)",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "default": 32
+        },
+        {
+          "type": "range",
+          "id": "frame_blur",
+          "label": "Cam Bulanıklık Efekti (Blur)",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "color",
+          "id": "aura_glow_color",
+          "label": "Işıltı Efekti (Aura Glow) Rengi",
+          "default": "rgba(194, 91, 130, 0.25)"
+        },
+        {
+          "type": "header",
+          "content": "🏷️ Görsel Üstü İndirim / Vurgu Rozeti"
         },
         {
           "type": "text",
@@ -287,16 +375,104 @@
           "default": "✦ ÖNE ÇIKAN SAF HYALÜRONİK SERUM"
         },
         {
+          "type": "color",
+          "id": "badge_bg",
+          "label": "Rozet Arka Plan Rengi",
+          "default": "#c25b82"
+        },
+        {
+          "type": "color",
+          "id": "badge_text_color",
+          "label": "Rozet Metin Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "badge_font_size",
+          "label": "Rozet Yazı Boyutu (px)",
+          "min": 10,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 13
+        },
+        {
+          "type": "header",
+          "content": "📝 Görsel Altı Başlık & Açıklama Kartı"
+        },
+        {
           "type": "text",
           "id": "caption_title",
           "label": "Görsel Altı Vitrin Başlığı",
           "default": "Radiance Glow Hyalüronik Serum"
         },
         {
+          "type": "color",
+          "id": "caption_title_color",
+          "label": "Vitrin Başlık Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "caption_title_size",
+          "label": "Vitrin Başlık Yazı Boyutu (px)",
+          "min": 14,
+          "max": 36,
+          "step": 2,
+          "unit": "px",
+          "default": 22
+        },
+        {
           "type": "text",
           "id": "caption_subtitle",
           "label": "Görsel Altı Vitrin Açıklaması",
           "default": "%100 Saf Hyalüronik Asit & Pembe Kuvars Özlü Gençlik İksiri"
+        },
+        {
+          "type": "color",
+          "id": "caption_subtitle_color",
+          "label": "Vitrin Açıklama Metin Rengi",
+          "default": "rgba(255, 255, 255, 0.75)"
+        },
+        {
+          "type": "color",
+          "id": "caption_bg",
+          "label": "Kart Arka Plan Rengi",
+          "default": "rgba(15, 11, 16, 0.7)"
+        },
+        {
+          "type": "header",
+          "content": "📐 İç ve Dış Boşluklar (Padding & Margin)"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Üst İç Boşluk (Padding Top)",
+          "min": 0,
+          "max": 80,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Alt İç Boşluk (Padding Bottom)",
+          "min": 0,
+          "max": 80,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Alt Dış Boşluk (Margin Bottom)",
+          "min": 0,
+          "max": 80,
+          "step": 2,
+          "unit": "px",
+          "default": 0
         }
       ]
     }

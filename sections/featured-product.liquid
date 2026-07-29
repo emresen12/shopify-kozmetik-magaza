@@ -36,7 +36,20 @@
 
     <!-- Left: Product Image Gallery -->
     {% assign image_block = section.blocks | where: 'type', 'image' | first %}
-    <div class="featured-product__gallery" {% if image_block %}{{ image_block.shopify_attributes }}{% else %}{{ section.shopify_attributes }}{% endif %}>
+    <div class="featured-product__gallery" style="
+      --img-max-width: {{ image_block.settings.max_width | default: 550 }}px;
+      --img-radius: {{ image_block.settings.border_radius | default: 28 }}px;
+      --frame-bg: {{ image_block.settings.frame_bg | default: 'rgba(255, 255, 255, 0.05)' }};
+      --frame-border: {{ image_block.settings.frame_border | default: 'rgba(255, 255, 255, 0.15)' }};
+      --frame-blur: {{ image_block.settings.frame_blur | default: 24 }}px;
+      --aura-glow-color: {{ image_block.settings.aura_glow_color | default: 'rgba(194, 91, 130, 0.25)' }};
+      --badge-bg: {{ image_block.settings.badge_bg | default: '#c25b82' }};
+      --badge-text-color: {{ image_block.settings.badge_text_color | default: '#ffffff' }};
+      --badge-font-size: {{ image_block.settings.badge_font_size | default: 12 }}px;
+      --padding-top: {{ image_block.settings.padding_top | default: 0 }}px;
+      --padding-bottom: {{ image_block.settings.padding_bottom | default: 0 }}px;
+      --margin-bottom: {{ image_block.settings.margin_bottom | default: 0 }}px;
+    " {% if image_block %}{{ image_block.shopify_attributes }}{% else %}{{ section.shopify_attributes }}{% endif %}>
       <div class="luxury-image-frame">
         <div class="frame-aura-glow"></div>
         {% if image_block and image_block.settings.image != blank %}
@@ -836,15 +849,131 @@
       "limit": 1,
       "settings": [
         {
+          "type": "header",
+          "content": "🖼️ Görsel Seçimi & Boyutlar"
+        },
+        {
           "type": "image_picker",
           "id": "image",
           "label": "Öne Çıkan Görsel / Serum Resmi Yükle"
         },
         {
+          "type": "range",
+          "id": "max_width",
+          "label": "Maksimum Görsel Genişliği (px)",
+          "min": 300,
+          "max": 800,
+          "step": 10,
+          "unit": "px",
+          "default": 550
+        },
+        {
+          "type": "range",
+          "id": "border_radius",
+          "label": "Görsel Köşe Yuvarlama (Radius)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 28
+        },
+        {
+          "type": "header",
+          "content": "✨ Cam Çerçeve & Renkler"
+        },
+        {
+          "type": "color",
+          "id": "frame_bg",
+          "label": "Çerçeve Arka Plan Rengi",
+          "default": "rgba(255, 255, 255, 0.05)"
+        },
+        {
+          "type": "color",
+          "id": "frame_border",
+          "label": "Çerçeve Kenarlık Rengi",
+          "default": "rgba(255, 255, 255, 0.15)"
+        },
+        {
+          "type": "range",
+          "id": "frame_blur",
+          "label": "Cam Bulanıklık Efekti (Blur)",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "default": 24
+        },
+        {
+          "type": "color",
+          "id": "aura_glow_color",
+          "label": "Arka Plan Işıltı (Aura Glow) Rengi",
+          "default": "rgba(194, 91, 130, 0.25)"
+        },
+        {
+          "type": "header",
+          "content": "🏷️ İndirim Rozeti"
+        },
+        {
           "type": "text",
           "id": "badge_text",
-          "label": "Görsel Üstü İndirim Rozeti",
+          "label": "Görsel Üstü Rozet Metni",
           "default": "✦ %30 ÖZEL İNDİRİM"
+        },
+        {
+          "type": "color",
+          "id": "badge_bg",
+          "label": "Rozet Arka Plan Rengi",
+          "default": "#c25b82"
+        },
+        {
+          "type": "color",
+          "id": "badge_text_color",
+          "label": "Rozet Metin Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "badge_font_size",
+          "label": "Rozet Yazı Boyutu (px)",
+          "min": 10,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 12
+        },
+        {
+          "type": "header",
+          "content": "📐 İç ve Dış Boşluklar (Padding & Margin)"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Üst İç Boşluk (Padding Top)",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Alt İç Boşluk (Padding Bottom)",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Alt Dış Boşluk (Margin Bottom)",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "default": 0
         }
       ]
     },
