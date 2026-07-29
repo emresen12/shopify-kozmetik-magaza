@@ -1,24 +1,238 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "hero_banner_section": {
       "type": "hero-banner",
+      "blocks": {
+        "badge_1": {
+          "type": "badge",
+          "settings": {
+            "text": "✦ İPEKSİ DOKU & DOĞAL IŞILTI"
+          }
+        },
+        "title_1": {
+          "type": "title",
+          "settings": {
+            "text": "Cilt Bakımında Yeni Çağ"
+          }
+        },
+        "subtitle_1": {
+          "type": "subtitle",
+          "settings": {
+            "text": "Doğanın en değerli özleri ve ileri teknoloji hyalüronik asit kompleksi ile cildinize anında gençlik ve ışıltı kazandırın."
+          }
+        },
+        "button_1": {
+          "type": "button",
+          "settings": {
+            "text": "Koleksiyonu Keşfet",
+            "style": "primary"
+          }
+        },
+        "button_2": {
+          "type": "button",
+          "settings": {
+            "text": "Öne Çıkan Ürün",
+            "style": "secondary"
+          }
+        },
+        "stat_1": {
+          "type": "stat_item",
+          "settings": {
+            "number": "%100",
+            "label": "Organik & Vegan"
+          }
+        },
+        "stat_2": {
+          "type": "stat_item",
+          "settings": {
+            "number": "24 Sa.",
+            "label": "Kesintisiz Nem"
+          }
+        },
+        "stat_3": {
+          "type": "stat_item",
+          "settings": {
+            "number": "4.9 ★",
+            "label": "Müşteri Puanı"
+          }
+        }
+      },
+      "block_order": [
+        "badge_1",
+        "title_1",
+        "subtitle_1",
+        "button_1",
+        "button_2",
+        "stat_1",
+        "stat_2",
+        "stat_3"
+      ],
       "settings": {}
     },
     "featured_product_showcase": {
       "type": "featured-product",
+      "blocks": {
+        "subheading_1": {
+          "type": "subheading",
+          "settings": {
+            "text": "LUMIÈRE BOTANICALS • HAUTE COUTURE BEAUTY"
+          }
+        },
+        "title_1": {
+          "type": "title",
+          "settings": {
+            "text": "Radiance Glow Hyalüronik Serum"
+          }
+        },
+        "rating_1": {
+          "type": "rating",
+          "settings": {
+            "stars": "★★★★★",
+            "score": "4.9 / 5.0",
+            "count_text": "(248 Müşteri Yorumu)"
+          }
+        },
+        "price_1": {
+          "type": "price",
+          "settings": {
+            "price": "₺450,00",
+            "compare_price": "₺650,00",
+            "savings_text": "₺200 Tasarruf"
+          }
+        },
+        "desc_1": {
+          "type": "description",
+          "settings": {
+            "text": "Cildinize anında doğal ışıltı ve derinlemesine nem kazandıran 3'lü saf hyalüronik asit kompleksi, pembe kuvars özü ve Fransız gül suyu ile zenginleştirilmiş konsantre gençlik iksiri."
+          }
+        },
+        "cert_1": {
+          "type": "cert_pill",
+          "settings": {
+            "text": "%100 Vegan Formula"
+          }
+        },
+        "cert_2": {
+          "type": "cert_pill",
+          "settings": {
+            "text": "Cruelty-Free Approved"
+          }
+        },
+        "volume_1": {
+          "type": "volume_options",
+          "settings": {
+            "label": "Hacim Seçimi:",
+            "opt_1": "30 ml (Standart)",
+            "opt_2": "50 ml Büyük Boy (+₺180)"
+          }
+        },
+        "buy_1": {
+          "type": "buy_buttons",
+          "settings": {
+            "btn_text": "Sepete Ekle"
+          }
+        },
+        "acc_1": {
+          "type": "accordion",
+          "settings": {
+            "title": "Öne Çıkan Aktif İçerikler",
+            "content": "%2 Triple Hyalüronik Asit, Isparta Gül Suyu ve Niasinamid (B3 Vitamini) kompleksi."
+          }
+        },
+        "acc_2": {
+          "type": "accordion",
+          "settings": {
+            "title": "Kullanım Rutini & Uygulama",
+            "content": "Sabah ve akşam temizlenmiş yüz ve boyun bölgesine 3-4 damla uygulayın."
+          }
+        }
+      },
+      "block_order": [
+        "subheading_1",
+        "title_1",
+        "rating_1",
+        "price_1",
+        "desc_1",
+        "cert_1",
+        "cert_2",
+        "volume_1",
+        "buy_1",
+        "acc_1",
+        "acc_2"
+      ],
       "settings": {}
     },
     "product_grid_showcase": {
       "type": "product-grid-panel",
+      "blocks": {
+        "subtitle_1": {
+          "type": "subtitle",
+          "settings": {
+            "text": "✦ SEÇKİN BAKIM KOLEKSİYONU"
+          }
+        },
+        "title_1": {
+          "type": "title",
+          "settings": {
+            "text": "Çok Satan Kozmetik Ürünlerimiz"
+          }
+        },
+        "button_1": {
+          "type": "button",
+          "settings": {
+            "text": "Tüm Koleksiyonu Keşfet"
+          }
+        },
+        "card_1": {
+          "type": "product_card",
+          "settings": {
+            "badge_text": "EN ÇOK SATAN",
+            "title": "Lumière Radiance Serum 30ml",
+            "description": "Cilt bariyerini yenileyici ve nemlendirici gençlik iksiri",
+            "price": "₺450,00",
+            "compare_price": "₺650,00"
+          }
+        },
+        "card_2": {
+          "type": "product_card",
+          "settings": {
+            "badge_text": "YENİ",
+            "title": "Velvet Hydra Besleyici Gece Kremi",
+            "description": "Gece boyunca yoğun elastikiyet ve nem bakımı",
+            "price": "₺520,00",
+            "compare_price": "₺700,00"
+          }
+        },
+        "card_3": {
+          "type": "product_card",
+          "settings": {
+            "badge_text": "ORGANİK",
+            "title": "Isparta Gül Suyu Arındırıcı Tonik",
+            "description": "Gözenek sıkılaştırıcı %100 doğal gül suyu",
+            "price": "₺280,00",
+            "compare_price": "₺350,00"
+          }
+        },
+        "card_4": {
+          "type": "product_card",
+          "settings": {
+            "badge_text": "%20 İNDİRİM",
+            "title": "Anti-Aging Peptit Göz Çevresi Kremi",
+            "description": "Göz altı morlukları ve şişlik karşıtı peptit kompleks",
+            "price": "₺390,00",
+            "compare_price": "₺500,00"
+          }
+        }
+      },
+      "block_order": [
+        "subtitle_1",
+        "title_1",
+        "button_1",
+        "card_1",
+        "card_2",
+        "card_3",
+        "card_4"
+      ],
       "settings": {}
     }
   },

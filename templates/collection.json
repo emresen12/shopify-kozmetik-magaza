@@ -1,20 +1,21 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "collection",
+    "hero_banner": {
+      "type": "collection-hero-banner",
+      "settings": {}
+    },
+    "filter_bar": {
+      "type": "collection-filter-bar",
+      "settings": {}
+    },
+    "product_grid": {
+      "type": "collection-product-grid",
       "settings": {}
     }
   },
   "order": [
-    "main"
+    "hero_banner",
+    "filter_bar",
+    "product_grid"
   ]
 }

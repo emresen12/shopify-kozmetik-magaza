@@ -1,0 +1,312 @@
+{% comment %}
+  Modular Collection Hero Banner Section
+  Fully customizable in Shopify Theme Editor (Typography, Colors, Atmosphere Orbs, Spacing)
+{% endcomment %}
+
+<div class="collection-hero-banner-section full-width" style="
+  --hero-bg: {{ section.settings.bg_color }};
+  --orb-1-color: {{ section.settings.orb_1_color }};
+  --orb-2-color: {{ section.settings.orb_2_color }};
+  --padding-top: {{ section.settings.padding_top }}px;
+  --padding-bottom: {{ section.settings.padding_bottom }}px;
+  --badge-color: {{ section.settings.badge_color }};
+  --badge-bg: {{ section.settings.badge_bg }};
+  --badge-border: {{ section.settings.badge_border_color }};
+  --badge-size: {{ section.settings.badge_font_size }}px;
+  --title-size: {{ section.settings.title_font_size }}px;
+  --title-size-mob: {{ section.settings.title_font_size_mobile }}px;
+  --title-weight: {{ section.settings.title_font_weight }};
+  --title-start: {{ section.settings.title_color_start }};
+  --title-end: {{ section.settings.title_color_end }};
+  --desc-size: {{ section.settings.desc_font_size }}px;
+  --desc-color: {{ section.settings.desc_color }};
+">
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+
+  <div class="collection-hero-content">
+    {% if section.settings.show_badge %}
+      <span class="collection-badge">
+        {{ section.settings.badge_text | default: "✦ SEÇKİN KOLEKSİYONLAR" }}
+      </span>
+    {% endif %}
+
+    <h1 class="collection-main-title">
+      {% if section.settings.custom_title != blank %}
+        {{ section.settings.custom_title }}
+      {% else %}
+        {{ collection.title | default: "Tüm Ürünlerimiz" }}
+      {% endif %}
+    </h1>
+
+    <p class="collection-main-desc">
+      {% if section.settings.custom_description != blank %}
+        {{ section.settings.custom_description }}
+      {% else %}
+        {{ collection.description | default: "Doğanın en saf ve etkili içerikleriyle formüle edilmiş, cildinize anında ışıltı ve canlılık veren ürünlerimizi keşfedin." }}
+      {% endif %}
+    </p>
+  </div>
+</div>
+
+{% stylesheet %}
+  .collection-hero-banner-section {
+    position: relative;
+    padding-top: var(--padding-top, 120px);
+    padding-bottom: var(--padding-bottom, 50px);
+    padding-left: 24px;
+    padding-right: 24px;
+    text-align: center;
+    background: var(--hero-bg, #0b080c);
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .collection-hero-banner-section .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+  }
+
+  .collection-hero-banner-section .hero-orb.orb-1 {
+    width: 420px;
+    height: 420px;
+    background: var(--orb-1-color, rgba(194, 91, 130, 0.2));
+    top: -50px;
+    left: 18%;
+  }
+
+  .collection-hero-banner-section .hero-orb.orb-2 {
+    width: 380px;
+    height: 380px;
+    background: var(--orb-2-color, rgba(247, 202, 208, 0.15));
+    bottom: -50px;
+    right: 18%;
+  }
+
+  .collection-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .collection-badge {
+    display: inline-block;
+    background: var(--badge-bg, rgba(255, 255, 255, 0.08));
+    border: 1px solid var(--badge-border, rgba(255, 255, 255, 0.2));
+    backdrop-filter: blur(12px);
+    color: var(--badge-color, #f7cad0);
+    font-size: var(--badge-size, 12px);
+    font-weight: 700;
+    padding: 6px 18px;
+    border-radius: 30px;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+  }
+
+  .collection-main-title {
+    font-size: var(--title-size, 40px);
+    font-weight: var(--title-weight, 800);
+    margin: 0 0 16px;
+    background: linear-gradient(135deg, var(--title-start, #ffffff) 0%, var(--title-end, #f7cad0) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+  }
+
+  .collection-main-desc {
+    font-size: var(--desc-size, 15px);
+    color: var(--desc-color, rgba(255, 255, 255, 0.75));
+    line-height: 1.6;
+    margin: 0 auto;
+    max-width: 680px;
+  }
+
+  @media (max-width: 768px) {
+    .collection-main-title {
+      font-size: var(--title-size-mob, 28px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Koleksiyon Hero Banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "İçerik Ayarları"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Üst Rozeti Göster",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Rozet Metni",
+      "default": "✦ SEÇKİN KOLEKSİYONLAR"
+    },
+    {
+      "type": "text",
+      "id": "custom_title",
+      "label": "Özel Başlık (Boşsa Otomatik Koleksiyon Adı Alınır)",
+      "placeholder": "Koleksiyon Adı"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_description",
+      "label": "Özel Açıklama Metni (Boşsa Koleksiyon Açıklaması Alınır)",
+      "placeholder": "Koleksiyon açıklaması..."
+    },
+    {
+      "type": "header",
+      "content": "Başlık Tipografisi"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "label": "Başlık Boyutu (Masaüstü)",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "title_font_size_mobile",
+      "label": "Başlık Boyutu (Mobil)",
+      "min": 18,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Başlık Kalınlığı",
+      "options": [
+        { "value": "400", "label": "Normal (400)" },
+        { "value": "600", "label": "Yarı Kalın (600)" },
+        { "value": "700", "label": "Kalın (700)" },
+        { "value": "800", "label": "Ekstra Kalın (800)" },
+        { "value": "900", "label": "Siyah (900)" }
+      ],
+      "default": "800"
+    },
+    {
+      "type": "color",
+      "id": "title_color_start",
+      "label": "Başlık Gradyan Başlangıç Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color_end",
+      "label": "Başlık Gradyan Bitiş Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "header",
+      "content": "Açıklama & Rozet Tipografisi"
+    },
+    {
+      "type": "range",
+      "id": "desc_font_size",
+      "label": "Açıklama Yazı Boyutu",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "desc_color",
+      "label": "Açıklama Metin Rengi",
+      "default": "rgba(255, 255, 255, 0.75)"
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "label": "Rozet Yazı Boyutu",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Rozet Metin Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg",
+      "label": "Rozet Arka Plan Rengi",
+      "default": "rgba(255, 255, 255, 0.08)"
+    },
+    {
+      "type": "color",
+      "id": "badge_border_color",
+      "label": "Rozet Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.2)"
+    },
+    {
+      "type": "header",
+      "content": "Arka Plan & Efektler"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Arka Plan Rengi",
+      "default": "#0b080c"
+    },
+    {
+      "type": "color",
+      "id": "orb_1_color",
+      "label": "Sol Işıltı Küresi Rengi",
+      "default": "rgba(194, 91, 130, 0.2)"
+    },
+    {
+      "type": "color",
+      "id": "orb_2_color",
+      "label": "Sağ Işıltı Küresi Rengi",
+      "default": "rgba(247, 202, 208, 0.15)"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Üst İç Boşluk (Padding Top)",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Alt İç Boşluk (Padding Bottom)",
+      "min": 20,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "name": "Koleksiyon Hero Banner"
+    }
+  ]
+}
+{% endschema %}

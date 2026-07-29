@@ -1,0 +1,368 @@
+{% comment %}
+  Modular Collection Filter & Sort Bar Section
+  Fully customizable in Shopify Theme Editor (Pills, Sort Options, Colors, Glassmorphism, Typography)
+{% endcomment %}
+
+<div class="collection-filter-bar-section full-width" style="
+  --bar-max-width: {{ section.settings.max_width }}px;
+  --margin-top: {{ section.settings.margin_top }}px;
+  --margin-bottom: {{ section.settings.margin_bottom }}px;
+  --bar-bg: {{ section.settings.bar_bg }};
+  --bar-border: {{ section.settings.bar_border_color }};
+  --bar-radius: {{ section.settings.bar_radius }}px;
+  --bar-blur: {{ section.settings.bar_blur }}px;
+  --pill-font-size: {{ section.settings.pill_font_size }}px;
+  --pill-font-weight: {{ section.settings.pill_font_weight }};
+  --pill-bg: {{ section.settings.pill_bg }};
+  --pill-color: {{ section.settings.pill_text_color }};
+  --pill-border: {{ section.settings.pill_border_color }};
+  --pill-active-bg: {{ section.settings.pill_active_bg }};
+  --pill-active-color: {{ section.settings.pill_active_text_color }};
+  --pill-active-border: {{ section.settings.pill_active_border_color }};
+  --sort-label-color: {{ section.settings.sort_label_color }};
+  --sort-label-size: {{ section.settings.sort_label_font_size }}px;
+  --sort-select-bg: {{ section.settings.sort_select_bg }};
+  --sort-select-color: {{ section.settings.sort_select_text_color }};
+  --sort-select-border: {{ section.settings.sort_select_border }};
+">
+  <div class="filter-bar-container">
+    <div class="collection-filter-bar">
+      
+      <!-- Filter Pills -->
+      {% if section.settings.show_filter_pills %}
+        <div class="filter-pills">
+          {% if section.blocks.size > 0 %}
+            {% for block in section.blocks %}
+              <button type="button" class="filter-pill {% if block.settings.is_active %}active{% endif %}" {{ block.shopify_attributes }}>
+                {{ block.settings.label }}
+              </button>
+            {% endfor %}
+          {% else %}
+            <button type="button" class="filter-pill active">Tüm Ürünler</button>
+            <button type="button" class="filter-pill">Serumlar</button>
+            <button type="button" class="filter-pill">Nemlendiriciler</button>
+            <button type="button" class="filter-pill">Yüz Maskeleri</button>
+            <button type="button" class="filter-pill">Göz Bakımı</button>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <!-- Sort Dropdown Box -->
+      {% if section.settings.show_sort_box %}
+        <div class="collection-sort-box">
+          <span class="sort-label">{{ section.settings.sort_label | default: "Sırala:" }}</span>
+          <select class="dark-sort-select">
+            <option value="manual">Öne Çıkanlar</option>
+            <option value="price-ascending">Fiyat: Düşükten Yükseğe</option>
+            <option value="price-descending">Fiyat: Yüksekten Düşüğe</option>
+            <option value="created-descending">En Yeniler</option>
+          </select>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .filter-bar-container {
+    max-width: var(--bar-max-width, 1320px);
+    margin: var(--margin-top, 40px) auto var(--margin-bottom, 36px);
+    padding: 0 24px;
+  }
+
+  .collection-filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 14px 20px;
+    background: var(--bar-bg, rgba(255, 255, 255, 0.04));
+    border: 1px solid var(--bar-border, rgba(255, 255, 255, 0.1));
+    backdrop-filter: blur(var(--bar-blur, 16px));
+    border-radius: var(--bar-radius, 20px);
+  }
+
+  .filter-pills {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .filter-pill {
+    padding: 8px 18px;
+    background: var(--pill-bg, transparent);
+    border: 1px solid var(--pill-border, rgba(255, 255, 255, 0.15));
+    border-radius: 12px;
+    color: var(--pill-color, rgba(255, 255, 255, 0.75));
+    font-size: var(--pill-font-size, 14px);
+    font-weight: var(--pill-font-weight, 700);
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .filter-pill:hover,
+  .filter-pill.active {
+    background: var(--pill-active-bg, rgba(194, 91, 130, 0.3));
+    border-color: var(--pill-active-border, #f7cad0);
+    color: var(--pill-active-color, #ffffff);
+    box-shadow: 0 4px 14px rgba(194, 91, 130, 0.2);
+  }
+
+  .collection-sort-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sort-label {
+    font-size: var(--sort-label-size, 14px);
+    color: var(--sort-label-color, rgba(255, 255, 255, 0.7));
+    font-weight: 600;
+  }
+
+  .dark-sort-select {
+    background: var(--sort-select-bg, rgba(255, 255, 255, 0.08));
+    border: 1px solid var(--sort-select-border, rgba(255, 255, 255, 0.2));
+    border-radius: 10px;
+    color: var(--sort-select-color, #ffffff);
+    padding: 8px 14px;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .dark-sort-select option {
+    background: #130d16;
+    color: #ffffff;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Koleksiyon Filtre Barı",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Genel Ayarlar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filter_pills",
+      "label": "Filtre Butonlarını Göster",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort_box",
+      "label": "Sıralama Seçim Kutusunu Göster",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sort_label",
+      "label": "Sıralama Etiketi",
+      "default": "Sırala:"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maksimum Konteyner Genişliği",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1320
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Üst Dış Boşluk (Margin Top)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Alt Dış Boşluk (Margin Bottom)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Çubuk Stil & Cam (Glassmorphism) Ayarları"
+    },
+    {
+      "type": "color",
+      "id": "bar_bg",
+      "label": "Çubuk Arka Plan Rengi",
+      "default": "rgba(255, 255, 255, 0.04)"
+    },
+    {
+      "type": "color",
+      "id": "bar_border_color",
+      "label": "Çubuk Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "type": "range",
+      "id": "bar_radius",
+      "label": "Çubuk Köşe Yuvarlama (Radius)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "bar_blur",
+      "label": "Cam Bulanıklık Efekti (Backdrop Blur)",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Filtre Butonları Tipografi & Renkler"
+    },
+    {
+      "type": "range",
+      "id": "pill_font_size",
+      "label": "Buton Yazı Boyutu",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "pill_font_weight",
+      "label": "Buton Yazı Kalınlığı",
+      "options": [
+        { "value": "400", "label": "Normal (400)" },
+        { "value": "600", "label": "Yarı Kalın (600)" },
+        { "value": "700", "label": "Kalın (700)" },
+        { "value": "800", "label": "Ekstra Kalın (800)" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "pill_bg",
+      "label": "Buton Arka Plan Rengi",
+      "default": "rgba(0, 0, 0, 0)"
+    },
+    {
+      "type": "color",
+      "id": "pill_text_color",
+      "label": "Buton Yazı Rengi",
+      "default": "rgba(255, 255, 255, 0.75)"
+    },
+    {
+      "type": "color",
+      "id": "pill_border_color",
+      "label": "Buton Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.15)"
+    },
+    {
+      "type": "color",
+      "id": "pill_active_bg",
+      "label": "Aktif Buton Arka Plan Rengi",
+      "default": "rgba(194, 91, 130, 0.3)"
+    },
+    {
+      "type": "color",
+      "id": "pill_active_text_color",
+      "label": "Aktif Buton Yazı Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pill_active_border_color",
+      "label": "Aktif Buton Kenarlık Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "header",
+      "content": "Sıralama Seçim Kutusu Renkleri"
+    },
+    {
+      "type": "color",
+      "id": "sort_label_color",
+      "label": "Etiket Metin Rengi",
+      "default": "rgba(255, 255, 255, 0.7)"
+    },
+    {
+      "type": "range",
+      "id": "sort_label_font_size",
+      "label": "Etiket Yazı Boyutu",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "sort_select_bg",
+      "label": "Seçim Kutusu Arka Plan Rengi",
+      "default": "rgba(255, 255, 255, 0.08)"
+    },
+    {
+      "type": "color",
+      "id": "sort_select_text_color",
+      "label": "Seçim Kutusu Metin Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "sort_select_border",
+      "label": "Seçim Kutusu Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.2)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "filter_pill",
+      "name": "Filtre Sekmesi / Butonu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Buton Başlığı",
+          "default": "Kategori Adı"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_active",
+          "label": "Varsayılan Olarak Seçili (Aktif)",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Koleksiyon Filtre Barı",
+      "blocks": [
+        { "type": "filter_pill", "settings": { "label": "Tüm Ürünler", "is_active": true } },
+        { "type": "filter_pill", "settings": { "label": "Serumlar" } },
+        { "type": "filter_pill", "settings": { "label": "Nemlendiriciler" } },
+        { "type": "filter_pill", "settings": { "label": "Yüz Maskeleri" } },
+        { "type": "filter_pill", "settings": { "label": "Göz Bakımı" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
