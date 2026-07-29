@@ -1,16 +1,71 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
       "type": "collections",
+      "blocks": {
+        "collection_1": {
+          "type": "collection_card",
+          "settings": {
+            "badge_text": "✦ EN ÇOK TERCİH EDİLEN",
+            "title": "Gençleştirici Serumlar",
+            "count_text": "14 ÜRÜN",
+            "description": "İnce çizgileri ve yaşlanma belirtilerini hedef alan konsantre peptit ve hyalüronik asit özleri."
+          }
+        },
+        "collection_2": {
+          "type": "collection_card",
+          "settings": {
+            "badge_text": "YOĞUN NEM",
+            "title": "Hydra-Luxe Nemlendirici Serisi",
+            "count_text": "9 ÜRÜN",
+            "description": "Cildin alt katmanlarına 24 saat kesintisiz nem sağlayan yoğun kadife krem serisi."
+          }
+        },
+        "collection_3": {
+          "type": "collection_card",
+          "settings": {
+            "badge_text": "AYDINLATICI",
+            "title": "Lumière Işıltı & Lekeler",
+            "count_text": "11 ÜRÜN",
+            "description": "Cilt tonunu eşitleyen ve doğal ışıltıyı ortaya çıkaran C vitamini ve alfa arbutin formülleri."
+          }
+        },
+        "collection_4": {
+          "type": "collection_card",
+          "settings": {
+            "badge_text": "GECE BAKIMI",
+            "title": "Midnight Gece Onarım Ritüeli",
+            "count_text": "6 ÜRÜN",
+            "description": "Gece boyunca hücresel yenilenmeyi destekleyen besleyici değerli botanik yağlar."
+          }
+        },
+        "collection_5": {
+          "type": "collection_card",
+          "settings": {
+            "badge_text": "ARINDIRICI",
+            "title": "Detoks & Yüz Maskeleri",
+            "count_text": "8 ÜRÜN",
+            "description": "Gözenekleri arındıran ve cilde anında tazelik veren antioksidan nem maskeleri."
+          }
+        },
+        "collection_6": {
+          "type": "collection_card",
+          "settings": {
+            "badge_text": "HASSAS BÖLGE",
+            "title": "Göz Çevresi & Dudak Bakımı",
+            "count_text": "7 ÜRÜN",
+            "description": "Hassas göz çevresi ve dudak bölgesine özel elastikiyet artıran altın tanecikli konsantreler."
+          }
+        }
+      },
+      "block_order": [
+        "collection_1",
+        "collection_2",
+        "collection_3",
+        "collection_4",
+        "collection_5",
+        "collection_6"
+      ],
       "settings": {}
     }
   },

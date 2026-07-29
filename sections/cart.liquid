@@ -1,37 +1,874 @@
 {% comment %}
-  This section is used in the cart template to render /cart page with an
-  overview of the items in customer's cart.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/cart
+  Modular Luxury Cart Page Section (Theme Block Architecture)
+  Renders Cart Page elements as independent, selectable Theme Blocks.
+  Clicking any element on the Cart Page in Shopify Theme Editor opens its detailed settings in the right sidebar!
 {% endcomment %}
 
-<h1>{{ 'cart.title' | t }}</h1>
+<div class="cart-page-section full-width" style="
+  --max-width: {{ section.settings.max_width | default: 1200 }}px;
+  --padding-top: {{ section.settings.padding_top | default: 50 }}px;
+  --padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
+">
+  <div class="cart-page-container">
+    
+    <!-- Render Header Blocks & Free Shipping Progress Blocks -->
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'header_block' %}
+          <div class="cart-page-header" style="
+            --title-color: {{ block.settings.title_color | default: '#ffffff' }};
+            --subtitle-color: {{ block.settings.subtitle_color | default: 'rgba(255, 255, 255, 0.7)' }};
+          " {{ block.shopify_attributes }}>
+            {% if block.settings.badge_text != blank %}
+              <span class="cart-page-badge">{{ block.settings.badge_text }}</span>
+            {% endif %}
+            <h1 class="cart-page-title">{{ block.settings.title | default: "Alışveriş Sepetiniz" }}</h1>
+            {% if block.settings.subtitle != blank %}
+              <p class="cart-page-subtitle">{{ block.settings.subtitle }}</p>
+            {% endif %}
+          </div>
 
-<form action="{{ routes.cart_url }}" method="post">
-  <table>
-    {% for item in cart.items %}
-      <tr>
-        <td>
-          {% render 'image', image: item.image, url: item.url %}
-        </td>
-        <td>
-          <p>{{ item.product.title }}</p>
-          {{ 'cart.remove' | t | link_to: item.url_to_remove }}
-        </td>
-        <td>
-          <input type="text" name="updates[]" value="{{ item.quantity }}">
-          <input type="submit" value="{{ 'cart.update' | t }}">
-        </td>
-      </tr>
+        {% when 'free_shipping_block' %}
+          <div class="cart-free-shipping-card" style="
+            --bg-color: {{ block.settings.bar_bg | default: 'rgba(194, 91, 130, 0.12)' }};
+            --border-color: {{ block.settings.bar_border | default: 'rgba(255, 255, 255, 0.12)' }};
+          " {{ block.shopify_attributes }}>
+            <p class="free-shipping-msg">🎉 {{ block.settings.text | default: "₺500 üzeri alışverişlerde Kargo Bedava!" }}</p>
+            <div class="shipping-progress-bar">
+              <div class="shipping-progress-fill" style="width: 100%;"></div>
+            </div>
+          </div>
+      {% endcase %}
     {% endfor %}
-  </table>
 
-  <input type="submit" name="checkout" value="{{ 'cart.checkout' | t }}">
-</form>
+    <!-- Main Layout: Cart Items Grid & Summary Sidebar -->
+    <div class="cart-layout-grid">
+      
+      <!-- Left Column: Cart Items List -->
+      <div class="cart-items-column">
+        {% assign item_blocks = section.blocks | where: "type", "cart_item_card" %}
+        
+        {% if item_blocks.size > 0 %}
+          {% for block in item_blocks %}
+            {% assign prod = block.settings.product %}
+            <div class="cart-page-item-card" style="
+              --card-bg: {{ block.settings.card_bg_color | default: 'rgba(255, 255, 255, 0.04)' }};
+              --card-border: {{ block.settings.card_border_color | default: 'rgba(255, 255, 255, 0.12)' }};
+              --card-radius: {{ block.settings.card_border_radius | default: 20 }}px;
+              --card-blur: {{ block.settings.card_blur | default: 16 }}px;
+              --title-color: {{ block.settings.title_color | default: '#ffffff' }};
+              --price-color: {{ block.settings.price_color | default: '#f7cad0' }};
+            " {{ block.shopify_attributes }}>
+              
+              <div class="item-img-box">
+                {% if block.settings.image != blank %}
+                  {{ block.settings.image | image_url: width: 200 | image_tag: class: 'item-img', loading: 'lazy' }}
+                {% elsif prod != blank and prod.featured_image %}
+                  {{ prod.featured_image | image_url: width: 200 | image_tag: class: 'item-img', loading: 'lazy' }}
+                {% else %}
+                  {% assign mod2 = forloop.index | modulo: 2 %}
+                  {% if mod2 == 0 %}
+                    <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Sepet Ürünü" class="item-img" width="100" height="100" loading="lazy">
+                  {% else %}
+                    <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Sepet Ürünü" class="item-img" width="100" height="100" loading="lazy">
+                  {% endif %}
+                {% endif %}
+              </div>
+
+              <div class="item-details-box">
+                <h3 class="item-title">
+                  <a href="{{ prod.url | default: '#' }}">
+                    {% if block.settings.title != blank %}{{ block.settings.title }}{% else %}{{ prod.title | default: "Lumière Radiance Serum 30ml" }}{% endif %}
+                  </a>
+                </h3>
+
+                {% if block.settings.meta_text != blank %}
+                  <div class="item-meta">{{ block.settings.meta_text }}</div>
+                {% endif %}
+
+                <div class="item-bottom-row">
+                  <div class="item-qty-selector">
+                    <button type="button" class="qty-btn qty-minus">-</button>
+                    <input type="text" value="{{ block.settings.quantity | default: 1 }}" readonly class="qty-val">
+                    <button type="button" class="qty-btn qty-plus">+</button>
+                  </div>
+
+                  <div class="item-price-box">
+                    <span class="item-price-main">
+                      {% if prod != blank %}{{ prod.price | money }}{% else %}{{ block.settings.price | default: "₺450,00" }}{% endif %}
+                    </span>
+                    {% if block.settings.compare_price != blank %}
+                      <span class="item-price-compare">{{ block.settings.compare_price }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <button type="button" class="item-remove-btn" title="Ürünü Kaldır">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+
+            </div>
+          {% endfor %}
+        {% else %}
+          {% comment %} Real Liquid Cart Items Fallback {% endcomment %}
+          {% if cart.item_count > 0 %}
+            {% for item in cart.items %}
+              <div class="cart-page-item-card" {{ section.shopify_attributes }}>
+                <div class="item-img-box">
+                  {% if item.image %}
+                    {{ item.image | image_url: width: 200 | image_tag: class: 'item-img', loading: 'lazy' }}
+                  {% else %}
+                    <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ item.product.title }}" class="item-img" width="100" height="100">
+                  {% endif %}
+                </div>
+
+                <div class="item-details-box">
+                  <h3 class="item-title"><a href="{{ item.url }}">{{ item.product.title }}</a></h3>
+                  <div class="item-bottom-row">
+                    <div class="item-qty-selector">
+                      <button type="button" class="qty-btn qty-minus">-</button>
+                      <input type="text" value="{{ item.quantity }}" readonly class="qty-val">
+                      <button type="button" class="qty-btn qty-plus">+</button>
+                    </div>
+                    <span class="item-price-main">{{ item.final_line_price | money }}</span>
+                  </div>
+                </div>
+
+                <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0" class="item-remove-btn" title="Kaldır">✕</a>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="cart-empty-state">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              <h3>Sepetiniz Henüz Boş</h3>
+              <p>Özel gençlik ve nemlendirici bakım ürünlerimizi keşfedin.</p>
+              <a href="{{ routes.all_products_collection_url }}" class="empty-shop-now-btn">Alışverişe Başla</a>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <!-- Right Column: Summary Box & Guarantee Badges -->
+      <div class="cart-summary-column">
+        
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'summary_block' %}
+              <div class="cart-summary-card" style="
+                --card-bg: {{ block.settings.card_bg_color | default: 'rgba(255, 255, 255, 0.04)' }};
+                --card-border: {{ block.settings.card_border_color | default: 'rgba(255, 255, 255, 0.12)' }};
+                --card-radius: {{ block.settings.card_border_radius | default: 24 }}px;
+                --btn-bg: {{ block.settings.btn_bg | default: 'linear-gradient(135deg, #c25b82 0%, #a24367 100%)' }};
+              " {{ block.shopify_attributes }}>
+                
+                <h3 class="summary-card-title">{{ block.settings.title | default: "Sipariş Özeti" }}</h3>
+                
+                <div class="summary-row">
+                  <span>{{ block.settings.subtotal_label | default: "Ara Toplam" }}</span>
+                  <span class="summary-price">₺970,00</span>
+                </div>
+
+                <div class="summary-row">
+                  <span>{{ block.settings.shipping_label | default: "Tahmini Kargo" }}</span>
+                  <span class="summary-free-tag">ÜCRETSİZ</span>
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-row total-row">
+                  <span>{{ block.settings.total_label | default: "Genel Toplam" }}</span>
+                  <span class="summary-total-price">₺970,00</span>
+                </div>
+
+                {% form 'cart', cart, class: 'cart-checkout-form' %}
+                  <button type="submit" name="checkout" class="cart-page-checkout-btn">
+                    <span>{{ block.settings.btn_text | default: "Siparişi Tamamla (Güvenli Ödeme)" }}</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12" 5 19 12 12 19"/></svg>
+                  </button>
+                {% endform %}
+
+              </div>
+
+            {% when 'guarantee_badges' %}
+              <div class="cart-guarantee-card" {{ block.shopify_attributes }}>
+                <div class="guarantee-item">
+                  <span class="guarantee-icon">🔒</span>
+                  <span>{{ block.settings.badge_1 | default: "256-Bit SSL Güvenli Şifreleme" }}</span>
+                </div>
+                <div class="guarantee-item">
+                  <span class="guarantee-icon">⚡</span>
+                  <span>{{ block.settings.badge_2 | default: "Aynı Gün Hızlı Kargo Teslimatı" }}</span>
+                </div>
+                <div class="guarantee-item">
+                  <span class="guarantee-icon">💯</span>
+                  <span>{{ block.settings.badge_3 | default: "%100 Orijinal Ürün Garantisi" }}</span>
+                </div>
+                <div class="guarantee-item">
+                  <span class="guarantee-icon">↺</span>
+                  <span>{{ block.settings.badge_4 | default: "14 Gün Koşulsuz Ücretsiz İade" }}</span>
+                </div>
+              </div>
+          {% endcase %}
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% stylesheet %}
+  .cart-page-section {
+    position: relative;
+    width: 100%;
+    background: #0b080c;
+    padding-top: var(--padding-top, 50px);
+    padding-bottom: var(--padding-bottom, 80px);
+  }
+
+  .cart-page-container {
+    max-width: var(--max-width, 1200px);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .cart-page-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .cart-page-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: rgba(194, 91, 130, 0.2);
+    border: 1px solid #f7cad0;
+    color: #f7cad0;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .cart-page-title {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--title-color, #ffffff);
+    margin: 0 0 10px 0;
+  }
+
+  .cart-page-subtitle {
+    font-size: 0.95rem;
+    color: var(--subtitle-color, rgba(255, 255, 255, 0.7));
+    margin: 0;
+  }
+
+  .cart-free-shipping-card {
+    background: var(--bg-color, rgba(194, 91, 130, 0.12));
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+    border-radius: 16px;
+    padding: 14px 20px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .free-shipping-msg {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #f7cad0;
+    margin: 0 0 8px 0;
+  }
+
+  .shipping-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .shipping-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #c25b82, #f7cad0);
+  }
+
+  .cart-layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .cart-items-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .cart-page-item-card {
+    position: relative;
+    background: var(--card-bg, rgba(255, 255, 255, 0.04));
+    border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12));
+    backdrop-filter: blur(var(--card-blur, 16px));
+    border-radius: var(--card-radius, 20px);
+    padding: 18px 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .cart-page-item-card:hover {
+    border-color: rgba(247, 202, 208, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .item-img-box {
+    width: 90px;
+    height: 90px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+  }
+
+  .item-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .item-details-box {
+    flex: 1;
+  }
+
+  .item-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+  }
+
+  .item-title a {
+    color: var(--title-color, #ffffff);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .item-title a:hover {
+    color: #f7cad0;
+  }
+
+  .item-meta {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 12px;
+  }
+
+  .item-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .item-qty-selector {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 2px;
+  }
+
+  .qty-btn {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .qty-val {
+    width: 32px;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    text-align: center;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  .item-price-main {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--price-color, #f7cad0);
+  }
+
+  .item-price-compare {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.45);
+    text-decoration: line-through;
+    margin-left: 6px;
+  }
+
+  .item-remove-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+
+  .item-remove-btn:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+  }
+
+  .cart-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+  }
+
+  .cart-empty-state h3 {
+    color: #ffffff;
+    font-size: 1.3rem;
+    margin: 16px 0 8px 0;
+  }
+
+  .cart-empty-state p {
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 20px 0;
+  }
+
+  .empty-shop-now-btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #c25b82 0%, #a24367 100%);
+    color: #ffffff;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(194, 91, 130, 0.35);
+  }
+
+  /* Summary Column */
+  .cart-summary-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .cart-summary-card {
+    background: var(--card-bg, rgba(255, 255, 255, 0.04));
+    border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12));
+    backdrop-filter: blur(16px);
+    border-radius: var(--card-radius, 24px);
+    padding: 24px;
+  }
+
+  .summary-card-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 20px 0;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 12px;
+  }
+
+  .summary-price {
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  .summary-free-tag {
+    color: #4ade80;
+    font-weight: 800;
+    font-size: 0.8rem;
+  }
+
+  .summary-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 16px 0;
+  }
+
+  .summary-row.total-row {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  .summary-total-price {
+    color: #f7cad0;
+    font-size: 1.3rem;
+  }
+
+  .cart-page-checkout-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    background: var(--btn-bg, linear-gradient(135deg, #c25b82 0%, #a24367 100%));
+    color: #ffffff;
+    border: none;
+    font-size: 0.92rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    box-shadow: 0 10px 30px rgba(194, 91, 130, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .cart-page-checkout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px rgba(194, 91, 130, 0.55);
+  }
+
+  .cart-guarantee-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .guarantee-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+  }
+
+  .guarantee-icon {
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 900px) {
+    .cart-layout-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.cart",
-  "settings": []
+  "name": "Sepet Sayfası İçeriği",
+  "settings": [
+    {
+      "type": "header",
+      "content": "📐 Izgara & Mizanpaj Ayarları"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maksimum Konteyner Genişliği",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Üst İç Boşluk (Padding Top)",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Alt İç Boşluk (Padding Bottom)",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "header_block",
+      "name": "🏷️ Sayfa Başlığı Bloğu",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Üst Rozet Metni",
+          "default": "✦ SEPET DETAYLARI"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Ana Başlık",
+          "default": "Alışveriş Sepetiniz"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Başlık Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Alt Başlık Metni",
+          "default": "Seçtiğiniz lüks bakım ürünlerini gözden geçirin ve siparişinizi tamamlayın."
+        },
+        {
+          "type": "color",
+          "id": "subtitle_color",
+          "label": "Alt Başlık Rengi",
+          "default": "rgba(255, 255, 255, 0.7)"
+        }
+      ]
+    },
+    {
+      "type": "free_shipping_block",
+      "name": "🚚 Ücretsiz Kargo Barı",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Kargo Metni",
+          "default": "₺500 üzeri alışverişlerde Kargo Bedava!"
+        },
+        {
+          "type": "color",
+          "id": "bar_bg",
+          "label": "Kart Arka Plan Rengi",
+          "default": "rgba(194, 91, 130, 0.12)"
+        },
+        {
+          "type": "color",
+          "id": "bar_border",
+          "label": "Kart Kenarlık Rengi",
+          "default": "rgba(255, 255, 255, 0.12)"
+        }
+      ]
+    },
+    {
+      "type": "cart_item_card",
+      "name": "🛍️ Ürün Kartı Bloğu",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Mağaza Ürünü Bağla"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Özel Görsel Yükle"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Ürün Adı",
+          "default": "Lumière Radiance Serum 30ml"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Ürün Adı Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "text",
+          "id": "meta_text",
+          "label": "Alt Özellik Etiketi",
+          "default": "%2 Saf Hyalüronik Asit & Pembe Kuvars"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Fiyat Metni",
+          "default": "₺450,00"
+        },
+        {
+          "type": "color",
+          "id": "price_color",
+          "label": "Fiyat Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "text",
+          "id": "compare_price",
+          "label": "Karşılaştırma Fiyatı",
+          "default": "₺650,00"
+        },
+        {
+          "type": "number",
+          "id": "quantity",
+          "label": "Varsayılan Adet",
+          "default": 1
+        },
+        {
+          "type": "header",
+          "content": "🔲 Cam Kart (Glassmorphism) Stili"
+        },
+        {
+          "type": "color",
+          "id": "card_bg_color",
+          "label": "Kart Arka Plan Rengi",
+          "default": "rgba(255, 255, 255, 0.04)"
+        },
+        {
+          "type": "color",
+          "id": "card_border_color",
+          "label": "Kart Kenarlık Rengi",
+          "default": "rgba(255, 255, 255, 0.12)"
+        },
+        {
+          "type": "range",
+          "id": "card_border_radius",
+          "label": "Köşe Yuvarlama (Radius)",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "card_blur",
+          "label": "Cam Bulanıklık Efekti (Blur)",
+          "min": 0,
+          "max": 30,
+          "step": 2,
+          "unit": "px",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "summary_block",
+      "name": "💳 Sipariş Özeti & Ödeme",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Kutu Başlığı",
+          "default": "Sipariş Özeti"
+        },
+        {
+          "type": "text",
+          "id": "subtotal_label",
+          "label": "Ara Toplam Etiketi",
+          "default": "Ara Toplam"
+        },
+        {
+          "type": "text",
+          "id": "shipping_label",
+          "label": "Kargo Ücreti Etiketi",
+          "default": "Tahmini Kargo"
+        },
+        {
+          "type": "text",
+          "id": "total_label",
+          "label": "Genel Toplam Etiketi",
+          "default": "Genel Toplam"
+        },
+        {
+          "type": "text",
+          "id": "btn_text",
+          "label": "Ödeme Buton Metni",
+          "default": "Siparişi Tamamla (Güvenli Ödeme)"
+        },
+        {
+          "type": "header",
+          "content": "🔲 Kutu Cam Stili"
+        },
+        {
+          "type": "color",
+          "id": "card_bg_color",
+          "label": "Kutu Arka Plan Rengi",
+          "default": "rgba(255, 255, 255, 0.04)"
+        },
+        {
+          "type": "color",
+          "id": "card_border_color",
+          "label": "Kutu Kenarlık Rengi",
+          "default": "rgba(255, 255, 255, 0.12)"
+        },
+        {
+          "type": "range",
+          "id": "card_border_radius",
+          "label": "Köşe Yuvarlama (Radius)",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "default": 24
+        }
+      ]
+    },
+    {
+      "type": "guarantee_badges",
+      "name": "🛡️ Güvenlik Rozetleri",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "badge_1",
+          "label": "Rozet 1",
+          "default": "🔒 256-Bit SSL Güvenli Şifreleme"
+        },
+        {
+          "type": "text",
+          "id": "badge_2",
+          "label": "Rozet 2",
+          "default": "⚡ Aynı Gün Hızlı Kargo Teslimatı"
+        },
+        {
+          "type": "text",
+          "id": "badge_3",
+          "label": "Rozet 3",
+          "default": "💯 %100 Orijinal Ürün Garantisi"
+        },
+        {
+          "type": "text",
+          "id": "badge_4",
+          "label": "Rozet 4",
+          "default": "↺ 14 Gün Koşulsuz Ücretsiz İade"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sepet Sayfası İçeriği"
+    }
+  ]
 }
 {% endschema %}

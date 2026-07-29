@@ -1,6 +1,5 @@
 {% comment %}
-  Modular Collection Product Grid Section (Category Filtering & Grid Mode Switcher Ready)
-  Renders product cards as independent, customizable Section Blocks (`product_card`).
+  Modular Collection Product Grid Section (Realtime Sorting & Category Filtering Ready)
 {% endcomment %}
 
 <div class="collection-product-grid-section full-width" style="
@@ -18,23 +17,37 @@
       {% if card_blocks.size > 0 %}
         {% for block in card_blocks %}
           {% assign prod = block.settings.product %}
-          <div class="haute-product-card" data-category="{{ block.settings.category | default: 'all' }}" style="
-            --item-card-bg: {{ block.settings.card_bg_color }};
-            --item-card-border: {{ block.settings.card_border_color }};
-            --item-card-radius: {{ block.settings.card_border_radius }}px;
-            --item-card-blur: {{ block.settings.card_blur }}px;
-            --item-card-padding: {{ block.settings.card_padding }}px;
-            --card-badge-start: {{ block.settings.badge_bg_start }};
-            --card-badge-end: {{ block.settings.badge_bg_end }};
-            --card-badge-text: {{ block.settings.badge_text_color }};
-            --card-title-color: {{ block.settings.title_color }};
-            --card-desc-color: {{ block.settings.desc_color }};
-            --card-price-color: {{ block.settings.price_color }};
-            --card-compare-color: {{ block.settings.compare_price_color }};
-            --card-qadd-bg: {{ block.settings.quick_add_bg }};
-            --card-qadd-text: {{ block.settings.quick_add_text_color }};
-            --card-qadd-border: {{ block.settings.quick_add_border }};
-          " {{ block.shopify_attributes }}>
+          {% if prod != blank %}
+            {% assign raw_price = prod.price | divided_by: 100.0 %}
+            {% assign card_title = prod.title %}
+          {% else %}
+            {% assign price_str = block.settings.price | default: '0' %}
+            {% assign raw_price = price_str | remove: '₺' | remove: '.' | replace: ',', '.' | plus: 0 %}
+            {% assign card_title = block.settings.title %}
+          {% endif %}
+
+          <div class="haute-product-card"
+            data-category="{{ block.settings.category | default: 'all' }}"
+            data-price="{{ raw_price }}"
+            data-index="{{ forloop.index }}"
+            data-title="{{ card_title | escape }}"
+            style="
+              --item-card-bg: {{ block.settings.card_bg_color }};
+              --item-card-border: {{ block.settings.card_border_color }};
+              --item-card-radius: {{ block.settings.card_border_radius }}px;
+              --item-card-blur: {{ block.settings.card_blur }}px;
+              --item-card-padding: {{ block.settings.card_padding }}px;
+              --card-badge-start: {{ block.settings.badge_bg_start }};
+              --card-badge-end: {{ block.settings.badge_bg_end }};
+              --card-badge-text: {{ block.settings.badge_text_color }};
+              --card-title-color: {{ block.settings.title_color }};
+              --card-desc-color: {{ block.settings.desc_color }};
+              --card-price-color: {{ block.settings.price_color }};
+              --card-compare-color: {{ block.settings.compare_price_color }};
+              --card-qadd-bg: {{ block.settings.quick_add_bg }};
+              --card-qadd-text: {{ block.settings.quick_add_text_color }};
+              --card-qadd-border: {{ block.settings.quick_add_border }};
+            " {{ block.shopify_attributes }}>
             <div class="card-image-wrapper">
               <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
                 {% if block.settings.image != blank %}
@@ -92,7 +105,13 @@
         {% paginate collection.products by section.settings.products_per_page %}
           {% if collection.products.size > 0 %}
             {% for product in collection.products %}
-              <div class="haute-product-card" data-category="all" {{ section.shopify_attributes }}>
+              {% assign raw_price = product.price | divided_by: 100.0 %}
+              <div class="haute-product-card"
+                data-category="all"
+                data-price="{{ raw_price }}"
+                data-index="{{ forloop.index }}"
+                data-title="{{ product.title | escape }}"
+                {{ section.shopify_attributes }}>
                 <div class="card-image-wrapper">
                   <a href="{{ product.url }}">
                     {% if product.featured_image %}

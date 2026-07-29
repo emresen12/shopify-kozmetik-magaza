@@ -1,7 +1,6 @@
 {% comment %}
   Modular Collection Filter & Sort Bar Section
-  Includes independent Theme Blocks for Category Pills, Grid View Switcher (2'li, 3'lü, 4'lü), and Sort Box.
-  All elements appear in Shopify Theme Editor tree as customizable Theme Blocks!
+  Includes independent Theme Blocks for Category Pills, Grid View Switcher (2'li, 3'lü, 4'lü), and Sort Box with Realtime Sorting.
 {% endcomment %}
 
 <div class="collection-filter-bar-section full-width" style="
@@ -130,6 +129,38 @@
         if (productGrid) {
           productGrid.style.setProperty('--grid-columns-desktop', cols);
         }
+      });
+    });
+
+    // 3. Realtime Sorting Interaction
+    const sortSelects = document.querySelectorAll('.dark-sort-select');
+    sortSelects.forEach(sortSelect => {
+      sortSelect.addEventListener('change', function() {
+        const value = this.value;
+        const grid = document.querySelector('.collection-products-grid');
+        if (!grid) return;
+
+        const cardsArray = Array.from(grid.querySelectorAll('.haute-product-card'));
+
+        cardsArray.sort((a, b) => {
+          const priceA = parseFloat(a.getAttribute('data-price')) || 0;
+          const priceB = parseFloat(b.getAttribute('data-price')) || 0;
+          const indexA = parseInt(a.getAttribute('data-index')) || 0;
+          const indexB = parseInt(b.getAttribute('data-index')) || 0;
+
+          if (value === 'price-ascending') {
+            return priceA - priceB;
+          } else if (value === 'price-descending') {
+            return priceB - priceA;
+          } else if (value === 'created-descending') {
+            return indexB - indexA;
+          } else {
+            // manual / featured
+            return indexA - indexB;
+          }
+        });
+
+        cardsArray.forEach(card => grid.appendChild(card));
       });
     });
   });
