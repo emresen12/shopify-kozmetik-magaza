@@ -90,76 +90,196 @@
 </header>
 
 <!-- ==========================================
-     SIDE AUTH DRAWER (Giriş Yap / Kayıt Ol)
+     SIDE AUTH DRAWER (Giriş Yap / Kayıt Ol Yan Açılır Penceresi)
 ========================================== -->
 <div class="side-drawer" id="authDrawer" aria-hidden="true">
   <div class="side-drawer__backdrop" data-close-drawer></div>
   <div class="side-drawer__panel">
     
-    <div class="side-drawer__header">
-      <h3 class="drawer-title">Hesap İşlemleri</h3>
-      <button type="button" class="side-drawer__close" data-close-drawer aria-label="Kapat">✕</button>
-    </div>
+    {% assign b_a_head = section.blocks | where: "type", "drawer_auth_header" %}
+    {% assign b_a_welc = section.blocks | where: "type", "drawer_auth_welcome" %}
+    {% assign b_a_tabs = section.blocks | where: "type", "drawer_auth_tabs" %}
+    {% assign b_a_log  = section.blocks | where: "type", "drawer_auth_login" %}
+    {% assign b_a_reg  = section.blocks | where: "type", "drawer_auth_register" %}
+    {% assign b_a_demo = section.blocks | where: "type", "drawer_auth_demo" %}
+    {% assign b_a_trst = section.blocks | where: "type", "drawer_auth_trust" %}
+    {% assign auth_blocks_size = b_a_head.size | plus: b_a_welc.size | plus: b_a_tabs.size | plus: b_a_log.size | plus: b_a_reg.size | plus: b_a_demo.size | plus: b_a_trst.size %}
 
-    <div class="auth-tabs">
-      <button type="button" class="auth-tab-btn active" data-tab="loginTab">Giriş Yap</button>
-      <button type="button" class="auth-tab-btn" data-tab="registerTab">Kayıt Ol</button>
-    </div>
+    {% if auth_blocks_size > 0 %}
+      {% for block in section.blocks %}
+        {% case block.type %}
 
-    <div class="side-drawer__body">
-      
-      <!-- LOGIN TAB CONTENT -->
-      <div class="auth-tab-content active" id="loginTab">
-        {% form 'customer_login', class: 'auth-form' %}
-          <div class="form-group">
-            <label for="CustomerEmail">E-Posta Adresi</label>
-            <input type="email" name="customer[email]" id="CustomerEmail" placeholder="ornek@email.com" required>
-          </div>
-          <div class="form-group">
-            <label for="CustomerPassword">Şifre</label>
-            <input type="password" name="customer[password]" id="CustomerPassword" placeholder="••••••••" required>
-          </div>
-          <div class="auth-forgot-row">
-            <a href="#recover" class="forgot-link">Şifremi Unuttum</a>
-          </div>
-          <button type="submit" class="auth-submit-btn">Giriş Yap</button>
-        {% endform %}
+          {% when 'drawer_auth_header' %}
+            <div class="side-drawer__header" {{ block.shopify_attributes }}>
+              <h3 class="drawer-title" style="color: {{ block.settings.title_color | default: '#ffffff' }};">
+                <span>{{ block.settings.title | default: "Hesap İşlemleri" }}</span>
+              </h3>
+              <button type="button" class="side-drawer__close" data-close-drawer aria-label="Kapat">✕</button>
+            </div>
+
+          {% when 'drawer_auth_welcome' %}
+            <div class="drawer-auth-welcome-block" style="
+              background: {{ block.settings.bg_color | default: '#1a0d18' }};
+              border: 1px solid {{ block.settings.border_color | default: '#3d1f35' }};
+            " {{ block.shopify_attributes }}>
+              <span class="auth-welcome-icon">{{ block.settings.icon | default: "💎" }}</span>
+              <p class="auth-welcome-text" style="color: {{ block.settings.text_color | default: '#f7cad0' }};">
+                {{ block.settings.text | default: "Üye olun, ilk alışverişinizde %10 indirim ve 500 Hoş Geldin Puanı kazanın!" }}
+              </p>
+            </div>
+
+          {% when 'drawer_auth_tabs' %}
+            <div class="auth-tabs" {{ block.shopify_attributes }}>
+              <button type="button" class="auth-tab-btn active" data-tab="loginTab">{{ block.settings.tab_1_label | default: "Giriş Yap" }}</button>
+              <button type="button" class="auth-tab-btn" data-tab="registerTab">{{ block.settings.tab_2_label | default: "Kayıt Ol" }}</button>
+            </div>
+
+          {% when 'drawer_auth_login' %}
+            <div class="side-drawer__body auth-drawer-body-login" {{ block.shopify_attributes }}>
+              <div class="auth-tab-content active" id="loginTab">
+                {% form 'customer_login', class: 'auth-form' %}
+                  <div class="form-group">
+                    <label for="CustomerEmail">{{ block.settings.email_label | default: "E-Posta Adresi" }}</label>
+                    <input type="email" name="customer[email]" id="CustomerEmail" placeholder="{{ block.settings.email_placeholder | default: 'ornek@email.com' }}" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="CustomerPassword">{{ block.settings.password_label | default: "Şifre" }}</label>
+                    <input type="password" name="customer[password]" id="CustomerPassword" placeholder="••••••••" required>
+                  </div>
+                  <div class="auth-forgot-row">
+                    <a href="#recover" class="forgot-link">{{ block.settings.forgot_text | default: "Şifremi Unuttum" }}</a>
+                  </div>
+                  <button type="submit" class="auth-submit-btn" style="
+                    background: linear-gradient(135deg, {{ block.settings.bg_gradient_start | default: '#c25b82' }} 0%, {{ block.settings.bg_gradient_end | default: '#a24367' }} 100%);
+                    color: {{ block.settings.text_color | default: '#ffffff' }};
+                  ">
+                    {{ block.settings.submit_text | default: "Giriş Yap" }}
+                  </button>
+                {% endform %}
+              </div>
+            </div>
+
+          {% when 'drawer_auth_register' %}
+            <div class="side-drawer__body auth-drawer-body-register" {{ block.shopify_attributes }}>
+              <div class="auth-tab-content" id="registerTab">
+                {% form 'create_customer', class: 'auth-form' %}
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="FirstName">{{ block.settings.first_name_label | default: "Adınız" }}</label>
+                      <input type="text" name="customer[first_name]" id="FirstName" placeholder="{{ block.settings.first_name_label | default: 'Adınız' }}" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="LastName">{{ block.settings.last_name_label | default: "Soyadınız" }}</label>
+                      <input type="text" name="customer[last_name]" id="LastName" placeholder="{{ block.settings.last_name_label | default: 'Soyadınız' }}" required>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="RegisterEmail">{{ block.settings.email_label | default: "E-Posta Adresi" }}</label>
+                    <input type="email" name="customer[email]" id="RegisterEmail" placeholder="ornek@email.com" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="RegisterPassword">{{ block.settings.password_label | default: "Şifre Oluşturun" }}</label>
+                    <input type="password" name="customer[password]" id="RegisterPassword" placeholder="En az 6 karakter" required>
+                  </div>
+                  <label class="terms-check">
+                    <input type="checkbox" required> {{ block.settings.terms_text | default: "Üyelik sözleşmesini kabul ediyorum." }}
+                  </label>
+                  <button type="submit" class="auth-submit-btn" style="
+                    background: linear-gradient(135deg, {{ block.settings.bg_gradient_start | default: '#c25b82' }} 0%, {{ block.settings.bg_gradient_end | default: '#a24367' }} 100%);
+                    color: {{ block.settings.text_color | default: '#ffffff' }};
+                  ">
+                    {{ block.settings.submit_text | default: "Kayıt Ol" }}
+                  </button>
+                {% endform %}
+              </div>
+            </div>
+
+          {% when 'drawer_auth_demo' %}
+            <div class="demo-login-box" style="background: {{ block.settings.bg_color | default: '#151019' }};" {{ block.shopify_attributes }}>
+              <p class="demo-login-text">{{ block.settings.title | default: "💡 Hızlı Deneme İçin:" }}</p>
+              <button type="button" class="demo-login-btn">{{ block.settings.button_text | default: "Demo Üye Bilgilerini Doldur" }}</button>
+            </div>
+
+          {% when 'drawer_auth_trust' %}
+            <div class="drawer-trust-badges-block" style="background: {{ block.settings.bg_color | default: '#120d15' }};" {{ block.shopify_attributes }}>
+              <div class="trust-badge-item">🔒 <span>{{ block.settings.badge_1 | default: "256-Bit SSL Koruma" }}</span></div>
+              <div class="trust-badge-item">💎 <span>{{ block.settings.badge_2 | default: "VIP Ayrıcalıklar" }}</span></div>
+              <div class="trust-badge-item">⚡ <span>{{ block.settings.badge_3 | default: "Hızlı Üyelik" }}</span></div>
+            </div>
+
+        {% endcase %}
+      {% endfor %}
+
+    {% else %}
+
+      <!-- DEFAULT FALLBACK AUTH DRAWER -->
+      <div class="side-drawer__header">
+        <h3 class="drawer-title">Hesap İşlemleri</h3>
+        <button type="button" class="side-drawer__close" data-close-drawer aria-label="Kapat">✕</button>
+      </div>
+
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab-btn active" data-tab="loginTab">Giriş Yap</button>
+        <button type="button" class="auth-tab-btn" data-tab="registerTab">Kayıt Ol</button>
+      </div>
+
+      <div class="side-drawer__body">
         
-        <div class="demo-login-box">
-          <p class="demo-login-text">💡 Hızlı Deneme İçin:</p>
-          <button type="button" class="demo-login-btn">Demo Üye Bilgilerini Doldur</button>
+        <!-- LOGIN TAB CONTENT -->
+        <div class="auth-tab-content active" id="loginTab">
+          {% form 'customer_login', class: 'auth-form' %}
+            <div class="form-group">
+              <label for="CustomerEmail">E-Posta Adresi</label>
+              <input type="email" name="customer[email]" id="CustomerEmail" placeholder="ornek@email.com" required>
+            </div>
+            <div class="form-group">
+              <label for="CustomerPassword">Şifre</label>
+              <input type="password" name="customer[password]" id="CustomerPassword" placeholder="••••••••" required>
+            </div>
+            <div class="auth-forgot-row">
+              <a href="#recover" class="forgot-link">Şifremi Unuttum</a>
+            </div>
+            <button type="submit" class="auth-submit-btn">Giriş Yap</button>
+          {% endform %}
+          
+          <div class="demo-login-box">
+            <p class="demo-login-text">💡 Hızlı Deneme İçin:</p>
+            <button type="button" class="demo-login-btn">Demo Üye Bilgilerini Doldur</button>
+          </div>
         </div>
-      </div>
 
-      <!-- REGISTER TAB CONTENT -->
-      <div class="auth-tab-content" id="registerTab">
-        {% form 'create_customer', class: 'auth-form' %}
-          <div class="form-row">
-            <div class="form-group">
-              <label for="FirstName">Adınız</label>
-              <input type="text" name="customer[first_name]" id="FirstName" placeholder="Adınız" required>
+        <!-- REGISTER TAB CONTENT -->
+        <div class="auth-tab-content" id="registerTab">
+          {% form 'create_customer', class: 'auth-form' %}
+            <div class="form-row">
+              <div class="form-group">
+                <label for="FirstName">Adınız</label>
+                <input type="text" name="customer[first_name]" id="FirstName" placeholder="Adınız" required>
+              </div>
+              <div class="form-group">
+                <label for="LastName">Soyadınız</label>
+                <input type="text" name="customer[last_name]" id="LastName" placeholder="Soyadınız" required>
+              </div>
             </div>
             <div class="form-group">
-              <label for="LastName">Soyadınız</label>
-              <input type="text" name="customer[last_name]" id="LastName" placeholder="Soyadınız" required>
+              <label for="RegisterEmail">E-Posta Adresi</label>
+              <input type="email" name="customer[email]" id="RegisterEmail" placeholder="ornek@email.com" required>
             </div>
-          </div>
-          <div class="form-group">
-            <label for="RegisterEmail">E-Posta Adresi</label>
-            <input type="email" name="customer[email]" id="RegisterEmail" placeholder="ornek@email.com" required>
-          </div>
-          <div class="form-group">
-            <label for="RegisterPassword">Şifre Oluşturun</label>
-            <input type="password" name="customer[password]" id="RegisterPassword" placeholder="En az 6 karakter" required>
-          </div>
-          <label class="terms-check">
-            <input type="checkbox" required> Üyelik sözleşmesini kabul ediyorum.
-          </label>
-          <button type="submit" class="auth-submit-btn">Kayıt Ol</button>
-        {% endform %}
+            <div class="form-group">
+              <label for="RegisterPassword">Şifre Oluşturun</label>
+              <input type="password" name="customer[password]" id="RegisterPassword" placeholder="En az 6 karakter" required>
+            </div>
+            <label class="terms-check">
+              <input type="checkbox" required> Üyelik sözleşmesini kabul ediyorum.
+            </label>
+            <button type="submit" class="auth-submit-btn">Kayıt Ol</button>
+          {% endform %}
+        </div>
+
       </div>
 
-    </div>
+    {% endif %}
+
   </div>
 </div>
 
@@ -965,6 +1085,23 @@
     font-size: 0.8rem;
   }
 
+  .drawer-auth-welcome-block {
+    margin: 12px 24px 0 24px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.82rem;
+  }
+  .auth-welcome-icon {
+    font-size: 1.3rem;
+  }
+  .auth-welcome-text {
+    margin: 0;
+    line-height: 1.4;
+  }
+
   .drawer-checkout-block-wrapper, .drawer-view-cart-block-wrapper {
     padding: 0 24px 10px 24px;
   }
@@ -1514,8 +1651,83 @@
         { "type": "text", "id": "icon", "label": "İkon", "default": "🎁" },
         { "type": "textarea", "id": "text", "label": "Kampanya Cümlesi", "default": "₺750 üzeri alışverişlerde Nemlendirici Gece Maskesi Hediye!" },
         { "type": "color", "id": "text_color", "label": "Metin Rengi", "default": "#f7cad0" },
-        { "type": "color", "id": "bg_color", "label": "Arka Plan Rengi", "default": "rgba(194, 91, 130, 0.15)" },
-        { "type": "color", "id": "border_color", "label": "Kenarlık Rengi", "default": "rgba(247, 202, 208, 0.3)" }
+        { "type": "color", "id": "bg_color", "label": "Arka Plan Rengi", "default": "#1a0d18" },
+        { "type": "color", "id": "border_color", "label": "Kenarlık Rengi", "default": "#3d1f35" }
+      ]
+    },
+    {
+      "type": "drawer_auth_header",
+      "name": "🔑 Hesap Başlık Kutusu",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Başlık Metni", "default": "Hesap İşlemleri" },
+        { "type": "color", "id": "title_color", "label": "Metin Rengi", "default": "#ffffff" }
+      ]
+    },
+    {
+      "type": "drawer_auth_welcome",
+      "name": "✨ Hoş Geldin Kampanyası",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "İkon / Emoji", "default": "💎" },
+        { "type": "textarea", "id": "text", "label": "Kampanya Cümlesi", "default": "Üye olun, ilk alışverişinizde %10 indirim ve 500 Hoş Geldin Puanı kazanın!" },
+        { "type": "color", "id": "text_color", "label": "Metin Rengi", "default": "#f7cad0" },
+        { "type": "color", "id": "bg_color", "label": "Arka Plan Rengi", "default": "#1a0d18" },
+        { "type": "color", "id": "border_color", "label": "Kenarlık Rengi", "default": "#3d1f35" }
+      ]
+    },
+    {
+      "type": "drawer_auth_tabs",
+      "name": "🔀 Giriş & Kayıt Sekmesi",
+      "settings": [
+        { "type": "text", "id": "tab_1_label", "label": "1. Sekme Metni", "default": "Giriş Yap" },
+        { "type": "text", "id": "tab_2_label", "label": "2. Sekme Metni", "default": "Kayıt Ol" }
+      ]
+    },
+    {
+      "type": "drawer_auth_login",
+      "name": "🔓 Giriş Form Kutusu",
+      "settings": [
+        { "type": "text", "id": "email_label", "label": "E-Posta Etiketi", "default": "E-Posta Adresi" },
+        { "type": "text", "id": "email_placeholder", "label": "E-Posta İpucu", "default": "ornek@email.com" },
+        { "type": "text", "id": "password_label", "label": "Şifre Etiketi", "default": "Şifre" },
+        { "type": "text", "id": "forgot_text", "label": "Şifremi Unuttum Metni", "default": "Şifremi Unuttum" },
+        { "type": "text", "id": "submit_text", "label": "Buton Metni", "default": "Giriş Yap" },
+        { "type": "color", "id": "bg_gradient_start", "label": "Gradient Başlangıç", "default": "#c25b82" },
+        { "type": "color", "id": "bg_gradient_end", "label": "Gradient Bitiş", "default": "#a24367" },
+        { "type": "color", "id": "text_color", "label": "Buton Metin Rengi", "default": "#ffffff" }
+      ]
+    },
+    {
+      "type": "drawer_auth_register",
+      "name": "✍️ Kayıt Form Kutusu",
+      "settings": [
+        { "type": "text", "id": "first_name_label", "label": "Ad Etiketi", "default": "Adınız" },
+        { "type": "text", "id": "last_name_label", "label": "Soyad Etiketi", "default": "Soyadınız" },
+        { "type": "text", "id": "email_label", "label": "E-Posta Etiketi", "default": "E-Posta Adresi" },
+        { "type": "text", "id": "password_label", "label": "Şifre Etiketi", "default": "Şifre Oluşturun" },
+        { "type": "textarea", "id": "terms_text", "label": "Sözleşme Onay Metni", "default": "Üyelik sözleşmesini kabul ediyorum." },
+        { "type": "text", "id": "submit_text", "label": "Buton Metni", "default": "Kayıt Ol" },
+        { "type": "color", "id": "bg_gradient_start", "label": "Gradient Başlangıç", "default": "#c25b82" },
+        { "type": "color", "id": "bg_gradient_end", "label": "Gradient Bitiş", "default": "#a24367" },
+        { "type": "color", "id": "text_color", "label": "Buton Metin Rengi", "default": "#ffffff" }
+      ]
+    },
+    {
+      "type": "drawer_auth_demo",
+      "name": "💡 Demo Üye Kutusu",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Kutu Başlığı", "default": "💡 Hızlı Deneme İçin:" },
+        { "type": "text", "id": "button_text", "label": "Buton Metni", "default": "Demo Üye Bilgilerini Doldur" },
+        { "type": "color", "id": "bg_color", "label": "Arka Plan Rengi", "default": "#151019" }
+      ]
+    },
+    {
+      "type": "drawer_auth_trust",
+      "name": "🔒 Güvenli Üyelik Rozeti",
+      "settings": [
+        { "type": "text", "id": "badge_1", "label": "1. Rozet", "default": "256-Bit SSL Koruma" },
+        { "type": "text", "id": "badge_2", "label": "2. Rozet", "default": "VIP Ayrıcalıklar" },
+        { "type": "text", "id": "badge_3", "label": "3. Rozet", "default": "Hızlı Üyelik" },
+        { "type": "color", "id": "bg_color", "label": "Arka Plan Rengi", "default": "#120d15" }
       ]
     }
   ]
