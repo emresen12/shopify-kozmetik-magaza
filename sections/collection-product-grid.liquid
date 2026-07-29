@@ -1,7 +1,7 @@
 {% comment %}
-  Modular Collection Product Grid Section (Shared Haute Product Card Block Architecture)
-  Uses the EXACT SAME product_card block structure and styling as the Home Page product grid.
-  Clicking any product card in Shopify Theme Editor selects that card block and opens all its settings in the right panel!
+  Modular Collection Product Grid Section
+  Renders all collection products in a full grid using the exact same Haute Luxury Product Card structure and glassmorphism styling as the Home Page.
+  Fully customizable in Shopify Theme Editor (Grid Columns, Card Glassmorphism, Colors, Badges, Buttons, Typography, Spacing).
 {% endcomment %}
 
 <div class="collection-product-grid-section full-width" style="
@@ -11,137 +11,120 @@
   --max-width: {{ section.settings.max_width }}px;
   --padding-top: {{ section.settings.padding_top }}px;
   --padding-bottom: {{ section.settings.padding_bottom }}px;
+  --item-card-bg: {{ section.settings.card_bg }};
+  --item-card-border: {{ section.settings.card_border_color }};
+  --item-card-radius: {{ section.settings.card_radius }}px;
+  --item-card-blur: {{ section.settings.card_blur }}px;
+  --card-badge-start: {{ section.settings.badge_bg_start | default: '#c25b82' }};
+  --card-badge-end: {{ section.settings.badge_bg_end | default: '#a24367' }};
+  --card-badge-text: {{ section.settings.badge_text_color | default: '#ffffff' }};
+  --card-title-color: {{ section.settings.title_color | default: '#ffffff' }};
+  --card-desc-color: {{ section.settings.desc_color | default: 'rgba(255, 255, 255, 0.65)' }};
+  --card-price-color: {{ section.settings.price_color | default: '#f7cad0' }};
+  --card-compare-color: {{ section.settings.compare_price_color | default: 'rgba(255, 255, 255, 0.45)' }};
+  --card-qadd-bg: {{ section.settings.quick_add_bg | default: 'rgba(194, 91, 130, 0.3)' }};
+  --card-qadd-text: {{ section.settings.quick_add_text_color | default: '#ffffff' }};
+  --card-qadd-border: {{ section.settings.quick_add_border_color | default: '#f7cad0' }};
 ">
   <div class="grid-section-container">
-    <div class="collection-products-grid">
-      {% assign card_blocks = section.blocks | where: "type", "product_card" %}
-
-      {% if card_blocks.size > 0 %}
-        {% for block in card_blocks %}
-          {% assign prod = block.settings.product %}
-          <div class="haute-product-card" style="
-            --item-card-bg: {{ block.settings.card_bg_color }};
-            --item-card-border: {{ block.settings.card_border_color }};
-            --item-card-radius: {{ block.settings.card_border_radius }}px;
-            --item-card-blur: {{ block.settings.card_blur }}px;
-            --item-card-padding: {{ block.settings.card_padding }}px;
-            --card-badge-start: {{ block.settings.badge_bg_start }};
-            --card-badge-end: {{ block.settings.badge_bg_end }};
-            --card-badge-text: {{ block.settings.badge_text_color }};
-            --card-title-color: {{ block.settings.title_color }};
-            --card-desc-color: {{ block.settings.desc_color }};
-            --card-price-color: {{ block.settings.price_color }};
-            --card-compare-color: {{ block.settings.compare_price_color }};
-            --card-qadd-bg: {{ block.settings.quick_add_bg }};
-            --card-qadd-text: {{ block.settings.quick_add_text_color }};
-            --card-qadd-border: {{ block.settings.quick_add_border }};
-          " {{ block.shopify_attributes }}>
-            <div class="card-image-wrapper">
-              <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
-                {% if block.settings.image != blank %}
-                  {{ block.settings.image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
-                {% elsif prod != blank and prod.featured_image %}
-                  {{ prod.featured_image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
-                {% else %}
-                  {% assign mod2 = forloop.index | modulo: 2 %}
-                  {% if mod2 == 0 %}
-                    <img src="{{ 'luxury-cream.jpg' | asset_url }}" class="card-img" alt="Demo Ürün" width="400" height="400" loading="lazy">
+    {% paginate collection.products by section.settings.products_per_page %}
+      <div class="collection-products-grid">
+        {% if collection.products.size > 0 %}
+          {% for product in collection.products %}
+            <div class="haute-product-card" {{ section.shopify_attributes }}>
+              <div class="card-image-wrapper">
+                <a href="{{ product.url }}">
+                  {% if product.featured_image %}
+                    {{ product.featured_image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
                   {% else %}
-                    <img src="{{ 'luxury-serum.jpg' | asset_url }}" class="card-img" alt="Demo Ürün" width="400" height="400" loading="lazy">
+                    <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ product.title }}" class="card-img" width="400" height="400" loading="lazy">
                   {% endif %}
-                {% endif %}
-              </a>
-
-              {% if block.settings.badge_text != blank %}
-                <span class="card-badge">{{ block.settings.badge_text }}</span>
-              {% endif %}
-
-              <button type="button" class="card-wishlist-btn" aria-label="Favorilere Ekle">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-              </button>
-            </div>
-
-            <div class="card-content-wrapper">
-              <div class="card-rating-stars">★★★★★ <span class="rating-val">5.0</span></div>
-
-              <h3 class="card-title">
-                <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
-                  {% if prod != blank %}{{ prod.title }}{% else %}{{ block.settings.title }}{% endif %}
                 </a>
-              </h3>
 
-              <p class="card-desc">
-                {% if prod != blank and prod.description != blank %}{{ prod.description | strip_html | truncate: 75 }}{% else %}{{ block.settings.description }}{% endif %}
-              </p>
+                {% if product.compare_at_price > product.price %}
+                  <span class="card-badge">%25 İNDİRİM</span>
+                {% else %}
+                  <span class="card-badge">✦ SEÇKİN</span>
+                {% endif %}
 
-              <div class="card-price-row">
-                <span class="price-main">
-                  {% if prod != blank %}{{ prod.price | money }}{% else %}{{ block.settings.price }}{% endif %}
-                </span>
-                <span class="price-compare">
-                  {% if prod != blank and prod.compare_at_price %}{{ prod.compare_at_price | money }}{% else %}{{ block.settings.compare_price }}{% endif %}
-                </span>
+                <button type="button" class="card-wishlist-btn" aria-label="Favorilere Ekle">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
               </div>
 
-              <button type="button" class="card-quick-add-btn demo-add-btn">
-                <span>{{ block.settings.quick_add_text }}</span>
-              </button>
-            </div>
-          </div>
-        {% endfor %}
-      {% else %}
-        {% paginate collection.products by section.settings.products_per_page %}
-          {% if collection.products.size > 0 %}
-            {% for product in collection.products %}
-              <div class="haute-product-card">
-                <div class="card-image-wrapper">
-                  <a href="{{ product.url }}">
-                    {% if product.featured_image %}
-                      {{ product.featured_image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
-                    {% else %}
-                      <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ product.title }}" class="card-img" width="400" height="400" loading="lazy">
-                    {% endif %}
-                  </a>
+              <div class="card-content-wrapper">
+                <div class="card-rating-stars">★★★★★ <span class="rating-val">5.0</span></div>
 
+                <h3 class="card-title">
+                  <a href="{{ product.url }}">{{ product.title }}</a>
+                </h3>
+
+                <p class="card-desc">
+                  {% if product.description != blank %}{{ product.description | strip_html | truncate: 75 }}{% else %}Lüks ve etkili cilt bakımı formulasyonu.{% endif %}
+                </p>
+
+                <div class="card-price-row">
+                  <span class="price-main">{{ product.price | money }}</span>
                   {% if product.compare_at_price > product.price %}
-                    <span class="card-badge">%25 İNDİRİM</span>
-                  {% else %}
-                    <span class="card-badge">✦ SEÇKİN</span>
+                    <span class="price-compare">{{ product.compare_at_price | money }}</span>
                   {% endif %}
-
-                  <button type="button" class="card-wishlist-btn" aria-label="Favorilere Ekle">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                  </button>
                 </div>
 
-                <div class="card-content-wrapper">
-                  <div class="card-rating-stars">★★★★★ <span class="rating-val">5.0</span></div>
-
-                  <h3 class="card-title">
-                    <a href="{{ product.url }}">{{ product.title }}</a>
-                  </h3>
-
-                  <p class="card-desc">
-                    {% if product.description != blank %}{{ product.description | strip_html | truncate: 75 }}{% else %}Lüks ve etkili cilt bakımı formulasyonu.{% endif %}
-                  </p>
-
-                  <div class="card-price-row">
-                    <span class="price-main">{{ product.price | money }}</span>
-                    {% if product.compare_at_price > product.price %}
-                      <span class="price-compare">{{ product.compare_at_price | money }}</span>
-                    {% endif %}
-                  </div>
-
-                  <button type="button" class="card-quick-add-btn demo-add-btn">
-                    <span>+ Hızlı Sepete Ekle</span>
-                  </button>
-                </div>
+                <button type="button" class="card-quick-add-btn demo-add-btn">
+                  <span>+ Hızlı Sepete Ekle</span>
+                </button>
               </div>
-            {% endfor %}
-          {% endif %}
-        {% endpaginate %}
+            </div>
+          {% endfor %}
+        {% else %}
+          {% comment %} Rich Demo Collection Cards (12 Full Luxury Cards) {% endcomment %}
+          {% assign demo_titles = "Radiance Glow Hyalüronik Serum 30ml,Velvet Hydra Besleyici Gece Kremi 50ml,Isparta Gül Suyu Arındırıcı Tonik 200ml,Anti-Aging Peptit Göz Çevresi Kremi 15ml,Pembe Kuvars Canlandırıcı Yüz Maskesi 100ml,Botanical Cleansing Elixir 150ml,Pure Vitamin C Brightening Essence 30ml,Satin Finish SPF50+ Güneş Koruyucu 50ml,Lumière Radiance Serum 50ml,Night Repair Youth Concentrate 30ml,Hydra-Luxe Intensive Cream 50ml,Rose Water Balancing Toner 150ml" | split: "," %}
+          {% assign demo_prices = "₺450,00,₺620,00,₺280,00,₺390,00,₺480,00,₺320,00,₺550,00,₺410,00,₺680,00,₺820,00,₺710,00,₺340,00" | split: "," %}
+          {% assign demo_old_prices = "₺650,00,₺750,00,₺350,00,₺500,00,₺600,00,₺420,00,₺700,00,₺520,00,₺850,00,₺990,00,₺890,00,₺430,00" | split: "," %}
+
+          {% for i in (1..12) %}
+            {% assign demo_idx = forloop.index0 %}
+            {% assign mod2 = forloop.index | modulo: 2 %}
+            <div class="haute-product-card" {{ section.shopify_attributes }}>
+              <div class="card-image-wrapper">
+                <a href="#">
+                  {% if mod2 == 0 %}
+                    <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Demo Ürün" class="card-img" width="400" height="400" loading="lazy">
+                  {% else %}
+                    <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Demo Ürün" class="card-img" width="400" height="400" loading="lazy">
+                  {% endif %}
+                </a>
+                <span class="card-badge">✦ SEÇKİN</span>
+                <button type="button" class="card-wishlist-btn" aria-label="Favorilere Ekle">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+
+              <div class="card-content-wrapper">
+                <div class="card-rating-stars">★★★★★ <span class="rating-val">5.0</span></div>
+                <h3 class="card-title">
+                  <a href="#">{{ demo_titles[demo_idx] }}</a>
+                </h3>
+                <p class="card-desc">Cilt bariyerini yenileyici ve derinlemesine nemlendirici lüks gençlik iksiri.</p>
+                <div class="card-price-row">
+                  <span class="price-main">{{ demo_prices[demo_idx] }}</span>
+                  <span class="price-compare">{{ demo_old_prices[demo_idx] }}</span>
+                </div>
+                <button type="button" class="card-quick-add-btn demo-add-btn">
+                  <span>+ Hızlı Sepete Ekle</span>
+                </button>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      {% if paginate.pages > 1 %}
+        <div class="dark-pagination-wrapper">
+          {{ paginate | default_pagination }}
+        </div>
       {% endif %}
-    </div>
+    {% endpaginate %}
   </div>
 </div>
 
@@ -173,7 +156,7 @@
     border: 1px solid var(--item-card-border, rgba(255, 255, 255, 0.12));
     backdrop-filter: blur(var(--item-card-blur, 16px));
     border-radius: var(--item-card-radius, 20px);
-    padding: var(--item-card-padding, 20px);
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -327,6 +310,31 @@
     box-shadow: 0 6px 20px rgba(194, 91, 130, 0.4);
   }
 
+  .dark-pagination-wrapper {
+    margin-top: 50px;
+    text-align: center;
+  }
+
+  .dark-pagination-wrapper a,
+  .dark-pagination-wrapper span {
+    display: inline-block;
+    padding: 8px 14px;
+    margin: 0 4px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .dark-pagination-wrapper .current {
+    background: #c25b82;
+    border-color: #c25b82;
+    color: #ffffff;
+  }
+
   @media (max-width: 1024px) {
     .collection-products-grid {
       grid-template-columns: repeat(3, 1fr);
@@ -403,6 +411,110 @@
     },
     {
       "type": "header",
+      "content": "🔲 Ürün Kartı Cam (Glassmorphism) Stili"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Kart Arka Plan Rengi",
+      "default": "rgba(255, 255, 255, 0.04)"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Kart Kenarlık Rengi",
+      "default": "rgba(255, 255, 255, 0.12)"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Köşe Yuvarlama (Radius)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_blur",
+      "label": "Cam Bulanıklık Efekti (Blur)",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "🏷️ Rozet & Tipografi Renkleri"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_start",
+      "label": "Rozet Başlangıç Rengi",
+      "default": "#c25b82"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_end",
+      "label": "Rozet Bitiş Rengi",
+      "default": "#a24367"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Rozet Metin Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Ürün Adı Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "desc_color",
+      "label": "Açıklama Metni Rengi",
+      "default": "rgba(255, 255, 255, 0.65)"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Fiyat Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "color",
+      "id": "compare_price_color",
+      "label": "Eski Fiyat Rengi",
+      "default": "rgba(255, 255, 255, 0.45)"
+    },
+    {
+      "type": "header",
+      "content": "🔘 Sepete Ekle Butonu Renkleri"
+    },
+    {
+      "type": "color",
+      "id": "quick_add_bg",
+      "label": "Buton Arka Plan Rengi",
+      "default": "rgba(194, 91, 130, 0.3)"
+    },
+    {
+      "type": "color",
+      "id": "quick_add_text_color",
+      "label": "Buton Metin Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "quick_add_border_color",
+      "label": "Buton Kenarlık Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "header",
       "content": "📐 Bölüm Boşlukları (Section Spacing)"
     },
     {
@@ -426,216 +538,9 @@
       "default": 80
     }
   ],
-  "blocks": [
-    {
-      "type": "product_card",
-      "name": "🛍️ Ürün Kartı Bloğu",
-      "settings": [
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Mağaza Ürünü Bağla (Seçilirse Dinamik Çekilir)"
-        },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Özel Ürün Görseli"
-        },
-        {
-          "type": "text",
-          "id": "badge_text",
-          "label": "Görsel Üstü Rozet Metni",
-          "default": "✦ SEÇKİN BAKIM"
-        },
-        {
-          "type": "color",
-          "id": "badge_bg_start",
-          "label": "Rozet Gradyan Başlangıç Rengi",
-          "default": "#c25b82"
-        },
-        {
-          "type": "color",
-          "id": "badge_bg_end",
-          "label": "Rozet Gradyan Bitiş Rengi",
-          "default": "#a24367"
-        },
-        {
-          "type": "color",
-          "id": "badge_text_color",
-          "label": "Rozet Metin Rengi",
-          "default": "#ffffff"
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Ürün Adı",
-          "default": "Lumière Radiance Serum 30ml"
-        },
-        {
-          "type": "color",
-          "id": "title_color",
-          "label": "Ürün Adı Rengi",
-          "default": "#ffffff"
-        },
-        {
-          "type": "text",
-          "id": "description",
-          "label": "Kısa Açıklama Metni",
-          "default": "Cilt bariyerini yenileyici ve nemlendirici gençlik iksiri"
-        },
-        {
-          "type": "color",
-          "id": "desc_color",
-          "label": "Açıklama Rengi",
-          "default": "rgba(255, 255, 255, 0.65)"
-        },
-        {
-          "type": "text",
-          "id": "price",
-          "label": "Fiyat Metni",
-          "default": "₺450,00"
-        },
-        {
-          "type": "color",
-          "id": "price_color",
-          "label": "Fiyat Rengi",
-          "default": "#f7cad0"
-        },
-        {
-          "type": "text",
-          "id": "compare_price",
-          "label": "Karşılaştırma Fiyatı",
-          "default": "₺650,00"
-        },
-        {
-          "type": "color",
-          "id": "compare_price_color",
-          "label": "Karşılaştırma Fiyat Rengi",
-          "default": "rgba(255, 255, 255, 0.45)"
-        },
-        {
-          "type": "text",
-          "id": "quick_add_text",
-          "label": "Buton Metni",
-          "default": "+ Hızlı Sepete Ekle"
-        },
-        {
-          "type": "color",
-          "id": "quick_add_bg",
-          "label": "Buton Arka Plan Rengi",
-          "default": "rgba(194, 91, 130, 0.3)"
-        },
-        {
-          "type": "color",
-          "id": "quick_add_text_color",
-          "label": "Buton Metin Rengi",
-          "default": "#ffffff"
-        },
-        {
-          "type": "color",
-          "id": "quick_add_border",
-          "label": "Buton Kenarlık Rengi",
-          "default": "#f7cad0"
-        },
-        {
-          "type": "url",
-          "id": "url",
-          "label": "Özel Yönlendirme Linki"
-        },
-        {
-          "type": "header",
-          "content": "🔲 Kart Cam (Glassmorphism) Stili"
-        },
-        {
-          "type": "color",
-          "id": "card_bg_color",
-          "label": "Kart Arka Plan Rengi",
-          "default": "rgba(255, 255, 255, 0.04)"
-        },
-        {
-          "type": "color",
-          "id": "card_border_color",
-          "label": "Kart Kenarlık Rengi",
-          "default": "rgba(255, 255, 255, 0.12)"
-        },
-        {
-          "type": "range",
-          "id": "card_border_radius",
-          "label": "Köşe Yuvarlama (Radius)",
-          "min": 0,
-          "max": 40,
-          "step": 2,
-          "unit": "px",
-          "default": 20
-        },
-        {
-          "type": "range",
-          "id": "card_blur",
-          "label": "Cam Bulanıklık Efekti (Blur)",
-          "min": 0,
-          "max": 30,
-          "step": 2,
-          "unit": "px",
-          "default": 16
-        },
-        {
-          "type": "range",
-          "id": "card_padding",
-          "label": "Kart İç Boşluğu (Padding)",
-          "min": 8,
-          "max": 40,
-          "step": 2,
-          "unit": "px",
-          "default": 20
-        }
-      ]
-    }
-  ],
   "presets": [
     {
-      "name": "Koleksiyon Ürün Izgarası",
-      "blocks": [
-        {
-          "type": "product_card",
-          "settings": {
-            "badge_text": "✦ EN ÇOK SATAN",
-            "title": "Lumière Radiance Serum 30ml",
-            "description": "Cilt bariyerini yenileyici ve nemlendirici gençlik iksiri",
-            "price": "₺450,00",
-            "compare_price": "₺650,00"
-          }
-        },
-        {
-          "type": "product_card",
-          "settings": {
-            "badge_text": "YENİ",
-            "title": "Velvet Hydra Besleyici Gece Kremi",
-            "description": "Gece boyunca yoğun elastikiyet ve nem bakımı",
-            "price": "₺520,00",
-            "compare_price": "₺700,00"
-          }
-        },
-        {
-          "type": "product_card",
-          "settings": {
-            "badge_text": "ORGANİK",
-            "title": "Isparta Gül Suyu Arındırıcı Tonik",
-            "description": "Gözenek sıkılaştırıcı %100 doğal gül suyu",
-            "price": "₺280,00",
-            "compare_price": "₺350,00"
-          }
-        },
-        {
-          "type": "product_card",
-          "settings": {
-            "badge_text": "%20 İNDİRİM",
-            "title": "Anti-Aging Peptit Göz Çevresi Kremi",
-            "description": "Göz altı morlukları ve şişlik karşıtı peptit kompleks",
-            "price": "₺390,00",
-            "compare_price": "₺500,00"
-          }
-        }
-      ]
+      "name": "Koleksiyon Ürün Izgarası"
     }
   ]
 }
