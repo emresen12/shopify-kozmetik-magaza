@@ -32,12 +32,34 @@
               " {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
 
             {% when 'title' %}
-              <h2 class="luxury-heading" style="
-                --title-color-start: {{ block.settings.color_start }};
-                --title-color-end: {{ block.settings.color_end }};
-                --title-size-desk: {{ block.settings.font_size_desktop }}px;
-                --title-size-mob: {{ block.settings.font_size_mobile }}px;
-              " {{ block.shopify_attributes }}>{{ block.settings.text }}</h2>
+              {% assign title_tag = block.settings.heading_tag | default: 'h2' %}
+              <{{ title_tag }}
+                class="luxury-heading text-align-{{ block.settings.text_align | default: 'left' }} transform-{{ block.settings.text_transform | default: 'none' }} {{ block.settings.custom_class }}"
+                style="
+                  --title-color-start: {{ block.settings.color_start | default: '#ffffff' }};
+                  --title-color-end: {{ block.settings.color_end | default: '#ffdfeb' }};
+                  --title-size-desk: {{ block.settings.font_size_desktop | default: 35 }}px;
+                  --title-size-mob: {{ block.settings.font_size_mobile | default: 26 }}px;
+                  font-weight: {{ block.settings.font_weight | default: '800' }};
+                  letter-spacing: {{ block.settings.letter_spacing | default: 0 }}px;
+                  line-height: {{ block.settings.line_height | default: 1.2 }};
+                  text-transform: {{ block.settings.text_transform | default: 'none' }};
+                  text-align: {{ block.settings.text_align | default: 'left' }};
+                  padding-top: {{ block.settings.padding_top | default: 0 }}px;
+                  padding-bottom: {{ block.settings.padding_bottom | default: 0 }}px;
+                  padding-left: {{ block.settings.padding_left | default: 0 }}px;
+                  padding-right: {{ block.settings.padding_right | default: 0 }}px;
+                  margin-bottom: {{ block.settings.margin_bottom | default: 16 }}px;
+                  {% unless block.settings.use_gradient %}
+                    background: none;
+                    -webkit-text-fill-color: initial;
+                    color: {{ block.settings.color_start | default: '#ffffff' }};
+                  {% endunless %}
+                "
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.text }}
+              </{{ title_tag }}>
           {% endcase %}
         {% endfor %}
       </div>
@@ -633,29 +655,38 @@
       "name": "Ana Başlık",
       "settings": [
         {
+          "type": "header",
+          "content": "📝 Başlık Metni & Etiket"
+        },
+        {
           "type": "text",
           "id": "text",
           "label": "Başlık Metni",
           "default": "Çok Satan Kozmetik Ürünlerimiz"
         },
         {
-          "type": "color",
-          "id": "color_start",
-          "label": "Başlık Gradient Başlangıç Rengi",
-          "default": "#ffffff"
+          "type": "select",
+          "id": "heading_tag",
+          "label": "HTML Başlık Etiketi (SEO)",
+          "options": [
+            { "value": "h1", "label": "H1 (Ana Başlık)" },
+            { "value": "h2", "label": "H2 (Alt Başlık)" },
+            { "value": "h3", "label": "H3" },
+            { "value": "h4", "label": "H4" },
+            { "value": "div", "label": "DIV" }
+          ],
+          "default": "h2"
         },
         {
-          "type": "color",
-          "id": "color_end",
-          "label": "Başlık Gradient Bitiş Rengi",
-          "default": "#ffdfeb"
+          "type": "header",
+          "content": "🔤 Tipografi Ayarları"
         },
         {
           "type": "range",
           "id": "font_size_desktop",
           "label": "Masaüstü Yazı Boyutu (px)",
           "min": 20,
-          "max": 60,
+          "max": 72,
           "step": 2,
           "unit": "px",
           "default": 35
@@ -665,10 +696,152 @@
           "id": "font_size_mobile",
           "label": "Mobil Yazı Boyutu (px)",
           "min": 16,
-          "max": 36,
+          "max": 48,
           "step": 1,
           "unit": "px",
           "default": 26
+        },
+        {
+          "type": "select",
+          "id": "font_weight",
+          "label": "Yazı Kalınlığı (Font Weight)",
+          "options": [
+            { "value": "400", "label": "Normal (400)" },
+            { "value": "500", "label": "Orta (500)" },
+            { "value": "600", "label": "Yarı Kalın (600)" },
+            { "value": "700", "label": "Kalın (700)" },
+            { "value": "800", "label": "Ekstra Kalın (800)" },
+            { "value": "900", "label": "Siyah (900)" }
+          ],
+          "default": "800"
+        },
+        {
+          "type": "select",
+          "id": "text_transform",
+          "label": "Harf Formatı (Text Transform)",
+          "options": [
+            { "value": "none", "label": "Normal" },
+            { "value": "uppercase", "label": "TÜMÜ BÜYÜK" },
+            { "value": "capitalize", "label": "Baş Harfler Büyük" },
+            { "value": "lowercase", "label": "tümü küçük" }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "range",
+          "id": "letter_spacing",
+          "label": "Harf Aralığı (Letter Spacing px)",
+          "min": 0,
+          "max": 10,
+          "step": 0.5,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "line_height",
+          "label": "Satır Yüksekliği (Line Height)",
+          "min": 1,
+          "max": 2,
+          "step": 0.1,
+          "default": 1.2
+        },
+        {
+          "type": "header",
+          "content": "🎨 Renk Ayarları"
+        },
+        {
+          "type": "checkbox",
+          "id": "use_gradient",
+          "label": "Gradyan Renk Efekti Kullan",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "color_start",
+          "label": "Başlık Rengi / Gradyan Başlangıcı",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "color_end",
+          "label": "Gradyan Bitiş Rengi",
+          "default": "#ffdfeb"
+        },
+        {
+          "type": "header",
+          "content": "📐 İç Boşluk (Padding) Ayarları"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Üst İç Boşluk (Padding Top px)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Alt İç Boşluk (Padding Bottom px)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_left",
+          "label": "Sol İç Boşluk (Padding Left px)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_right",
+          "label": "Sağ İç Boşluk (Padding Right px)",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "📐 Düzen & Hizalama (Layout & Alignment)"
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Metin Hizalama",
+          "options": [
+            { "value": "left", "label": "Sol" },
+            { "value": "center", "label": "Orta" },
+            { "value": "right", "label": "Sağ" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Alt Dış Boşluk (Margin Bottom px)",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "default": 16
+        },
+        {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Özel CSS Sınıfı (Class)",
+          "placeholder": "custom-title-class"
         }
       ]
     },
