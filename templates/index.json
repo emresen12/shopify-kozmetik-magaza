@@ -4,32 +4,32 @@
       "type": "hero-banner",
       "blocks": {
         "badge_1": {
-          "type": "hero-badge",
+          "type": "badge",
           "settings": {
             "text": "✦ İPEKSİ DOKU & DOĞAL IŞILTI"
           }
         },
         "title_1": {
-          "type": "hero-title",
+          "type": "title",
           "settings": {
             "text": "Cilt Bakımında Yeni Çağ"
           }
         },
         "subtitle_1": {
-          "type": "hero-subtitle",
+          "type": "subtitle",
           "settings": {
             "text": "Doğanın en değerli özleri ve ileri teknoloji hyalüronik asit kompleksi ile cildinize anında gençlik ve ışıltı kazandırın."
           }
         },
         "button_1": {
-          "type": "hero-button",
+          "type": "button",
           "settings": {
             "text": "Koleksiyonu Keşfet",
             "button_style": "primary"
           }
         },
         "stats_1": {
-          "type": "hero-stats",
+          "type": "stats",
           "settings": {
             "stat_1_number": "%100",
             "stat_1_label": "Organik & Vegan",
