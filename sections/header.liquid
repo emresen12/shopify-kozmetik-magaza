@@ -170,9 +170,20 @@
   <div class="side-drawer__backdrop" data-close-drawer></div>
   <div class="side-drawer__panel">
     
-    {% assign cart_blocks = section.blocks | where: "type", "drawer_cart_header" | concat: (section.blocks | where: "type", "drawer_shipping_bar") | concat: (section.blocks | where: "type", "drawer_cart_items") | concat: (section.blocks | where: "type", "drawer_empty_cart") | concat: (section.blocks | where: "type", "drawer_cart_note") | concat: (section.blocks | where: "type", "drawer_discount_box") | concat: (section.blocks | where: "type", "drawer_subtotal") | concat: (section.blocks | where: "type", "drawer_checkout_btn") | concat: (section.blocks | where: "type", "drawer_view_cart_link") | concat: (section.blocks | where: "type", "drawer_trust_badges") | concat: (section.blocks | where: "type", "drawer_promo_announcement") %}
+    {% assign b_header = section.blocks | where: "type", "drawer_cart_header" %}
+    {% assign b_ship = section.blocks | where: "type", "drawer_shipping_bar" %}
+    {% assign b_items = section.blocks | where: "type", "drawer_cart_items" %}
+    {% assign b_empty = section.blocks | where: "type", "drawer_empty_cart" %}
+    {% assign b_note = section.blocks | where: "type", "drawer_cart_note" %}
+    {% assign b_disc = section.blocks | where: "type", "drawer_discount_box" %}
+    {% assign b_subtotal = section.blocks | where: "type", "drawer_subtotal" %}
+    {% assign b_checkout = section.blocks | where: "type", "drawer_checkout_btn" %}
+    {% assign b_view = section.blocks | where: "type", "drawer_view_cart_link" %}
+    {% assign b_trust = section.blocks | where: "type", "drawer_trust_badges" %}
+    {% assign b_promo = section.blocks | where: "type", "drawer_promo_announcement" %}
+    {% assign cart_blocks_size = b_header.size | plus: b_ship.size | plus: b_items.size | plus: b_empty.size | plus: b_note.size | plus: b_disc.size | plus: b_subtotal.size | plus: b_checkout.size | plus: b_view.size | plus: b_trust.size | plus: b_promo.size %}
 
-    {% if cart_blocks.size > 0 %}
+    {% if cart_blocks_size > 0 %}
       {% for block in section.blocks %}
         {% case block.type %}
 
@@ -1065,7 +1076,7 @@
   }
 {% endstylesheet %}
 
-{% javascript %}
+<script>
   document.addEventListener('DOMContentLoaded', () => {
     // --- SEARCH BAR TOGGLE ---
     const searchWrapper = document.getElementById('searchWrapper');
@@ -1372,7 +1383,7 @@
       }, { passive: true });
     }
   });
-{% endjavascript %}
+</script>
 
 {% schema %}
 {
@@ -1404,7 +1415,7 @@
   "blocks": [
     {
       "type": "drawer_cart_header",
-      "name": "🛒 Sepet Başlık Cümlesi & Sayaç",
+      "name": "🛒 Sepet Başlığı & Sayaç",
       "settings": [
         { "type": "text", "id": "title", "label": "Başlık Metni", "default": "Alışveriş Sepetiniz" },
         { "type": "color", "id": "title_color", "label": "Metin Rengi", "default": "#ffffff" },
@@ -1413,7 +1424,7 @@
     },
     {
       "type": "drawer_shipping_bar",
-      "name": "🚚 Ücretsiz Kargo İlerleme Çubuğu",
+      "name": "🚚 Ücretsiz Kargo Çubuğu",
       "settings": [
         { "type": "text", "id": "icon", "label": "İkon / Emoji", "default": "🎉" },
         { "type": "text", "id": "text", "label": "Kargo Bedava Metni", "default": "₺500 üzeri alışverişlerde Kargo Bedava!" },
@@ -1424,12 +1435,12 @@
     },
     {
       "type": "drawer_cart_items",
-      "name": "🛍️ Sepet Ürünleri Listesi Kutusu",
+      "name": "🛍️ Sepet Ürün Listesi",
       "settings": []
     },
     {
       "type": "drawer_empty_cart",
-      "name": "🛒 Boş Sepet Cümlesi & Butonu",
+      "name": "🛒 Boş Sepet Metni",
       "settings": [
         { "type": "text", "id": "icon", "label": "İkon / Emoji", "default": "🛒" },
         { "type": "text", "id": "title", "label": "Başlık Cümlesi", "default": "Sepetiniz henüz boş" },
@@ -1452,7 +1463,7 @@
     },
     {
       "type": "drawer_discount_box",
-      "name": "🏷️ İndirim Kodu Giriş Kutusu",
+      "name": "🏷️ İndirim Kodu Kutusu",
       "settings": [
         { "type": "text", "id": "placeholder", "label": "İpucu Metni", "default": "İndirim Kodu" },
         { "type": "text", "id": "btn_text", "label": "Buton Metni", "default": "Uygula" }
@@ -1460,7 +1471,7 @@
     },
     {
       "type": "drawer_subtotal",
-      "name": "💰 Ara Toplam & Genel Toplam Hesap Özeti",
+      "name": "💰 Sepet Özet Hesabı",
       "settings": [
         { "type": "text", "id": "subtotal_label", "label": "Ara Toplam Metni", "default": "Ara Toplam" },
         { "type": "text", "id": "shipping_label", "label": "Kargo Ücreti Metni", "default": "Kargo Ücreti" },
@@ -1470,7 +1481,7 @@
     },
     {
       "type": "drawer_checkout_btn",
-      "name": "🚀 Ödemeye Geç / Siparişi Tamamla Butonu",
+      "name": "🚀 Ödemeye Geç Butonu",
       "settings": [
         { "type": "text", "id": "text", "label": "Buton Metni", "default": "Siparişi Tamamla (Ödemeye Geç)" },
         { "type": "color", "id": "bg_gradient_start", "label": "Gradient Başlangıç", "default": "#c25b82" },
@@ -1480,7 +1491,7 @@
     },
     {
       "type": "drawer_view_cart_link",
-      "name": "🔗 Sepet Sayfasına Git Bağlantısı",
+      "name": "🔗 Sepet Sayfası Linki",
       "settings": [
         { "type": "text", "id": "text", "label": "Link Metni", "default": "Sepet Sayfasına Git" },
         { "type": "color", "id": "text_color", "label": "Link Rengi", "default": "rgba(255, 255, 255, 0.6)" }
@@ -1488,7 +1499,7 @@
     },
     {
       "type": "drawer_trust_badges",
-      "name": "🔒 Güvenli Ödeme & Teslimat Rozetleri",
+      "name": "🔒 Güvenli Ödeme Rozeti",
       "settings": [
         { "type": "text", "id": "badge_1", "label": "1. Rozet", "default": "256-Bit SSL Ödeme" },
         { "type": "text", "id": "badge_2", "label": "2. Rozet", "default": "24h Hızlı Kargo" },
@@ -1498,7 +1509,7 @@
     },
     {
       "type": "drawer_promo_announcement",
-      "name": "🎁 Özel Hediye Kampanya Duyuru Kutusu",
+      "name": "🎁 Hediye Kampanya Kutusu",
       "settings": [
         { "type": "text", "id": "icon", "label": "İkon", "default": "🎁" },
         { "type": "textarea", "id": "text", "label": "Kampanya Cümlesi", "default": "₺750 üzeri alışverişlerde Nemlendirici Gece Maskesi Hediye!" },

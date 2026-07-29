@@ -14,7 +14,10 @@
     <div class="hero-orb orb-1"></div>
     <div class="hero-orb orb-2"></div>
     <div class="collections-hero-content">
-      {% assign hero_blocks = section.blocks | where: "type", "hero_badge" | concat: (section.blocks | where: "type", "hero_title") | concat: (section.blocks | where: "type", "hero_description") %}
+      {% assign hero_badges = section.blocks | where: "type", "hero_badge" %}
+      {% assign hero_titles = section.blocks | where: "type", "hero_title" %}
+      {% assign hero_descs = section.blocks | where: "type", "hero_description" %}
+      {% assign hero_blocks = hero_badges | concat: hero_titles | concat: hero_descs %}
       {% if hero_blocks.size > 0 %}
         {% for block in section.blocks %}
           {% case block.type %}
@@ -518,7 +521,7 @@
     },
     {
       "type": "hero_description",
-      "name": "📝 Üst Açıklama Paragrafı",
+      "name": "📝 Üst Açıklama Metni",
       "settings": [
         {
           "type": "textarea",
@@ -545,7 +548,7 @@
     },
     {
       "type": "collection_card",
-      "name": "✨ Koleksiyon Kartı Bloğu",
+      "name": "✨ Koleksiyon Kartı",
       "settings": [
         {
           "type": "collection",
