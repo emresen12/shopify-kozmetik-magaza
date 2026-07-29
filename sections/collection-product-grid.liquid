@@ -1,6 +1,7 @@
 {% comment %}
-  Modular Collection Product Grid Section
-  Fully customizable in Shopify Theme Editor (Grid Columns, Card Glassmorphism, Badges, Buttons, Ratings, Typography)
+  Modular Collection Product Grid Section (Shared Haute Product Card Block Architecture)
+  Uses the EXACT SAME product_card block structure and styling as the Home Page product grid.
+  Clicking any product card in Shopify Theme Editor selects that card block and opens all its settings in the right panel!
 {% endcomment %}
 
 <div class="collection-product-grid-section full-width" style="
@@ -8,376 +9,322 @@
   --grid-columns-mobile: {{ section.settings.columns_mobile }};
   --grid-gap: {{ section.settings.grid_gap }}px;
   --max-width: {{ section.settings.max_width }}px;
-  --card-bg: {{ section.settings.card_bg }};
-  --card-border: {{ section.settings.card_border_color }};
-  --card-radius: {{ section.settings.card_radius }}px;
-  --card-blur: {{ section.settings.card_blur }}px;
-  --card-hover-border: {{ section.settings.card_hover_border }};
-  --card-hover-lift: -{{ section.settings.card_hover_lift }}px;
-  --badge-bg: {{ section.settings.badge_bg }};
-  --badge-color: {{ section.settings.badge_text_color }};
-  --sale-badge-start: {{ section.settings.sale_badge_bg_start }};
-  --sale-badge-end: {{ section.settings.sale_badge_bg_end }};
-  --wishlist-bg: {{ section.settings.wishlist_bg }};
-  --wishlist-icon-color: {{ section.settings.wishlist_icon_color }};
-  --wishlist-hover-bg: {{ section.settings.wishlist_hover_bg }};
-  --quick-add-bg: {{ section.settings.quick_add_bg }};
-  --quick-add-color: {{ section.settings.quick_add_text_color }};
-  --quick-add-border: {{ section.settings.quick_add_border_color }};
-  --quick-add-hover-start: {{ section.settings.quick_add_hover_bg_start }};
-  --quick-add-hover-end: {{ section.settings.quick_add_hover_bg_end }};
-  --star-color: {{ section.settings.star_color }};
-  --rating-val-color: {{ section.settings.rating_val_color }};
-  --title-size: {{ section.settings.title_font_size }}px;
-  --title-weight: {{ section.settings.title_font_weight }};
-  --title-color: {{ section.settings.title_color }};
-  --title-hover-color: {{ section.settings.title_hover_color }};
-  --price-size: {{ section.settings.price_font_size }}px;
-  --price-weight: {{ section.settings.price_font_weight }};
-  --price-color: {{ section.settings.price_color }};
-  --compare-price-color: {{ section.settings.compare_price_color }};
-  --pagination-bg: {{ section.settings.pagination_bg }};
-  --pagination-color: {{ section.settings.pagination_text_color }};
-  --pagination-active-bg: {{ section.settings.pagination_active_bg }};
-  --pagination-active-color: {{ section.settings.pagination_active_text_color }};
+  --padding-top: {{ section.settings.padding_top }}px;
+  --padding-bottom: {{ section.settings.padding_bottom }}px;
 ">
   <div class="grid-section-container">
     <div class="collection-products-grid">
-      {% paginate collection.products by section.settings.products_per_page %}
-        {% if collection.products.size > 0 %}
-          {% for product in collection.products %}
-            <div class="compact-product-card">
-              <div class="compact-card__img-box">
-                <a href="{{ product.url }}">
-                  {% if product.featured_image %}
-                    {{ product.featured_image | image_url: width: 450 | image_tag: class: 'compact-card__img', loading: 'lazy' }}
-                  {% else %}
-                    <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ product.title }}" class="compact-card__img" width="300" height="300" loading="lazy">
-                  {% endif %}
-                </a>
+      {% assign card_blocks = section.blocks | where: "type", "product_card" %}
 
-                {% if section.settings.show_badge %}
-                  {% if product.compare_at_price > product.price %}
-                    <span class="compact-card__tag sale-tag">%25 İNDİRİM</span>
-                  {% else %}
-                    <span class="compact-card__tag">{{ section.settings.default_badge_text | default: "✦ SEÇKİN" }}</span>
-                  {% endif %}
-                {% endif %}
-
-                {% if section.settings.show_wishlist %}
-                  <button type="button" class="compact-wishlist-btn" aria-label="Favorilere Ekle">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                  </button>
-                {% endif %}
-
-                {% if section.settings.show_quick_add %}
-                  <button type="button" class="compact-quick-add-btn demo-add-btn">
-                    {{ section.settings.quick_add_text | default: "+ Sepete Ekle" }}
-                  </button>
-                {% endif %}
-              </div>
-
-              <div class="compact-card__info">
-                {% if section.settings.show_rating %}
-                  <div class="compact-card__rating">
-                    <span class="stars">★★★★★</span>
-                    <span class="rating-val">5.0</span>
-                  </div>
-                {% endif %}
-
-                <h3 class="compact-card__title">
-                  <a href="{{ product.url }}">{{ product.title }}</a>
-                </h3>
-
-                <div class="compact-card__price-row">
-                  <span class="compact-price">{{ product.price | money }}</span>
-                  {% if product.compare_at_price > product.price %}
-                    <span class="compact-compare-price">{{ product.compare_at_price | money }}</span>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        {% else %}
-          {% comment %} Demonstration fallback products when no products in store {% endcomment %}
-          {% assign demo_titles = "Radiance Glow Serum,Hydra-Luxe Velvet Cream,Rose Infusion Mask,Midnight Repair Oil,Botanical Cleansing Elixir,Lumière Gold Eye Complex,Peptide Renewal Concentrate,Satin Finish Sunscreen" | split: "," %}
-          {% assign demo_prices = "₺450,00,₺620,00,₺380,00,₺740,00,₺310,00,₺590,00,₺850,00,₺420,00" | split: "," %}
-          {% assign demo_old_prices = "₺590,00,₺750,00,₺460,00,₺900,00,₺390,00,₺720,00,₺990,00,₺510,00" | split: "," %}
-          
-          {% for i in (1..8) %}
-            {% assign demo_idx = forloop.index0 %}
-            {% assign mod2 = forloop.index | modulo: 2 %}
-            {% assign mod3 = forloop.index | modulo: 3 %}
-
-            <div class="compact-product-card">
-              <div class="compact-card__img-box">
-                <a href="#">
+      {% if card_blocks.size > 0 %}
+        {% for block in card_blocks %}
+          {% assign prod = block.settings.product %}
+          <div class="haute-product-card" style="
+            --item-card-bg: {{ block.settings.card_bg_color }};
+            --item-card-border: {{ block.settings.card_border_color }};
+            --item-card-radius: {{ block.settings.card_border_radius }}px;
+            --item-card-blur: {{ block.settings.card_blur }}px;
+            --item-card-padding: {{ block.settings.card_padding }}px;
+            --card-badge-start: {{ block.settings.badge_bg_start }};
+            --card-badge-end: {{ block.settings.badge_bg_end }};
+            --card-badge-text: {{ block.settings.badge_text_color }};
+            --card-title-color: {{ block.settings.title_color }};
+            --card-desc-color: {{ block.settings.desc_color }};
+            --card-price-color: {{ block.settings.price_color }};
+            --card-compare-color: {{ block.settings.compare_price_color }};
+            --card-qadd-bg: {{ block.settings.quick_add_bg }};
+            --card-qadd-text: {{ block.settings.quick_add_text_color }};
+            --card-qadd-border: {{ block.settings.quick_add_border }};
+          " {{ block.shopify_attributes }}>
+            <div class="card-image-wrapper">
+              <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
+                {% if block.settings.image != blank %}
+                  {{ block.settings.image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
+                {% elsif prod != blank and prod.featured_image %}
+                  {{ prod.featured_image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
+                {% else %}
+                  {% assign mod2 = forloop.index | modulo: 2 %}
                   {% if mod2 == 0 %}
-                    <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Demo Ürün" class="compact-card__img" width="300" height="300" loading="lazy">
+                    <img src="{{ 'luxury-cream.jpg' | asset_url }}" class="card-img" alt="Demo Ürün" width="400" height="400" loading="lazy">
                   {% else %}
-                    <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Demo Ürün" class="compact-card__img" width="300" height="300" loading="lazy">
+                    <img src="{{ 'luxury-serum.jpg' | asset_url }}" class="card-img" alt="Demo Ürün" width="400" height="400" loading="lazy">
                   {% endif %}
+                {% endif %}
+              </a>
+
+              {% if block.settings.badge_text != blank %}
+                <span class="card-badge">{{ block.settings.badge_text }}</span>
+              {% endif %}
+
+              <button type="button" class="card-wishlist-btn" aria-label="Favorilere Ekle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </button>
+            </div>
+
+            <div class="card-content-wrapper">
+              <div class="card-rating-stars">★★★★★ <span class="rating-val">5.0</span></div>
+
+              <h3 class="card-title">
+                <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
+                  {% if prod != blank %}{{ prod.title }}{% else %}{{ block.settings.title }}{% endif %}
                 </a>
+              </h3>
 
-                {% if section.settings.show_badge %}
-                  {% if mod3 == 0 %}
-                    <span class="compact-card__tag sale-tag">%25 İNDİRİM</span>
-                  {% else %}
-                    <span class="compact-card__tag">{{ section.settings.default_badge_text | default: "✦ SEÇKİN" }}</span>
-                  {% endif %}
-                {% endif %}
+              <p class="card-desc">
+                {% if prod != blank and prod.description != blank %}{{ prod.description | strip_html | truncate: 75 }}{% else %}{{ block.settings.description }}{% endif %}
+              </p>
 
-                {% if section.settings.show_wishlist %}
-                  <button type="button" class="compact-wishlist-btn" aria-label="Favorilere Ekle">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                  </button>
-                {% endif %}
-
-                {% if section.settings.show_quick_add %}
-                  <button type="button" class="compact-quick-add-btn demo-add-btn">
-                    {{ section.settings.quick_add_text | default: "+ Sepete Ekle" }}
-                  </button>
-                {% endif %}
+              <div class="card-price-row">
+                <span class="price-main">
+                  {% if prod != blank %}{{ prod.price | money }}{% else %}{{ block.settings.price }}{% endif %}
+                </span>
+                <span class="price-compare">
+                  {% if prod != blank and prod.compare_at_price %}{{ prod.compare_at_price | money }}{% else %}{{ block.settings.compare_price }}{% endif %}
+                </span>
               </div>
 
-              <div class="compact-card__info">
-                {% if section.settings.show_rating %}
-                  <div class="compact-card__rating">
-                    <span class="stars">★★★★★</span>
-                    <span class="rating-val">5.0</span>
+              <button type="button" class="card-quick-add-btn demo-add-btn">
+                <span>{{ block.settings.quick_add_text }}</span>
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        {% paginate collection.products by section.settings.products_per_page %}
+          {% if collection.products.size > 0 %}
+            {% for product in collection.products %}
+              <div class="haute-product-card">
+                <div class="card-image-wrapper">
+                  <a href="{{ product.url }}">
+                    {% if product.featured_image %}
+                      {{ product.featured_image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
+                    {% else %}
+                      <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ product.title }}" class="card-img" width="400" height="400" loading="lazy">
+                    {% endif %}
+                  </a>
+
+                  {% if product.compare_at_price > product.price %}
+                    <span class="card-badge">%25 İNDİRİM</span>
+                  {% else %}
+                    <span class="card-badge">✦ SEÇKİN</span>
+                  {% endif %}
+
+                  <button type="button" class="card-wishlist-btn" aria-label="Favorilere Ekle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  </button>
+                </div>
+
+                <div class="card-content-wrapper">
+                  <div class="card-rating-stars">★★★★★ <span class="rating-val">5.0</span></div>
+
+                  <h3 class="card-title">
+                    <a href="{{ product.url }}">{{ product.title }}</a>
+                  </h3>
+
+                  <p class="card-desc">
+                    {% if product.description != blank %}{{ product.description | strip_html | truncate: 75 }}{% else %}Lüks ve etkili cilt bakımı formulasyonu.{% endif %}
+                  </p>
+
+                  <div class="card-price-row">
+                    <span class="price-main">{{ product.price | money }}</span>
+                    {% if product.compare_at_price > product.price %}
+                      <span class="price-compare">{{ product.compare_at_price | money }}</span>
+                    {% endif %}
                   </div>
-                {% endif %}
 
-                <h3 class="compact-card__title">
-                  <a href="#">{{ demo_titles[demo_idx] }}</a>
-                </h3>
-
-                <div class="compact-card__price-row">
-                  <span class="compact-price">{{ demo_prices[demo_idx] }}</span>
-                  <span class="compact-compare-price">{{ demo_old_prices[demo_idx] }}</span>
+                  <button type="button" class="card-quick-add-btn demo-add-btn">
+                    <span>+ Hızlı Sepete Ekle</span>
+                  </button>
                 </div>
               </div>
-            </div>
-          {% endfor %}
-        {% endif %}
-
-        {% if paginate.pages > 1 %}
-          <div class="dark-pagination-wrapper">
-            {{ paginate | default_pagination }}
-          </div>
-        {% endif %}
-      {% endpaginate %}
+            {% endfor %}
+          {% endif %}
+        {% endpaginate %}
+      {% endif %}
     </div>
   </div>
 </div>
 
 {% stylesheet %}
+  .collection-product-grid-section {
+    position: relative;
+    width: 100%;
+    background: #0b080c;
+    padding-top: var(--padding-top, 40px);
+    padding-bottom: var(--padding-bottom, 80px);
+  }
+
   .grid-section-container {
     max-width: var(--max-width, 1320px);
-    margin: 0 auto 80px;
+    margin: 0 auto;
     padding: 0 24px;
   }
 
   .collection-products-grid {
     display: grid;
-    grid-template-columns: repeat(var(--grid-columns-desktop, 5), 1fr);
-    gap: var(--grid-gap, 22px);
+    grid-template-columns: repeat(var(--grid-columns-desktop, 4), 1fr);
+    gap: var(--grid-gap, 24px);
   }
 
-  .compact-product-card {
-    background: var(--card-bg, rgba(255, 255, 255, 0.04));
-    border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12));
-    backdrop-filter: blur(var(--card-blur, 16px));
-    border-radius: var(--card-radius, 20px);
-    overflow: hidden;
+  /* Haute Shared Product Card Component Styles */
+  .haute-product-card {
+    position: relative;
+    background: var(--item-card-bg, rgba(255, 255, 255, 0.04));
+    border: 1px solid var(--item-card-border, rgba(255, 255, 255, 0.12));
+    backdrop-filter: blur(var(--item-card-blur, 16px));
+    border-radius: var(--item-card-radius, 20px);
+    padding: var(--item-card-padding, 20px);
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+    justify-content: space-between;
+    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
   }
 
-  .compact-product-card:hover {
-    transform: translateY(var(--card-hover-lift, -6px));
-    border-color: var(--card-hover-border, rgba(247, 202, 208, 0.4));
-    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(194, 91, 130, 0.2);
+  .haute-product-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(247, 202, 208, 0.4);
+    box-shadow: 0 20px 50px rgba(194, 91, 130, 0.2);
   }
 
-  .compact-card__img-box {
+  .card-image-wrapper {
     position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
+    border-radius: 14px;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.3);
   }
 
-  .compact-card__img {
+  .card-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .compact-product-card:hover .compact-card__img {
-    transform: scale(1.08);
+  .haute-product-card:hover .card-img {
+    transform: scale(1.06);
   }
 
-  .compact-card__tag {
+  .card-badge {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background: var(--badge-bg, rgba(255, 255, 255, 0.15));
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(8px);
-    color: var(--badge-color, #ffffff);
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, var(--card-badge-start, #c25b82) 0%, var(--card-badge-end, #a24367) 100%);
+    color: var(--card-badge-text, #ffffff);
     font-size: 0.68rem;
-    font-weight: 700;
-    padding: 3px 8px;
+    font-weight: 800;
+    padding: 4px 10px;
     border-radius: 20px;
-    letter-spacing: 0.5px;
-    z-index: 2;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
-  .compact-card__tag.sale-tag {
-    background: linear-gradient(135deg, var(--sale-badge-start, #c25b82) 0%, var(--sale-badge-end, #a44267) 100%);
-    border: none;
-  }
-
-  .compact-wishlist-btn {
+  .card-wishlist-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: var(--wishlist-bg, rgba(0, 0, 0, 0.4));
+    background: rgba(15, 11, 16, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(8px);
-    color: var(--wishlist-icon-color, #ffffff);
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 2;
-    transition: all 0.2s ease;
+    transition: background 0.3s ease, color 0.3s ease;
   }
 
-  .compact-wishlist-btn:hover {
-    background: var(--wishlist-hover-bg, #c25b82);
-    border-color: var(--wishlist-hover-bg, #c25b82);
-    transform: scale(1.1);
+  .card-wishlist-btn:hover {
+    background: #c25b82;
+    color: #ffffff;
   }
 
-  .compact-quick-add-btn {
-    position: absolute;
-    bottom: -40px;
-    left: 10px;
-    right: 10px;
-    padding: 8px;
-    background: var(--quick-add-bg, rgba(18, 12, 20, 0.9));
-    border: 1px solid var(--quick-add-border, rgba(247, 202, 208, 0.4));
-    backdrop-filter: blur(10px);
-    color: var(--quick-add-color, #ffffff);
-    font-size: 0.78rem;
-    font-weight: 800;
-    border-radius: 10px;
-    cursor: pointer;
-    z-index: 3;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .compact-product-card:hover .compact-quick-add-btn {
-    bottom: 10px;
-  }
-
-  .compact-quick-add-btn:hover {
-    background: linear-gradient(135deg, var(--quick-add-hover-start, #c25b82) 0%, var(--quick-add-hover-end, #a44267) 100%);
-    border-color: transparent;
-  }
-
-  .compact-card__info {
-    padding: 14px 14px 16px;
+  .card-content-wrapper {
+    margin-top: 16px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    flex: 1;
+    flex-grow: 1;
   }
 
-  .compact-card__rating {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.75rem;
-  }
-
-  .compact-card__rating .stars {
-    color: var(--star-color, #f7cad0);
+  .card-rating-stars {
+    font-size: 0.72rem;
+    color: #f7cad0;
     letter-spacing: 1px;
+    margin-bottom: 6px;
   }
 
-  .compact-card__rating .rating-val {
-    color: var(--rating-val-color, rgba(255, 255, 255, 0.6));
+  .card-rating-stars .rating-val {
+    color: rgba(255, 255, 255, 0.6);
     font-weight: 700;
+    margin-left: 4px;
   }
 
-  .compact-card__title {
-    margin: 0;
-    font-size: var(--title-size, 14px);
-    font-weight: var(--title-weight, 700);
-    line-height: 1.35;
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 6px 0;
   }
 
-  .compact-card__title a {
-    color: var(--title-color, #ffffff);
+  .card-title a {
+    color: var(--card-title-color, #ffffff);
     text-decoration: none;
     transition: color 0.2s ease;
   }
 
-  .compact-card__title a:hover {
-    color: var(--title-hover-color, #f7cad0);
+  .card-title a:hover {
+    color: #f7cad0;
   }
 
-  .compact-card__price-row {
+  .card-desc {
+    font-size: 0.8rem;
+    color: var(--card-desc-color, rgba(255, 255, 255, 0.65));
+    line-height: 1.4;
+    margin: 0 0 14px 0;
+    flex-grow: 1;
+  }
+
+  .card-price-row {
     display: flex;
     align-items: baseline;
     gap: 8px;
-    margin-top: 4px;
+    margin-bottom: 14px;
   }
 
-  .compact-price {
-    font-size: var(--price-size, 16px);
-    font-weight: var(--price-weight, 800);
-    color: var(--price-color, #f7cad0);
+  .price-main {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--card-price-color, #f7cad0);
   }
 
-  .compact-compare-price {
-    font-size: 0.78rem;
-    color: var(--compare-price-color, rgba(255, 255, 255, 0.45));
+  .price-compare {
+    font-size: 0.82rem;
+    color: var(--card-compare-color, rgba(255, 255, 255, 0.45));
     text-decoration: line-through;
   }
 
-  .dark-pagination-wrapper {
-    margin-top: 50px;
-    text-align: center;
-    grid-column: 1 / -1;
-  }
-
-  .dark-pagination-wrapper a,
-  .dark-pagination-wrapper span {
-    display: inline-block;
-    padding: 8px 14px;
-    margin: 0 4px;
-    border-radius: 10px;
-    background: var(--pagination-bg, rgba(255, 255, 255, 0.08));
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: var(--pagination-color, #ffffff);
-    text-decoration: none;
-    font-size: 0.85rem;
+  .card-quick-add-btn {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: var(--card-qadd-bg, rgba(194, 91, 130, 0.3));
+    border: 1px solid var(--card-qadd-border, #f7cad0);
+    color: var(--card-qadd-text, #ffffff);
+    font-size: 0.82rem;
     font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
   }
 
-  .dark-pagination-wrapper .current {
-    background: var(--pagination-active-bg, #c25b82);
-    border-color: var(--pagination-active-bg, #c25b82);
-    color: var(--pagination-active-color, #ffffff);
+  .card-quick-add-btn:hover {
+    background: linear-gradient(135deg, #c25b82 0%, #a24367 100%);
+    border-color: #c25b82;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(194, 91, 130, 0.4);
   }
 
   @media (max-width: 1024px) {
@@ -391,6 +338,10 @@
       grid-template-columns: repeat(var(--grid-columns-mobile, 2), 1fr);
       gap: 14px;
     }
+
+    .haute-product-card {
+      padding: 12px;
+    }
   }
 {% endstylesheet %}
 
@@ -400,7 +351,7 @@
   "settings": [
     {
       "type": "header",
-      "content": "Izgara & Mizanpaj Ayarları"
+      "content": "📐 Izgara & Mizanpaj Ayarları"
     },
     {
       "type": "range",
@@ -418,7 +369,7 @@
       "min": 2,
       "max": 6,
       "step": 1,
-      "default": 5
+      "default": 4
     },
     {
       "type": "select",
@@ -438,7 +389,7 @@
       "max": 40,
       "step": 2,
       "unit": "px",
-      "default": 22
+      "default": 24
     },
     {
       "type": "range",
@@ -452,290 +403,239 @@
     },
     {
       "type": "header",
-      "content": "Ürün Kartı & Cam (Glassmorphism) Stil"
-    },
-    {
-      "type": "color",
-      "id": "card_bg",
-      "label": "Kart Arka Plan Rengi",
-      "default": "rgba(255, 255, 255, 0.04)"
-    },
-    {
-      "type": "color",
-      "id": "card_border_color",
-      "label": "Kart Kenarlık Rengi",
-      "default": "rgba(255, 255, 255, 0.12)"
+      "content": "📐 Bölüm Boşlukları (Section Spacing)"
     },
     {
       "type": "range",
-      "id": "card_radius",
-      "label": "Kart Köşe Yuvarlama (Radius)",
+      "id": "padding_top",
+      "label": "Üst İç Boşluk (Padding Top)",
       "min": 0,
-      "max": 40,
-      "step": 2,
+      "max": 150,
+      "step": 10,
       "unit": "px",
-      "default": 20
+      "default": 40
     },
     {
       "type": "range",
-      "id": "card_blur",
-      "label": "Cam Bulanıklık Efekti (Backdrop Blur)",
+      "id": "padding_bottom",
+      "label": "Alt İç Boşluk (Padding Bottom)",
       "min": 0,
-      "max": 30,
-      "step": 2,
+      "max": 150,
+      "step": 10,
       "unit": "px",
-      "default": 16
-    },
+      "default": 80
+    }
+  ],
+  "blocks": [
     {
-      "type": "color",
-      "id": "card_hover_border",
-      "label": "Kart Hover Kenarlık Rengi",
-      "default": "rgba(247, 202, 208, 0.4)"
-    },
-    {
-      "type": "range",
-      "id": "card_hover_lift",
-      "label": "Hover Yükselme Miktarı (Translate Y)",
-      "min": 0,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": 6
-    },
-    {
-      "type": "header",
-      "content": "Rozet / Etiket (Badge) Ayarları"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_badge",
-      "label": "Rozeti Göster",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "default_badge_text",
-      "label": "Varsayılan Rozet Metni",
-      "default": "✦ SEÇKİN"
-    },
-    {
-      "type": "color",
-      "id": "badge_bg",
-      "label": "Rozet Arka Planı",
-      "default": "rgba(255, 255, 255, 0.15)"
-    },
-    {
-      "type": "color",
-      "id": "badge_text_color",
-      "label": "Rozet Metin Rengi",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "sale_badge_bg_start",
-      "label": "İndirim Rozeti Gradyan Başlangıcı",
-      "default": "#c25b82"
-    },
-    {
-      "type": "color",
-      "id": "sale_badge_bg_end",
-      "label": "İndirim Rozeti Gradyan Bitişi",
-      "default": "#a44267"
-    },
-    {
-      "type": "header",
-      "content": "Butonlar (Favori & Hızlı Ekle)"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_wishlist",
-      "label": "Favori Butonunu Göster",
-      "default": true
-    },
-    {
-      "type": "color",
-      "id": "wishlist_bg",
-      "label": "Favori Butonu Arka Planı",
-      "default": "rgba(0, 0, 0, 0.4)"
-    },
-    {
-      "type": "color",
-      "id": "wishlist_icon_color",
-      "label": "Favori İkon Rengi",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "wishlist_hover_bg",
-      "label": "Favori Butonu Hover Rengi",
-      "default": "#c25b82"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_quick_add",
-      "label": "Hızlı Sepete Ekle Butonunu Göster",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "quick_add_text",
-      "label": "Hızlı Ekle Buton Metni",
-      "default": "+ Sepete Ekle"
-    },
-    {
-      "type": "color",
-      "id": "quick_add_bg",
-      "label": "Hızlı Ekle Arka Plan Rengi",
-      "default": "rgba(18, 12, 20, 0.9)"
-    },
-    {
-      "type": "color",
-      "id": "quick_add_text_color",
-      "label": "Hızlı Ekle Metin Rengi",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "quick_add_border_color",
-      "label": "Hızlı Ekle Kenarlık Rengi",
-      "default": "rgba(247, 202, 208, 0.4)"
-    },
-    {
-      "type": "color",
-      "id": "quick_add_hover_bg_start",
-      "label": "Hızlı Ekle Hover Gradyan Başlangıcı",
-      "default": "#c25b82"
-    },
-    {
-      "type": "color",
-      "id": "quick_add_hover_bg_end",
-      "label": "Hızlı Ekle Hover Gradyan Bitişi",
-      "default": "#a44267"
-    },
-    {
-      "type": "header",
-      "content": "Tipografi & Değerlendirme"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_rating",
-      "label": "Değerlendirme Yıldızlarını Göster",
-      "default": true
-    },
-    {
-      "type": "color",
-      "id": "star_color",
-      "label": "Yıldız Rengi",
-      "default": "#f7cad0"
-    },
-    {
-      "type": "color",
-      "id": "rating_val_color",
-      "label": "Puan Metin Rengi",
-      "default": "rgba(255, 255, 255, 0.6)"
-    },
-    {
-      "type": "range",
-      "id": "title_font_size",
-      "label": "Ürün Başlığı Yazı Boyutu",
-      "min": 10,
-      "max": 24,
-      "step": 1,
-      "unit": "px",
-      "default": 14
-    },
-    {
-      "type": "select",
-      "id": "title_font_weight",
-      "label": "Ürün Başlığı Yazı Kalınlığı",
-      "options": [
-        { "value": "400", "label": "Normal (400)" },
-        { "value": "500", "label": "Orta (500)" },
-        { "value": "600", "label": "Yarı Kalın (600)" },
-        { "value": "700", "label": "Kalın (700)" },
-        { "value": "800", "label": "Ekstra Kalın (800)" }
-      ],
-      "default": "700"
-    },
-    {
-      "type": "color",
-      "id": "title_color",
-      "label": "Ürün Başlığı Rengi",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "title_hover_color",
-      "label": "Ürün Başlığı Hover Rengi",
-      "default": "#f7cad0"
-    },
-    {
-      "type": "range",
-      "id": "price_font_size",
-      "label": "Fiyat Yazı Boyutu",
-      "min": 12,
-      "max": 28,
-      "step": 1,
-      "unit": "px",
-      "default": 16
-    },
-    {
-      "type": "select",
-      "id": "price_font_weight",
-      "label": "Fiyat Yazı Kalınlığı",
-      "options": [
-        { "value": "400", "label": "Normal (400)" },
-        { "value": "600", "label": "Yarı Kalın (600)" },
-        { "value": "700", "label": "Kalın (700)" },
-        { "value": "800", "label": "Ekstra Kalın (800)" },
-        { "value": "900", "label": "Siyah (900)" }
-      ],
-      "default": "800"
-    },
-    {
-      "type": "color",
-      "id": "price_color",
-      "label": "Fiyat Rengi",
-      "default": "#f7cad0"
-    },
-    {
-      "type": "color",
-      "id": "compare_price_color",
-      "label": "İndirim Öncesi Eski Fiyat Rengi",
-      "default": "rgba(255, 255, 255, 0.45)"
-    },
-    {
-      "type": "header",
-      "content": "Sayfalama (Pagination) Ayarları"
-    },
-    {
-      "type": "color",
-      "id": "pagination_bg",
-      "label": "Sayfalama Buton Arka Planı",
-      "default": "rgba(255, 255, 255, 0.08)"
-    },
-    {
-      "type": "color",
-      "id": "pagination_text_color",
-      "label": "Sayfalama Metin Rengi",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "pagination_active_bg",
-      "label": "Aktif Sayfa Arka Plan Rengi",
-      "default": "#c25b82"
-    },
-    {
-      "type": "color",
-      "id": "pagination_active_text_color",
-      "label": "Aktif Sayfa Metin Rengi",
-      "default": "#ffffff"
+      "type": "product_card",
+      "name": "🛍️ Ürün Kartı Bloğu",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Mağaza Ürünü Bağla (Seçilirse Dinamik Çekilir)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Özel Ürün Görseli"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Görsel Üstü Rozet Metni",
+          "default": "✦ SEÇKİN BAKIM"
+        },
+        {
+          "type": "color",
+          "id": "badge_bg_start",
+          "label": "Rozet Gradyan Başlangıç Rengi",
+          "default": "#c25b82"
+        },
+        {
+          "type": "color",
+          "id": "badge_bg_end",
+          "label": "Rozet Gradyan Bitiş Rengi",
+          "default": "#a24367"
+        },
+        {
+          "type": "color",
+          "id": "badge_text_color",
+          "label": "Rozet Metin Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Ürün Adı",
+          "default": "Lumière Radiance Serum 30ml"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Ürün Adı Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Kısa Açıklama Metni",
+          "default": "Cilt bariyerini yenileyici ve nemlendirici gençlik iksiri"
+        },
+        {
+          "type": "color",
+          "id": "desc_color",
+          "label": "Açıklama Rengi",
+          "default": "rgba(255, 255, 255, 0.65)"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Fiyat Metni",
+          "default": "₺450,00"
+        },
+        {
+          "type": "color",
+          "id": "price_color",
+          "label": "Fiyat Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "text",
+          "id": "compare_price",
+          "label": "Karşılaştırma Fiyatı",
+          "default": "₺650,00"
+        },
+        {
+          "type": "color",
+          "id": "compare_price_color",
+          "label": "Karşılaştırma Fiyat Rengi",
+          "default": "rgba(255, 255, 255, 0.45)"
+        },
+        {
+          "type": "text",
+          "id": "quick_add_text",
+          "label": "Buton Metni",
+          "default": "+ Hızlı Sepete Ekle"
+        },
+        {
+          "type": "color",
+          "id": "quick_add_bg",
+          "label": "Buton Arka Plan Rengi",
+          "default": "rgba(194, 91, 130, 0.3)"
+        },
+        {
+          "type": "color",
+          "id": "quick_add_text_color",
+          "label": "Buton Metin Rengi",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "quick_add_border",
+          "label": "Buton Kenarlık Rengi",
+          "default": "#f7cad0"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Özel Yönlendirme Linki"
+        },
+        {
+          "type": "header",
+          "content": "🔲 Kart Cam (Glassmorphism) Stili"
+        },
+        {
+          "type": "color",
+          "id": "card_bg_color",
+          "label": "Kart Arka Plan Rengi",
+          "default": "rgba(255, 255, 255, 0.04)"
+        },
+        {
+          "type": "color",
+          "id": "card_border_color",
+          "label": "Kart Kenarlık Rengi",
+          "default": "rgba(255, 255, 255, 0.12)"
+        },
+        {
+          "type": "range",
+          "id": "card_border_radius",
+          "label": "Köşe Yuvarlama (Radius)",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "card_blur",
+          "label": "Cam Bulanıklık Efekti (Blur)",
+          "min": 0,
+          "max": 30,
+          "step": 2,
+          "unit": "px",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "card_padding",
+          "label": "Kart İç Boşluğu (Padding)",
+          "min": 8,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Koleksiyon Ürün Izgarası"
+      "name": "Koleksiyon Ürün Izgarası",
+      "blocks": [
+        {
+          "type": "product_card",
+          "settings": {
+            "badge_text": "✦ EN ÇOK SATAN",
+            "title": "Lumière Radiance Serum 30ml",
+            "description": "Cilt bariyerini yenileyici ve nemlendirici gençlik iksiri",
+            "price": "₺450,00",
+            "compare_price": "₺650,00"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "badge_text": "YENİ",
+            "title": "Velvet Hydra Besleyici Gece Kremi",
+            "description": "Gece boyunca yoğun elastikiyet ve nem bakımı",
+            "price": "₺520,00",
+            "compare_price": "₺700,00"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "badge_text": "ORGANİK",
+            "title": "Isparta Gül Suyu Arındırıcı Tonik",
+            "description": "Gözenek sıkılaştırıcı %100 doğal gül suyu",
+            "price": "₺280,00",
+            "compare_price": "₺350,00"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "badge_text": "%20 İNDİRİM",
+            "title": "Anti-Aging Peptit Göz Çevresi Kremi",
+            "description": "Göz altı morlukları ve şişlik karşıtı peptit kompleks",
+            "price": "₺390,00",
+            "compare_price": "₺500,00"
+          }
+        }
+      ]
     }
   ]
 }

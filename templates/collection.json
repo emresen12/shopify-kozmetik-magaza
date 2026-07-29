@@ -141,6 +141,54 @@
     },
     "product_grid": {
       "type": "collection-product-grid",
+      "blocks": {
+        "card_1": {
+          "type": "product_card",
+          "settings": {
+            "badge_text": "✦ EN ÇOK SATAN",
+            "title": "Lumière Radiance Serum 30ml",
+            "description": "Cilt bariyerini yenileyici ve nemlendirici gençlik iksiri",
+            "price": "₺450,00",
+            "compare_price": "₺650,00"
+          }
+        },
+        "card_2": {
+          "type": "product_card",
+          "settings": {
+            "badge_text": "YENİ",
+            "title": "Velvet Hydra Besleyici Gece Kremi",
+            "description": "Gece boyunca yoğun elastikiyet ve nem bakımı",
+            "price": "₺520,00",
+            "compare_price": "₺700,00"
+          }
+        },
+        "card_3": {
+          "type": "product_card",
+          "settings": {
+            "badge_text": "ORGANİK",
+            "title": "Isparta Gül Suyu Arındırıcı Tonik",
+            "description": "Gözenek sıkılaştırıcı %100 doğal gül suyu",
+            "price": "₺280,00",
+            "compare_price": "₺350,00"
+          }
+        },
+        "card_4": {
+          "type": "product_card",
+          "settings": {
+            "badge_text": "%20 İNDİRİM",
+            "title": "Anti-Aging Peptit Göz Çevresi Kremi",
+            "description": "Göz altı morlukları ve şişlik karşıtı peptit kompleks",
+            "price": "₺390,00",
+            "compare_price": "₺500,00"
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3",
+        "card_4"
+      ],
       "settings": {}
     }
   },
