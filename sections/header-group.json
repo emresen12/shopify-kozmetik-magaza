@@ -12,15 +12,40 @@
             "title_color": "#ffffff"
           }
         },
-        "nav_menu_1": {
-          "type": "drawer_nav_menu",
-          "settings": {}
-        },
-        "nav_actions_1": {
-          "type": "drawer_nav_actions",
+        "nav_link_1": {
+          "type": "drawer_nav_link",
           "settings": {
-            "account_label": "Hesabım",
-            "cart_label": "Sepetim"
+            "title": "Ana Sayfa",
+            "url": "/",
+            "icon": "✦"
+          }
+        },
+        "nav_link_2": {
+          "type": "drawer_nav_link",
+          "settings": {
+            "title": "Ürünler",
+            "url": "/collections/all",
+            "icon": "✦"
+          }
+        },
+        "nav_link_3": {
+          "type": "drawer_nav_link",
+          "settings": {
+            "title": "Katalog",
+            "url": "/collections",
+            "icon": "✦"
+          }
+        },
+        "nav_account_1": {
+          "type": "drawer_nav_account",
+          "settings": {
+            "label": "Hesabım"
+          }
+        },
+        "nav_cart_1": {
+          "type": "drawer_nav_cart",
+          "settings": {
+            "label": "Sepetim"
           }
         },
         "cart_header_1": {
@@ -120,8 +145,11 @@
       },
       "block_order": [
         "nav_header_1",
-        "nav_menu_1",
-        "nav_actions_1",
+        "nav_link_1",
+        "nav_link_2",
+        "nav_link_3",
+        "nav_account_1",
+        "nav_cart_1",
         "cart_header_1",
         "cart_shipping_1",
         "cart_items_1",
