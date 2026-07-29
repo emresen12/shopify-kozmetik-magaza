@@ -63,6 +63,18 @@
             "label": "Göz Bakımı",
             "category": "eye-care"
           }
+        },
+        "switcher_1": {
+          "type": "grid_switcher",
+          "settings": {
+            "label": "Görünüm:"
+          }
+        },
+        "sort_1": {
+          "type": "sort_box",
+          "settings": {
+            "label": "Sırala:"
+          }
         }
       },
       "block_order": [
@@ -70,11 +82,11 @@
         "filter_2",
         "filter_3",
         "filter_4",
-        "filter_5"
+        "filter_5",
+        "switcher_1",
+        "sort_1"
       ],
-      "settings": {
-        "show_grid_switcher": true
-      }
+      "settings": {}
     },
     "product_grid": {
       "type": "collection-product-grid",
