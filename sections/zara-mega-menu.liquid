@@ -67,10 +67,19 @@
                   class="zmm__cat-btn{%- if cat_idx == 0 %} is-active{%- endif -%}"
                   data-panel="zmm-panel-{{ block.id }}"
                   aria-expanded="{%- if cat_idx == 0 -%}true{%- else -%}false{%- endif -%}">
-                  {%- if block.settings.badge != blank -%}
-                    <span class="zmm__cat-badge">{{ block.settings.badge }}</span>
-                  {%- endif -%}
-                  {{ block.settings.title }}
+                  <div class="zmm__cat-thumb-wrap">
+                    {%- if block.settings.image != blank -%}
+                      {{ block.settings.image | image_url: width: 120 | image_tag: class: 'zmm__cat-thumb', loading: 'lazy', alt: block.settings.title }}
+                    {%- else -%}
+                      <img src="{{ 'zmm-hero.jpg' | asset_url }}" alt="{{ block.settings.title }}" class="zmm__cat-thumb" width="56" height="56" loading="lazy">
+                    {%- endif -%}
+                  </div>
+                  <div class="zmm__cat-text-group">
+                    {%- if block.settings.badge != blank -%}
+                      <span class="zmm__cat-badge">{{ block.settings.badge }}</span>
+                    {%- endif -%}
+                    <span class="zmm__cat-title-text">{{ block.settings.title }}</span>
+                  </div>
                 </button>
               </li>
               {%- assign cat_idx = cat_idx | plus: 1 -%}
@@ -141,9 +150,9 @@
               <div class="zmm__feat-col">
                 {%- assign in_cat2 = false -%}
                 {%- assign feat_count = 0 -%}
-                {%- for img in section.blocks -%}
-                  {%- if img.type == 'main_category' -%}
-                    {%- if img.id == current_id -%}
+                {%- for img_block in section.blocks -%}
+                  {%- if img_block.type == 'main_category' -%}
+                    {%- if img_block.id == current_id -%}
                       {%- assign in_cat2 = true -%}
                     {%- else -%}
                       {%- assign in_cat2 = false -%}
@@ -336,9 +345,9 @@
 
 /* ─── Col 1: Main Categories ───────────────────────── */
 .zmm__col-cats {
-  width: 300px;
+  width: 320px;
   flex-shrink: 0;
-  padding-right: 48px;
+  padding-right: 36px;
   overflow-y: auto;
   scrollbar-width: none;
   border-right: 1px solid rgba(247, 202, 208, 0.08);
@@ -349,7 +358,7 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 12px;
 }
 
 .zmm__cat-btn {
@@ -358,19 +367,60 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
   width: 100%;
   text-align: left;
-  padding: 10px 14px 10px 0;
-  font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 32px;
-  font-weight: 400;
-  line-height: 1.1;
-  color: rgba(255, 255, 255, 0.28);
-  letter-spacing: -0.01em;
+  padding: 8px 12px 8px 0;
+  color: rgba(255, 255, 255, 0.35);
   transition: color 0.35s ease, transform 0.35s ease;
   position: relative;
 }
+
+.zmm__cat-thumb-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid rgba(247, 202, 208, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.zmm__cat-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.zmm__cat-btn:hover .zmm__cat-thumb,
+.zmm__cat-btn.is-active .zmm__cat-thumb {
+  transform: scale(1.12);
+}
+
+.zmm__cat-btn:hover .zmm__cat-thumb-wrap,
+.zmm__cat-btn.is-active .zmm__cat-thumb-wrap {
+  border-color: #c25b82;
+  box-shadow: 0 0 14px rgba(194, 91, 130, 0.35);
+}
+
+.zmm__cat-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.zmm__cat-title-text {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
 .zmm__cat-btn::before {
   content: '';
   position: absolute;
@@ -386,9 +436,11 @@
 .zmm__cat-btn:hover,
 .zmm__cat-btn.is-active {
   color: #ffffff;
-  transform: translateX(8px);
+  transform: translateX(6px);
 }
 .zmm__cat-btn.is-active::before {
+  transform: translateY(-50%) scaleY(1);
+}
   transform: translateY(-50%) scaleY(1);
 }
 
@@ -709,6 +761,11 @@
           "id": "title",
           "label": "Kategori Adı",
           "default": "MAKYAJ"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Kategori Görseli / İkonu"
         },
         {
           "type": "text",
