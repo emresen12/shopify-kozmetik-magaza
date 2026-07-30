@@ -149,27 +149,32 @@
                       {%- assign in_cat2 = false -%}
                     {%- endif -%}
                   {%- endif -%}
-                  {%- if in_cat2 and img.type == 'featured_image' -%}
+                  {%- if in_cat2 and img_block.type == 'featured_image' -%}
                     <a
-                      href="{{ img.settings.url | default: '#' }}"
+                      href="{{ img_block.settings.url | default: '#' }}"
                       class="zmm__feat-card"
-                      {{ img.shopify_attributes }}>
+                      {{ img_block.shopify_attributes }}>
                       <div class="zmm__feat-img-wrap">
-                        {%- if img.settings.image != blank -%}
-                          {{ img.settings.image | image_url: width: 360 | image_tag:
+                        {%- if img_block.settings.image != blank -%}
+                          {{ img_block.settings.image | image_url: width: 360 | image_tag:
                               class: 'zmm__feat-img',
                               loading: 'lazy',
-                              alt: img.settings.title }}
+                              alt: img_block.settings.title }}
                         {%- else -%}
-                          {%- assign ph_num = feat_count | modulo: 4 | plus: 1 -%}
-                          {{ 'collection-' | append: ph_num | placeholder_svg_tag: 'zmm__feat-img zmm__feat-svg' }}
+                          <img
+                            src="{{ 'zmm-hero.jpg' | asset_url }}"
+                            alt="{{ img_block.settings.title }}"
+                            class="zmm__feat-img"
+                            loading="lazy"
+                            width="360"
+                            height="540">
                         {%- endif -%}
-                        {%- if img.settings.badge != blank -%}
-                          <span class="zmm__feat-badge">{{ img.settings.badge }}</span>
+                        {%- if img_block.settings.badge != blank -%}
+                          <span class="zmm__feat-badge">{{ img_block.settings.badge }}</span>
                         {%- endif -%}
                       </div>
-                      {%- if img.settings.title != blank -%}
-                        <span class="zmm__feat-label">{{ img.settings.title }}</span>
+                      {%- if img_block.settings.title != blank -%}
+                        <span class="zmm__feat-label">{{ img_block.settings.title }}</span>
                       {%- endif -%}
                     </a>
                     {%- assign feat_count = feat_count | plus: 1 -%}

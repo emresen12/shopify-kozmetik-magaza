@@ -4,9 +4,352 @@
   "sections": {
     "zara_mega_menu": {
       "type": "zara-mega-menu",
-      "blocks": {},
-      "block_order": [],
-      "settings": {}
+      "settings": {},
+      "blocks": {
+        "cat_makyaj": {
+          "type": "main_category",
+          "settings": { "title": "MAKYAJ", "badge": "" }
+        },
+        "grp_m_yuz": {
+          "type": "sub_group",
+          "settings": { "title": "YÜZ" }
+        },
+        "lnk_m_yeni": {
+          "type": "sub_link",
+          "settings": { "title": "Yeni Ürünler", "url": "/collections/makyaj", "is_highlighted": true }
+        },
+        "lnk_m_fondoten": {
+          "type": "sub_link",
+          "settings": { "title": "Fondöten", "url": "/collections/fondoten", "is_highlighted": false }
+        },
+        "lnk_m_kapatic": {
+          "type": "sub_link",
+          "settings": { "title": "Kapatıcı & Concealer", "url": "/collections/kapatic", "is_highlighted": false }
+        },
+        "lnk_m_allik": {
+          "type": "sub_link",
+          "settings": { "title": "Allık & Bronzer", "url": "/collections/allik", "is_highlighted": false }
+        },
+        "lnk_m_pudra": {
+          "type": "sub_link",
+          "settings": { "title": "Pudra & Setting Spray", "url": "/collections/pudra", "is_highlighted": false }
+        },
+        "grp_m_goz": {
+          "type": "sub_group",
+          "settings": { "title": "GÖZ" }
+        },
+        "lnk_m_maskara": {
+          "type": "sub_link",
+          "settings": { "title": "Maskara", "url": "/collections/maskara", "is_highlighted": false }
+        },
+        "lnk_m_eyeliner": {
+          "type": "sub_link",
+          "settings": { "title": "Eyeliner & Göz Kalemi", "url": "/collections/eyeliner", "is_highlighted": false }
+        },
+        "lnk_m_golge": {
+          "type": "sub_link",
+          "settings": { "title": "Göz Farı Paleti", "url": "/collections/goz-fari", "is_highlighted": false }
+        },
+        "lnk_m_primer": {
+          "type": "sub_link",
+          "settings": { "title": "Göz Primer", "url": "/collections/primer", "is_highlighted": false }
+        },
+        "grp_m_dudak": {
+          "type": "sub_group",
+          "settings": { "title": "DUDAK" }
+        },
+        "lnk_m_ruj": {
+          "type": "sub_link",
+          "settings": { "title": "Ruj", "url": "/collections/ruj", "is_highlighted": true }
+        },
+        "lnk_m_parlatic": {
+          "type": "sub_link",
+          "settings": { "title": "Dudak Parlatıcı", "url": "/collections/dudak-parlatic", "is_highlighted": false }
+        },
+        "lnk_m_dudalem": {
+          "type": "sub_link",
+          "settings": { "title": "Dudak Kalemi", "url": "/collections/dudak-kalemi", "is_highlighted": false }
+        },
+        "img_m_1": {
+          "type": "featured_image",
+          "settings": { "title": "VİRAL RUJ SETİ", "badge": "YENİ", "url": "/collections/ruj" }
+        },
+        "img_m_2": {
+          "type": "featured_image",
+          "settings": { "title": "GÖZ KOLEKSİYONU", "badge": "", "url": "/collections/goz-fari" }
+        },
+        "cat_cilt": {
+          "type": "main_category",
+          "settings": { "title": "CİLT BAKIMI", "badge": "" }
+        },
+        "grp_c_temiz": {
+          "type": "sub_group",
+          "settings": { "title": "TEMİZLEME" }
+        },
+        "lnk_c_yeni": {
+          "type": "sub_link",
+          "settings": { "title": "Yeni Ürünler", "url": "/collections/cilt-bakimi", "is_highlighted": true }
+        },
+        "lnk_c_jel": {
+          "type": "sub_link",
+          "settings": { "title": "Yüz Yıkama Jeli", "url": "/collections/temizleyici", "is_highlighted": false }
+        },
+        "lnk_c_misel": {
+          "type": "sub_link",
+          "settings": { "title": "Misel Suyu", "url": "/collections/misel-suyu", "is_highlighted": false }
+        },
+        "lnk_c_peeling": {
+          "type": "sub_link",
+          "settings": { "title": "Yüz Peelingi", "url": "/collections/peeling", "is_highlighted": false }
+        },
+        "grp_c_nemlen": {
+          "type": "sub_group",
+          "settings": { "title": "NEMLENDİRİCİ" }
+        },
+        "lnk_c_gunduz": {
+          "type": "sub_link",
+          "settings": { "title": "Gündüz Kremi", "url": "/collections/gunduz-kremi", "is_highlighted": false }
+        },
+        "lnk_c_gece": {
+          "type": "sub_link",
+          "settings": { "title": "Gece Kremi", "url": "/collections/gece-kremi", "is_highlighted": false }
+        },
+        "lnk_c_goz": {
+          "type": "sub_link",
+          "settings": { "title": "Göz Çevresi Kremi", "url": "/collections/goz-cevresi", "is_highlighted": false }
+        },
+        "grp_c_serum": {
+          "type": "sub_group",
+          "settings": { "title": "SERUM & ÖZLER" }
+        },
+        "lnk_c_cvit": {
+          "type": "sub_link",
+          "settings": { "title": "C Vitamini Serumu", "url": "/collections/c-vitamini", "is_highlighted": true }
+        },
+        "lnk_c_hyal": {
+          "type": "sub_link",
+          "settings": { "title": "Hyalüronik Asit", "url": "/collections/hyaluron", "is_highlighted": false }
+        },
+        "lnk_c_retinol": {
+          "type": "sub_link",
+          "settings": { "title": "Retinol", "url": "/collections/retinol", "is_highlighted": false }
+        },
+        "lnk_c_niasin": {
+          "type": "sub_link",
+          "settings": { "title": "Niasinamid", "url": "/collections/niasinamid", "is_highlighted": false }
+        },
+        "grp_c_gunes": {
+          "type": "sub_group",
+          "settings": { "title": "GÜNEŞ KORUMA" }
+        },
+        "lnk_c_spf": {
+          "type": "sub_link",
+          "settings": { "title": "SPF 50+ Yüz Kremi", "url": "/collections/gunes-koruma", "is_highlighted": false }
+        },
+        "lnk_c_after": {
+          "type": "sub_link",
+          "settings": { "title": "After Sun Bakım", "url": "/collections/after-sun", "is_highlighted": false }
+        },
+        "img_c_1": {
+          "type": "featured_image",
+          "settings": { "title": "CİLT BAKIM RUTİNİ", "badge": "", "url": "/collections/cilt-bakimi" }
+        },
+        "img_c_2": {
+          "type": "featured_image",
+          "settings": { "title": "SERUM KOLEKSİYONU", "badge": "ÇOK SATAN", "url": "/collections/serum" }
+        },
+        "cat_parfum": {
+          "type": "main_category",
+          "settings": { "title": "PARFÜM", "badge": "" }
+        },
+        "grp_p_kadin": {
+          "type": "sub_group",
+          "settings": { "title": "KADIN PARFÜM" }
+        },
+        "lnk_p_yeni": {
+          "type": "sub_link",
+          "settings": { "title": "Yeni Kokular", "url": "/collections/parfum", "is_highlighted": true }
+        },
+        "lnk_p_ciceksi": {
+          "type": "sub_link",
+          "settings": { "title": "Çiçeksi", "url": "/collections/ciceksi-parfum", "is_highlighted": false }
+        },
+        "lnk_p_odunsu": {
+          "type": "sub_link",
+          "settings": { "title": "Odunsu & Oriental", "url": "/collections/odunsu-parfum", "is_highlighted": false }
+        },
+        "lnk_p_meyve": {
+          "type": "sub_link",
+          "settings": { "title": "Meyvemsi & Taze", "url": "/collections/taze-parfum", "is_highlighted": false }
+        },
+        "grp_p_erkek": {
+          "type": "sub_group",
+          "settings": { "title": "ERKEK PARFÜM" }
+        },
+        "lnk_p_erkek_taze": {
+          "type": "sub_link",
+          "settings": { "title": "Taze & Aquatik", "url": "/collections/erkek-parfum", "is_highlighted": false }
+        },
+        "lnk_p_erkek_odun": {
+          "type": "sub_link",
+          "settings": { "title": "Odunsu & Derin", "url": "/collections/erkek-odunsu", "is_highlighted": false }
+        },
+        "grp_p_set": {
+          "type": "sub_group",
+          "settings": { "title": "HEDİYE SETLERİ" }
+        },
+        "lnk_p_hediyes": {
+          "type": "sub_link",
+          "settings": { "title": "Parfüm Hediye Setleri", "url": "/collections/parfum-set", "is_highlighted": true }
+        },
+        "lnk_p_mini": {
+          "type": "sub_link",
+          "settings": { "title": "Minyatür Koleksiyonu", "url": "/collections/mini-parfum", "is_highlighted": false }
+        },
+        "img_p_1": {
+          "type": "featured_image",
+          "settings": { "title": "YENİ SEZON KOKULAR", "badge": "2025", "url": "/collections/parfum" }
+        },
+        "img_p_2": {
+          "type": "featured_image",
+          "settings": { "title": "HEDİYE SETLERİ", "badge": "", "url": "/collections/parfum-set" }
+        },
+        "cat_vucut": {
+          "type": "main_category",
+          "settings": { "title": "VÜCUT BAKIMI", "badge": "" }
+        },
+        "grp_v_vucut": {
+          "type": "sub_group",
+          "settings": { "title": "VÜCUT" }
+        },
+        "lnk_v_yeni": {
+          "type": "sub_link",
+          "settings": { "title": "Yeni Ürünler", "url": "/collections/vucut-bakimi", "is_highlighted": true }
+        },
+        "lnk_v_losyon": {
+          "type": "sub_link",
+          "settings": { "title": "Vücut Losyonu", "url": "/collections/vucut-losyonu", "is_highlighted": false }
+        },
+        "lnk_v_yag": {
+          "type": "sub_link",
+          "settings": { "title": "Vücut Yağı", "url": "/collections/vucut-yagi", "is_highlighted": false }
+        },
+        "lnk_v_peeling": {
+          "type": "sub_link",
+          "settings": { "title": "Vücut Peeling", "url": "/collections/vucut-peeling", "is_highlighted": false }
+        },
+        "grp_v_el": {
+          "type": "sub_group",
+          "settings": { "title": "EL & AYAK" }
+        },
+        "lnk_v_el": {
+          "type": "sub_link",
+          "settings": { "title": "El Kremi", "url": "/collections/el-kremi", "is_highlighted": false }
+        },
+        "lnk_v_tirak": {
+          "type": "sub_link",
+          "settings": { "title": "Tırnak Bakımı", "url": "/collections/tirnak", "is_highlighted": false }
+        },
+        "grp_v_ev": {
+          "type": "sub_group",
+          "settings": { "title": "EV KOKULARI" }
+        },
+        "lnk_v_mum": {
+          "type": "sub_link",
+          "settings": { "title": "Mum", "url": "/collections/mum", "is_highlighted": true }
+        },
+        "lnk_v_oda": {
+          "type": "sub_link",
+          "settings": { "title": "Oda Spreyi", "url": "/collections/oda-spreyi", "is_highlighted": false }
+        },
+        "lnk_v_difuz": {
+          "type": "sub_link",
+          "settings": { "title": "Difüzör", "url": "/collections/difuzor", "is_highlighted": false }
+        },
+        "img_v_1": {
+          "type": "featured_image",
+          "settings": { "title": "DOĞAL MUMLAR", "badge": "", "url": "/collections/mum" }
+        },
+        "img_v_2": {
+          "type": "featured_image",
+          "settings": { "title": "VÜCUT BAKIM SETİ", "badge": "HEDİYE", "url": "/collections/vucut-bakimi" }
+        },
+        "cat_yeni": {
+          "type": "main_category",
+          "settings": { "title": "YENİ ÜRÜNLER", "badge": "YENİ" }
+        },
+        "grp_y_one": {
+          "type": "sub_group",
+          "settings": { "title": "ÖNE ÇIKANLAR" }
+        },
+        "lnk_y_hafta": {
+          "type": "sub_link",
+          "settings": { "title": "Bu Hafta Gelenler", "url": "/collections/yeni-urunler", "is_highlighted": true }
+        },
+        "lnk_y_cok": {
+          "type": "sub_link",
+          "settings": { "title": "Çok Satanlar", "url": "/collections/cok-satanlar", "is_highlighted": false }
+        },
+        "lnk_y_editor": {
+          "type": "sub_link",
+          "settings": { "title": "Editörün Seçimi", "url": "/collections/editor-secimi", "is_highlighted": false }
+        },
+        "lnk_y_trend": {
+          "type": "sub_link",
+          "settings": { "title": "Trend Ürünler", "url": "/collections/trend", "is_highlighted": false }
+        },
+        "grp_y_koleks": {
+          "type": "sub_group",
+          "settings": { "title": "ÖZEL KOLEKSİYONLAR" }
+        },
+        "lnk_y_sezon": {
+          "type": "sub_link",
+          "settings": { "title": "Sezon Koleksiyonu", "url": "/collections/sezon", "is_highlighted": false }
+        },
+        "lnk_y_sinirli": {
+          "type": "sub_link",
+          "settings": { "title": "Sınırlı Sürüm", "url": "/collections/sinirli-surum", "is_highlighted": true }
+        },
+        "lnk_y_hediye": {
+          "type": "sub_link",
+          "settings": { "title": "Hediye Setleri", "url": "/collections/hediye-setleri", "is_highlighted": false }
+        },
+        "img_y_1": {
+          "type": "featured_image",
+          "settings": { "title": "HAFTANIN YENİLERİ", "badge": "YENİ", "url": "/collections/yeni-urunler" }
+        },
+        "img_y_2": {
+          "type": "featured_image",
+          "settings": { "title": "EDİTÖRÜN SEÇİMİ", "badge": "", "url": "/collections/editor-secimi" }
+        }
+      },
+      "block_order": [
+        "cat_makyaj",
+        "grp_m_yuz", "lnk_m_yeni", "lnk_m_fondoten", "lnk_m_kapatic", "lnk_m_allik", "lnk_m_pudra",
+        "grp_m_goz", "lnk_m_maskara", "lnk_m_eyeliner", "lnk_m_golge", "lnk_m_primer",
+        "grp_m_dudak", "lnk_m_ruj", "lnk_m_parlatic", "lnk_m_dudalem",
+        "img_m_1", "img_m_2",
+        "cat_cilt",
+        "grp_c_temiz", "lnk_c_yeni", "lnk_c_jel", "lnk_c_misel", "lnk_c_peeling",
+        "grp_c_nemlen", "lnk_c_gunduz", "lnk_c_gece", "lnk_c_goz",
+        "grp_c_serum", "lnk_c_cvit", "lnk_c_hyal", "lnk_c_retinol", "lnk_c_niasin",
+        "grp_c_gunes", "lnk_c_spf", "lnk_c_after",
+        "img_c_1", "img_c_2",
+        "cat_parfum",
+        "grp_p_kadin", "lnk_p_yeni", "lnk_p_ciceksi", "lnk_p_odunsu", "lnk_p_meyve",
+        "grp_p_erkek", "lnk_p_erkek_taze", "lnk_p_erkek_odun",
+        "grp_p_set", "lnk_p_hediyes", "lnk_p_mini",
+        "img_p_1", "img_p_2",
+        "cat_vucut",
+        "grp_v_vucut", "lnk_v_yeni", "lnk_v_losyon", "lnk_v_yag", "lnk_v_peeling",
+        "grp_v_el", "lnk_v_el", "lnk_v_tirak",
+        "grp_v_ev", "lnk_v_mum", "lnk_v_oda", "lnk_v_difuz",
+        "img_v_1", "img_v_2",
+        "cat_yeni",
+        "grp_y_one", "lnk_y_hafta", "lnk_y_cok", "lnk_y_editor", "lnk_y_trend",
+        "grp_y_koleks", "lnk_y_sezon", "lnk_y_sinirli", "lnk_y_hediye",
+        "img_y_1", "img_y_2"
+      ]
     },
     "header": {
       "type": "header",
