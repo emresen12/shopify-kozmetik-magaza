@@ -2,6 +2,33 @@
   <!-- Kozmetik Teması Arka Plan Efekti -->
   <div class="mega-menu__bg-glow"></div>
 
+  <!-- Header Alanı (Eski tam ekran üst barı geri getirildi) -->
+  <div class="mega-menu__header">
+    <div class="mega-menu__left">
+      <button class="mega-menu__close menu-toggle-btn" aria-label="{{ 'general.accessibility.close' | t | default: 'Kapat' }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <a href="{{ routes.root_url }}" class="mega-menu__logo">
+        {% if section.settings.logo != blank %}
+          {{ section.settings.logo | image_url: width: 150 | image_tag: alt: shop.name }}
+        {% else %}
+          {{ shop.name }}
+        {% endif %}
+      </a>
+    </div>
+    <div class="mega-menu__right">
+      <a href="{{ routes.search_url }}" class="mega-menu__link">ARA</a>
+      <a href="{{ routes.account_login_url }}" class="mega-menu__link">HESABIM</a>
+      <a href="/pages/help" class="mega-menu__link">YARDIM</a>
+      <a href="{{ routes.cart_url }}" class="mega-menu__link">
+        SEPET <span class="cart-count">({{ cart.item_count }})</span>
+      </a>
+    </div>
+  </div>
+
   <!-- Ana İçerik Alanı -->
   <div class="mega-menu__content">
     
@@ -78,7 +105,7 @@
                             <li><a href="#" class="mega-menu__child-link">Makyaj Fırçaları</a></li>
                             <li><a href="#" class="mega-menu__child-link">Makyaj Süngerleri</a></li>
                             <li><a href="#" class="mega-menu__child-link">Fırça Temizleyiciler</a></li>
-                          {% elsif sub_title contains 'temizleme' or sub_title contains 'tonik' %}
+                          {% elsif sub_title contains 'temizleme' or sub_title contains 'tonik' or sub_title contains 'temizle' %}
                             <li><a href="#" class="mega-menu__child-link">Yüz Temizleme Jeli</a></li>
                             <li><a href="#" class="mega-menu__child-link">Makyaj Temizleyici</a></li>
                             <li><a href="#" class="mega-menu__child-link">Tonik & Mist</a></li>
@@ -88,7 +115,7 @@
                             <li><a href="#" class="mega-menu__child-link">Gece Kremi</a></li>
                             <li><a href="#" class="mega-menu__child-link">Yüz Serumu</a></li>
                             <li><a href="#" class="mega-menu__child-link">Göz Çevresi Bakımı</a></li>
-                          {% elsif sub_title contains 'bakım' or sub_title contains 'özel' %}
+                          {% elsif sub_title contains 'bakım' or sub_title contains 'özel' or sub_title contains 'güneş' %}
                             <li><a href="#" class="mega-menu__child-link">Yüz Maskeleri</a></li>
                             <li><a href="#" class="mega-menu__child-link">Güneş Kremi (SPF)</a></li>
                             <li><a href="#" class="mega-menu__child-link">Leke Karşıtı Bakım</a></li>
@@ -96,11 +123,16 @@
                             <li><a href="#" class="mega-menu__child-link">Eau de Parfum (EDP)</a></li>
                             <li><a href="#" class="mega-menu__child-link">Eau de Toilette (EDT)</a></li>
                             <li><a href="#" class="mega-menu__child-link">Çiçeksi & Meyvemsi</a></li>
+                            <li><a href="#" class="mega-menu__child-link">Oryantal Notalar</a></li>
                           {% elsif sub_title contains 'erkek' %}
                             <li><a href="#" class="mega-menu__child-link">Ferah & Su Notaları</a></li>
                             <li><a href="#" class="mega-menu__child-link">Odunsu & Baharatlı</a></li>
-                          {% elsif sub_title contains 'vücut' or sub_title contains 'ev' %}
+                            <li><a href="#" class="mega-menu__child-link">Maskülen Seriler</a></li>
+                          {% elsif sub_title contains 'vücut' or sub_title contains 'vucut' %}
                             <li><a href="#" class="mega-menu__child-link">Vücut Spreyi</a></li>
+                            <li><a href="#" class="mega-menu__child-link">Vücut Losyonu</a></li>
+                            <li><a href="#" class="mega-menu__child-link">Duş Jeli</a></li>
+                          {% elsif sub_title contains 'ev' or sub_title contains 'koku' %}
                             <li><a href="#" class="mega-menu__child-link">Kokulu Mumlar</a></li>
                             <li><a href="#" class="mega-menu__child-link">Oda Kokusu</a></li>
                           {% else %}
@@ -160,15 +192,15 @@
 /* Kozmetik Temasına Uygun Mega Menu Stilleri */
 .mega-menu {
   position: fixed;
-  top: 82px; /* Header yüksekliği (Desktop) */
+  top: 0;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 82px);
-  background: rgba(15, 11, 16, 0.96);
+  height: 100vh;
+  background: rgba(15, 11, 16, 0.97);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   color: #ffffff;
-  z-index: 999; /* Header'ın (1000) bir tık altında */
+  z-index: 2147483647; /* Üst barı kapatacak şekilde tam ekran en üstte */
   display: flex;
   flex-direction: column;
   opacity: 0;
@@ -200,19 +232,106 @@
   visibility: visible;
 }
 
-/* Header'daki Hamburgere Ait Çizgileri X Yapma Efekti */
-.menu-toggle-btn svg line {
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  transform-origin: 50% 50%;
+/* Menü İçi Üst Bar (Header) */
+.mega-menu__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(15, 11, 16, 0.2);
 }
-.menu-toggle-btn.is-active svg line:nth-child(1) {
-  transform: translateY(6px) rotate(45deg);
+
+.mega-menu__left {
+  display: flex;
+  align-items: center;
+  gap: 40px;
 }
-.menu-toggle-btn.is-active svg line:nth-child(2) {
-  opacity: 0;
+
+.mega-menu__close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
-.menu-toggle-btn.is-active svg line:nth-child(3) {
-  transform: translateY(-6px) rotate(-45deg);
+
+.mega-menu__close:hover {
+  transform: scale(1.1);
+  color: #f7cad0;
+}
+
+.mega-menu__close svg {
+  width: 32px;
+  height: 32px;
+}
+
+.mega-menu__logo {
+  font-size: 28px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  background: linear-gradient(to right, #fff, #f7cad0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.mega-menu__logo img {
+  max-height: 40px;
+  width: auto;
+  display: block;
+}
+
+.mega-menu__right {
+  display: flex;
+  gap: 30px;
+}
+
+.mega-menu__link {
+  font-size: 11px;
+  font-weight: 500;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.mega-menu__link .cart-count {
+  color: #c25b82;
+  font-weight: 700;
+}
+
+.mega-menu__link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #f7cad0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.mega-menu__link:hover {
+  color: #ffffff;
+}
+
+.mega-menu__link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /* Main Content Grid */
@@ -220,7 +339,7 @@
   display: flex;
   flex: 1;
   padding: 40px;
-  height: 100%;
+  height: calc(100vh - 100px);
 }
 
 /* 1. Kolon: Ana Kategoriler */
@@ -445,13 +564,10 @@
 }
 
 @media (max-width: 990px) {
-  .mega-menu {
-    top: 70px; /* Mobil Header Yüksekliği */
-    height: calc(100vh - 70px);
-  }
   .mega-menu__content {
     flex-direction: column;
     padding: 20px;
+    height: calc(100vh - 120px);
   }
   .mega-menu__main-cats {
     width: 100%;

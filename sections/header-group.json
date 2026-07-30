@@ -190,12 +190,6 @@
         "feat_cilt_1": {
           "type": "featured_image",
           "settings": {
-            "title": "YENİ SEZON"
-          }
-        },
-        "feat_cilt_2": {
-          "type": "featured_image",
-          "settings": {
             "title": "CİLT BAKIM SIRLARI"
           }
         },
@@ -228,6 +222,78 @@
           "settings": {
             "title": "VİRAL DUDAK SETİ"
           }
+        },
+        "cat_parfum": {
+          "type": "main_category",
+          "settings": {
+            "title": "PARFÜM"
+          }
+        },
+        "sub_parfum_1": {
+          "type": "submenu_column",
+          "settings": {
+            "title": "KADIN PARFÜMLERİ"
+          }
+        },
+        "sub_parfum_2": {
+          "type": "submenu_column",
+          "settings": {
+            "title": "ERKEK PARFÜMLERİ"
+          }
+        },
+        "feat_parfum_1": {
+          "type": "featured_image",
+          "settings": {
+            "title": "YENİ SEZON KOKULAR"
+          }
+        },
+        "cat_vucut": {
+          "type": "main_category",
+          "settings": {
+            "title": "VÜCUT & EV"
+          }
+        },
+        "sub_vucut_1": {
+          "type": "submenu_column",
+          "settings": {
+            "title": "VÜCUT BAKIMI"
+          }
+        },
+        "sub_vucut_2": {
+          "type": "submenu_column",
+          "settings": {
+            "title": "EV KOKULARI"
+          }
+        },
+        "feat_vucut_1": {
+          "type": "featured_image",
+          "settings": {
+            "title": "DOĞAL MUMLAR"
+          }
+        },
+        "cat_yeni": {
+          "type": "main_category",
+          "settings": {
+            "title": "YENİ ÜRÜNLER"
+          }
+        },
+        "sub_yeni_1": {
+          "type": "submenu_column",
+          "settings": {
+            "title": "ÖNE ÇIKANLAR"
+          }
+        },
+        "sub_yeni_2": {
+          "type": "submenu_column",
+          "settings": {
+            "title": "ÖZEL SETLER"
+          }
+        },
+        "feat_yeni_1": {
+          "type": "featured_image",
+          "settings": {
+            "title": "HAFTANIN YENİLERİ"
+          }
         }
       },
       "block_order": [
@@ -235,12 +301,23 @@
         "sub_cilt_1",
         "sub_cilt_2",
         "feat_cilt_1",
-        "feat_cilt_2",
         "cat_makyaj",
         "sub_makyaj_1",
         "sub_makyaj_2",
         "sub_makyaj_3",
-        "feat_makyaj_1"
+        "feat_makyaj_1",
+        "cat_parfum",
+        "sub_parfum_1",
+        "sub_parfum_2",
+        "feat_parfum_1",
+        "cat_vucut",
+        "sub_vucut_1",
+        "sub_vucut_2",
+        "feat_vucut_1",
+        "cat_yeni",
+        "sub_yeni_1",
+        "sub_yeni_2",
+        "feat_yeni_1"
       ]
     }
   },
