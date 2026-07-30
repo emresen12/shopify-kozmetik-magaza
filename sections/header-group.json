@@ -164,9 +164,88 @@
         "auth_register_1"
       ],
       "settings": {}
+    },
+    "mega_menu": {
+      "type": "menu",
+      "settings": {},
+      "blocks": {
+        "cat_cilt": {
+          "type": "main_category",
+          "settings": {
+            "title": "CİLT BAKIMI"
+          }
+        },
+        "sub_cilt_1": {
+          "type": "submenu_column",
+          "settings": {
+            "title": "TEMİZLEME & TONİK"
+          }
+        },
+        "sub_cilt_2": {
+          "type": "submenu_column",
+          "settings": {
+            "title": "NEMLENDİRİCİ & SERUM"
+          }
+        },
+        "feat_cilt_1": {
+          "type": "featured_image",
+          "settings": {
+            "title": "YENİ SEZON"
+          }
+        },
+        "feat_cilt_2": {
+          "type": "featured_image",
+          "settings": {
+            "title": "CİLT BAKIM SIRLARI"
+          }
+        },
+        "cat_makyaj": {
+          "type": "main_category",
+          "settings": {
+            "title": "MAKYAJ"
+          }
+        },
+        "sub_makyaj_1": {
+          "type": "submenu_column",
+          "settings": {
+            "title": "YÜZ"
+          }
+        },
+        "sub_makyaj_2": {
+          "type": "submenu_column",
+          "settings": {
+            "title": "GÖZ"
+          }
+        },
+        "sub_makyaj_3": {
+          "type": "submenu_column",
+          "settings": {
+            "title": "DUDAK"
+          }
+        },
+        "feat_makyaj_1": {
+          "type": "featured_image",
+          "settings": {
+            "title": "VİRAL DUDAK SETİ"
+          }
+        }
+      },
+      "block_order": [
+        "cat_cilt",
+        "sub_cilt_1",
+        "sub_cilt_2",
+        "feat_cilt_1",
+        "feat_cilt_2",
+        "cat_makyaj",
+        "sub_makyaj_1",
+        "sub_makyaj_2",
+        "sub_makyaj_3",
+        "feat_makyaj_1"
+      ]
     }
   },
   "order": [
-    "header"
+    "header",
+    "mega_menu"
   ]
 }
