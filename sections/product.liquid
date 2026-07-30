@@ -16,7 +16,7 @@
   <!-- ==========================================
        1. HERO PRODUCT BUY BOX SECTION
   ========================================== -->
-  <div class="single-product-hero-container">
+  <div class="single-product-hero-container" data-image-pos="{{ section.settings.image_position | default: 'left' }}">
 
     <!-- LEFT: MINIMAL MEDIA GALLERY & THUMBNAIL BLOCKS -->
     <div class="single-product__media-col">
@@ -852,6 +852,16 @@
     position: relative;
     z-index: 2;
     align-items: start;
+  }
+
+  .single-product-hero-container[data-image-pos="right"] {
+    grid-template-columns: 0.9fr 1.1fr;
+  }
+  .single-product-hero-container[data-image-pos="right"] .single-product__media-col {
+    order: 2;
+  }
+  .single-product-hero-container[data-image-pos="right"] .single-product__info-col {
+    order: 1;
   }
 
   .sticky-media-frame {
@@ -1767,6 +1777,16 @@
 {
   "name": "Lüks Ürün Sayfası",
   "settings": [
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Görsel Konumu (Sayfa Düzeni)",
+      "options": [
+        { "value": "left", "label": "Solda" },
+        { "value": "right", "label": "Sağda" }
+      ],
+      "default": "left"
+    },
     {
       "type": "collection",
       "id": "other_products_collection",
