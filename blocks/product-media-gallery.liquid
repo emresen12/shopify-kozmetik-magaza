@@ -1,0 +1,70 @@
+{% doc %}
+  Product Media Gallery component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'product-media-gallery', id: 'media-gallery-1' %}
+{% enddoc %}
+
+<div class="sticky-media-frame" {{ block.shopify_attributes }}>
+  <div class="main-image-viewport">
+    {% if product.featured_media %}
+      <img 
+        id="MainProductMediaImage"
+        src="{{ product.featured_media | image_url: width: 1400 }}" 
+        alt="{{ product.featured_media.alt | default: product.title | escape }}"
+        class="viewport-img"
+        width="1000"
+        height="1000"
+        loading="eager"
+      >
+    {% else %}
+      <img 
+        id="MainProductMediaImage"
+        src="{{ 'luxury-serum.jpg' | asset_url }}" 
+        alt="{{ product.title | escape }}" 
+        class="viewport-img"
+        width="1000"
+        height="1000"
+        loading="eager"
+      >
+    {% endif %}
+  </div>
+
+  {% if product.media.size > 1 %}
+    <div class="media-thumbnails-row">
+      {% for media in product.media %}
+        <button 
+          type="button" 
+          class="thumb-btn {% if forloop.first %}active{% endif %}"
+          data-img-url="{{ media | image_url: width: 1400 }}"
+          aria-label="Görsel {{ forloop.index }}"
+        >
+          {{ media | image_url: width: 180, height: 180, crop: 'center' | image_tag: class: 'thumb-btn-img', loading: 'lazy' }}
+        </button>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="media-thumbnails-row">
+      <button type="button" class="thumb-btn active" data-img-url="{{ 'luxury-serum.jpg' | asset_url }}">
+        <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Görsel 1" class="thumb-btn-img">
+      </button>
+      <button type="button" class="thumb-btn" data-img-url="{{ 'luxury-cream.jpg' | asset_url }}">
+        <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Görsel 2" class="thumb-btn-img">
+      </button>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Ürün Görsel Galerisi",
+  "settings": [
+    { "type": "checkbox", "id": "show_thumbnails", "label": "Küçük Görseller Gösterilsin mi?", "default": true }
+  ],
+  "presets": [
+    {
+      "name": "Ürün Görsel Galerisi"
+    }
+  ]
+}
+{% endschema %}

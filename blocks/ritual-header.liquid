@@ -1,0 +1,26 @@
+{% doc %}
+  Ritual Header component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'ritual-header', id: 'ritual-header-1' %}
+{% enddoc %}
+
+<div class="sp-section-header" {{ block.shopify_attributes }}>
+  <span class="sec-subtitle">{{ block.settings.subtitle | default: "APPLICATION RITUAL" }}</span>
+  <h3 class="sec-title">{{ block.settings.title | default: "Güzellik Ritüeli" }}</h3>
+</div>
+
+{% schema %}
+{
+  "name": "Ritüel Grubu Başlığı",
+  "settings": [
+    { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "APPLICATION RITUAL" },
+    { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Güzellik Ritüeli" }
+  ],
+  "presets": [
+    {
+      "name": "Ritüel Grubu Başlığı"
+    }
+  ]
+}
+{% endschema %}

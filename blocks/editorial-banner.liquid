@@ -1,0 +1,38 @@
+{% doc %}
+  Editorial Banner block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'editorial-banner', id: 'editorial-banner-1' %}
+{% enddoc %}
+
+<div class="sp-editorial-banner-wrap" {{ block.shopify_attributes }}>
+  <div class="editorial-card">
+    {% if block.settings.image != blank %}
+      <img src="{{ block.settings.image | image_url: width: 1800 }}" alt="Editorial" class="editorial-img" loading="lazy">
+    {% else %}
+      <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Editorial" class="editorial-img" loading="lazy">
+    {% endif %}
+    <div class="editorial-content">
+      <span class="ed-tag">{{ block.settings.subtitle | default: "LA MAISON DE BEAUTÉ" }}</span>
+      <h2 class="ed-title">{{ block.settings.title | default: "Işıltının ve Zarafetin En Saf Hali" }}</h2>
+      <p class="ed-desc">{{ block.settings.text | default: "Nadir botanik özler ve 24K altın minerallerinin buluştuğu zamansız bir ritüel." }}</p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Editorial Banner",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Görsel" },
+    { "type": "text", "id": "subtitle", "label": "Üst Başlık", "default": "LA MAISON DE BEAUTÉ" },
+    { "type": "text", "id": "title", "label": "Ana Başlık", "default": "Işıltının ve Zarafetin En Saf Hali" },
+    { "type": "text", "id": "text", "label": "Açıklama Metni", "default": "Nadir botanik özler ve 24K altın minerallerinin buluştuğu zamansız bir ritüel." }
+  ],
+  "presets": [
+    {
+      "name": "Editorial Banner"
+    }
+  ]
+}
+{% endschema %}

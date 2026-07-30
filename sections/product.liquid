@@ -1,109 +1,2121 @@
 {% comment %}
-  This section is used in the product template to render product page with
-  media, content, and add-to-cart form.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
+  Chanel & Zara Inspired High-Fashion Product Page Section
+  Ultra-customizable block settings for every single element on the product page.
+  Dynamically synced with Shopify Collections & Collection Product Grid Catalog.
 {% endcomment %}
 
-<div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
-</div>
+<div class="single-product-page-section full-width" id="singleProductPage" style="
+  --padding-top: {{ section.settings.padding_top | default: 90 }}px;
+  --padding-bottom: {{ section.settings.padding_bottom | default: 120 }}px;
+  --bg-color: {{ section.settings.bg_color | default: '#0b080c' }};
+  --accent-gold: {{ section.settings.accent_gold | default: '#f7cad0' }};
+">
+  <!-- Ambient Atmosphere Glow -->
+  <div class="luxury-ambient-glow"></div>
 
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p class="product-info__price">{{ product.price | money }}</p>
+  <!-- ==========================================
+       1. HERO PRODUCT BUY BOX SECTION
+  ========================================== -->
+  <div class="single-product-hero-container">
 
-  <ul class="product-badges" aria-label="{{ 'products.badges.label' | t }}">
-    <li class="product-badge product-badge--cruelty-free">
-      {{ 'products.badges.cruelty_free' | t }}
-    </li>
-    <li class="product-badge product-badge--vegan">
-      {{ 'products.badges.vegan' | t }}
-    </li>
-  </ul>
+    <!-- LEFT: MINIMAL MEDIA GALLERY & THUMBNAIL BLOCKS -->
+    <div class="single-product__media-col">
+      {% assign media_gallery_block = section.blocks | where: "type", "product_media_gallery" | first %}
+      {% assign media_thumbnail_blocks = section.blocks | where: "type", "media_thumbnail" %}
 
-  <p>{{ product.description }}</p>
-</div>
-
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
-
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
+      <div class="sticky-media-frame" 
+        style="
+          {% if media_gallery_block.settings.border_radius %}border-radius: {{ media_gallery_block.settings.border_radius }}px;{% endif %}
+          {% if media_gallery_block.settings.bg_color != blank %}background-color: {{ media_gallery_block.settings.bg_color }};{% endif %}
+        "
+        {% if media_gallery_block %} {{ media_gallery_block.shopify_attributes }} {% endif %}
+      >
+        <div class="main-image-viewport" style="aspect-ratio: {{ media_gallery_block.settings.aspect_ratio | default: '4 / 5' }};">
+          {% if product.featured_media %}
+            <img 
+              id="MainProductMediaImage"
+              src="{{ product.featured_media | image_url: width: 1400 }}" 
+              alt="{{ product.featured_media.alt | default: product.title | escape }}"
+              class="viewport-img"
+              width="1000"
+              height="1000"
+              loading="eager"
+            >
+          {% else %}
+            <img 
+              id="MainProductMediaImage"
+              src="{{ 'luxury-serum.jpg' | asset_url }}" 
+              alt="{{ product.title | escape }}" 
+              class="viewport-img"
+              width="1000"
+              height="1000"
+              loading="eager"
+            >
           {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
-      {% endfor %}
-    </select>
+        </div>
 
-    <input type="text" name="quantity" min="1" value="1">
+        {% if media_gallery_block.settings.show_thumbnails == blank or media_gallery_block.settings.show_thumbnails == true %}
+          <div class="media-thumbnails-row">
+            {% if media_thumbnail_blocks.size > 0 %}
+              {% for block in media_thumbnail_blocks %}
+                <button 
+                  type="button" 
+                  class="thumb-btn {% if forloop.first %}active{% endif %}"
+                  data-img-url="{% if block.settings.image != blank %}{{ block.settings.image | image_url: width: 1400 }}{% else %}{{ 'luxury-serum.jpg' | asset_url }}{% endif %}"
+                  aria-label="{{ block.settings.alt | default: 'Küçük Görsel' }}"
+                  style="
+                    {% if block.settings.thumb_size %}width: {{ block.settings.thumb_size }}px; height: {{ block.settings.thumb_size }}px;{% endif %}
+                    {% if block.settings.border_radius %}border-radius: {{ block.settings.border_radius }}px;{% endif %}
+                  "
+                  {{ block.shopify_attributes }}
+                >
+                  {% if block.settings.image != blank %}
+                    <img src="{{ block.settings.image | image_url: width: 180, height: 180, crop: 'center' }}" alt="{{ block.settings.alt | default: 'Görsel' }}" class="thumb-btn-img" loading="lazy">
+                  {% else %}
+                    <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Görsel {{ forloop.index }}" class="thumb-btn-img">
+                  {% endif %}
+                </button>
+              {% endfor %}
+            {% elsif product.media.size > 1 %}
+              {% for media in product.media %}
+                <button 
+                  type="button" 
+                  class="thumb-btn {% if forloop.first %}active{% endif %}"
+                  data-img-url="{{ media | image_url: width: 1400 }}"
+                  aria-label="Görsel {{ forloop.index }}"
+                >
+                  {{ media | image_url: width: 180, height: 180, crop: 'center' | image_tag: class: 'thumb-btn-img', loading: 'lazy' }}
+                </button>
+              {% endfor %}
+            {% else %}
+              <button type="button" class="thumb-btn active" data-img-url="{{ 'luxury-serum.jpg' | asset_url }}">
+                <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Görsel 1" class="thumb-btn-img">
+              </button>
+              <button type="button" class="thumb-btn" data-img-url="{{ 'luxury-cream.jpg' | asset_url }}">
+                <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Görsel 2" class="thumb-btn-img">
+              </button>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
 
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
+
+    <!-- RIGHT: HERO BUY BOX BLOCKS -->
+    <div class="single-product__info-col">
+      <div class="minimal-info-box">
+
+        {% for block in section.blocks %}
+          {% case block.type %}
+
+            {% comment %} --- MARKA / KATEGORİ --- {% endcomment %}
+            {% when 'vendor_badge' %}
+              <div class="sp-block block-vendor" {{ block.shopify_attributes }}>
+                <span class="vendor-tag" style="
+                  {% if block.settings.text_color != blank %}color: {{ block.settings.text_color }};{% endif %}
+                  {% if block.settings.font_size %}font-size: {{ block.settings.font_size }}px;{% endif %}
+                  {% if block.settings.letter_spacing != blank %}letter-spacing: {{ block.settings.letter_spacing }};{% endif %}
+                ">
+                  {{ product.vendor | default: block.settings.default_vendor | default: "CHANEL • HAUTE BEAUTÉ" | upcase }}
+                </span>
+              </div>
+
+            {% comment %} --- BAŞLIK --- {% endcomment %}
+            {% when 'title' %}
+              <div class="sp-block block-title" {{ block.shopify_attributes }}>
+                <h1 class="sp-title" style="
+                  {% if block.settings.text_color != blank %}color: {{ block.settings.text_color }};{% endif %}
+                  {% if block.settings.font_size %}font-size: {{ block.settings.font_size }}px;{% endif %}
+                  {% if block.settings.font_weight != blank %}font-weight: {{ block.settings.font_weight }};{% endif %}
+                ">
+                  {{ block.settings.custom_title | default: product.title | default: "Rose Gold Elixir de Jeunesse" }}
+                </h1>
+              </div>
+
+            {% comment %} --- FİYAT --- {% endcomment %}
+            {% when 'price' %}
+              <div class="sp-block block-price" {{ block.shopify_attributes }}>
+                <div class="price-row">
+                  <span class="price-current" id="SpProductPrice" style="
+                    {% if block.settings.price_color != blank %}color: {{ block.settings.price_color }};{% endif %}
+                    {% if block.settings.font_size %}font-size: {{ block.settings.font_size }}px;{% endif %}
+                  ">
+                    {{ product.selected_or_first_available_variant.price | default: 125000 | money }}
+                  </span>
+                  {% if product.compare_at_price > product.price or block.settings.demo_compare_price != blank %}
+                    <span class="price-compare" id="SpComparePrice" style="
+                      {% if block.settings.compare_color != blank %}color: {{ block.settings.compare_color }};{% endif %}
+                    ">
+                      {{ product.selected_or_first_available_variant.compare_at_price | default: block.settings.demo_compare_price | default: "₺1.650,00" }}
+                    </span>
+                  {% endif %}
+                </div>
+                {% if block.settings.show_tax_notice %}
+                  <span class="sp-tax-notice" style="display: block; font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">
+                    {{ block.settings.tax_notice_text | default: "KDV dahil • Kargo sepette hesaplanır" }}
+                  </span>
+                {% endif %}
+              </div>
+
+            {% comment %} --- VARYANT SEÇİMİ --- {% endcomment %}
+            {% when 'variant_picker' %}
+              <div class="sp-block block-variants" {{ block.shopify_attributes }}>
+                {% unless product.has_only_default_variant %}
+                  <div class="variant-groups-wrap">
+                    {% for option in product.options_with_values %}
+                      <div class="v-group">
+                        <label class="v-label" style="{% if block.settings.label_size %}font-size: {{ block.settings.label_size }}px;{% endif %}">{{ option.name }}</label>
+                        <div class="v-pills-row">
+                          {% for value in option.values %}
+                            <button 
+                              type="button" 
+                              class="v-pill-btn {% if option.selected_value == value %}active{% endif %}"
+                              data-value="{{ value | escape }}"
+                              style="{% if block.settings.pill_border_radius %}border-radius: {{ block.settings.pill_border_radius }}px;{% endif %}"
+                            >
+                              <span>{{ value }}</span>
+                            </button>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <div class="v-group">
+                    <label class="v-label" style="{% if block.settings.label_size %}font-size: {{ block.settings.label_size }}px;{% endif %}">HACİM</label>
+                    <div class="v-pills-row">
+                      <button type="button" class="v-pill-btn" style="{% if block.settings.pill_border_radius %}border-radius: {{ block.settings.pill_border_radius }}px;{% endif %}">30 ML</button>
+                      <button type="button" class="v-pill-btn active" style="{% if block.settings.pill_border_radius %}border-radius: {{ block.settings.pill_border_radius }}px;{% endif %}">50 ML</button>
+                      <button type="button" class="v-pill-btn" style="{% if block.settings.pill_border_radius %}border-radius: {{ block.settings.pill_border_radius }}px;{% endif %}">100 ML</button>
+                    </div>
+                  </div>
+                {% endunless %}
+              </div>
+
+            {% comment %} --- SATIN ALMA BUTONLARI --- {% endcomment %}
+            {% when 'buy_buttons' %}
+              <div class="sp-block block-buy-buttons" {{ block.shopify_attributes }}>
+                {% form 'product', product, id: 'SpProductForm', class: 'sp-form' %}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id | default: 12345678 }}">
+
+                  <div class="buy-action-row">
+                    {% if block.settings.show_quantity == blank or block.settings.show_quantity == true %}
+                      <div class="sp-qty-picker">
+                        <button type="button" class="sp-qty-btn sp-qty-minus">-</button>
+                        <input type="number" name="quantity" value="1" min="1" class="sp-qty-val">
+                        <button type="button" class="sp-qty-btn sp-qty-plus">+</button>
+                      </div>
+                    {% endif %}
+
+                    <button type="submit" name="add" class="sp-add-to-cart-btn" style="
+                      {% if block.settings.button_bg != blank %}background-color: {{ block.settings.button_bg }};{% endif %}
+                      {% if block.settings.button_text_color != blank %}color: {{ block.settings.button_text_color }};{% endif %}
+                      {% if block.settings.button_border_radius %}border-radius: {{ block.settings.button_border_radius }}px;{% endif %}
+                    ">
+                      <span>{{ block.settings.button_text | default: "SEPETE EKLE" }}</span>
+                    </button>
+                  </div>
+
+                  {% if block.settings.show_dynamic_checkout %}
+                    <div class="sp-dynamic-checkout-wrap">
+                      {{ form | payment_button }}
+                    </div>
+                  {% endif %}
+                {% endform %}
+              </div>
+
+            {% comment %} --- AKORDEON SEKMELER --- {% endcomment %}
+            {% when 'collapsible_tab' %}
+              <div class="sp-block block-accordion" {{ block.shopify_attributes }}>
+                <details class="sp-accordion-details" {% if block.settings.open_by_default %}open{% endif %} style="
+                  {% if block.settings.border_color != blank %}border-color: {{ block.settings.border_color }};{% endif %}
+                ">
+                  <summary class="sp-accordion-summary" style="
+                    {% if block.settings.title_color != blank %}color: {{ block.settings.title_color }};{% endif %}
+                  ">
+                    <span>
+                      {% if block.settings.icon != blank %}<span style="margin-right: 8px;">{{ block.settings.icon }}</span>{% endif %}
+                      {{ block.settings.heading | default: "ÜRÜN DETAYLARI & İÇERİK" }}
+                    </span>
+                    <span class="sp-acc-plus">+</span>
+                  </summary>
+                  <div class="sp-accordion-body" style="
+                    {% if block.settings.content_color != blank %}color: {{ block.settings.content_color }};{% endif %}
+                  ">
+                    {{ block.settings.content | default: "Isparta gülü ve 24k altın özleri içeren hücre yenileyici elit formül. Cildi derinlemesine nemlendirir ve ışıltı kazandırır." }}
+                  </div>
+                </details>
+              </div>
+
+          {% endcase %}
+        {% endfor %}
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ==========================================
+       STANDALONE SECTION HEADINGS & TEXT BLOCKS
+  ========================================== -->
+  {% for block in section.blocks %}
+    {% if block.type == 'section_heading' %}
+      <div class="sp-section-header align-{{ block.settings.align | default: 'center' }}" style="
+        {% if block.settings.margin_bottom %}margin-bottom: {{ block.settings.margin_bottom }}px;{% endif %}
+      " {{ block.shopify_attributes }}>
+        {% if block.settings.subtitle != blank %}
+          <span class="sec-subtitle" style="{% if block.settings.subtitle_color != blank %}color: {{ block.settings.subtitle_color }};{% endif %}">{{ block.settings.subtitle }}</span>
+        {% endif %}
+        {% if block.settings.title != blank %}
+          <h3 class="sec-title" style="{% if block.settings.title_color != blank %}color: {{ block.settings.title_color }};{% endif %}">{{ block.settings.title }}</h3>
+        {% endif %}
+      </div>
+    {% elsif block.type == 'text_block' %}
+      <div class="sp-text-block align-{{ block.settings.align | default: 'center' }}" {{ block.shopify_attributes }}>
+        <div class="sp-text-content" style="
+          {% if block.settings.text_color != blank %}color: {{ block.settings.text_color }};{% endif %}
+          {% if block.settings.font_size %}font-size: {{ block.settings.font_size }}px;{% endif %}
+          {% if block.settings.max_width %}max-width: {{ block.settings.max_width }}px; margin: 0 auto;{% endif %}
+        ">
+          {{ block.settings.content }}
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+
+  <!-- ==========================================
+       2. EDITORIAL BANNER (FULL WIDTH BLOCK)
+  ========================================== -->
+  {% for block in section.blocks %}
+    {% if block.type == 'editorial_banner' %}
+      <div class="sp-editorial-banner-wrap" {{ block.shopify_attributes }}>
+        <div class="editorial-card" style="
+          {% if block.settings.height %}height: {{ block.settings.height }}px;{% endif %}
+          {% if block.settings.card_border_radius %}border-radius: {{ block.settings.card_border_radius }}px;{% endif %}
+        ">
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | image_url: width: 1800 }}" alt="Editorial" class="editorial-img" loading="lazy">
+          {% else %}
+            <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Editorial" class="editorial-img" loading="lazy">
+          {% endif %}
+          <div class="editorial-content" style="text-align: {{ block.settings.text_align | default: 'left' }};">
+            <span class="ed-tag">{{ block.settings.subtitle | default: "LA MAISON DE BEAUTÉ" }}</span>
+            <h2 class="ed-title">{{ block.settings.title | default: "Işıltının ve Zarafetin En Saf Hali" }}</h2>
+            <p class="ed-desc">{{ block.settings.text | default: "Nadir botanik özler ve 24K altın minerallerinin buluştuğu zamansız bir ritüel." }}</p>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+
+  <!-- ==========================================
+       3. FORMULA NOTES GROUP (OUTER GROUP + INNER HEADER + INNER CARDS SIDE-BY-SIDE)
+  ========================================== -->
+  {% assign formula_group_block = section.blocks | where: "type", "formula_group" | first %}
+  {% assign formula_header_block = section.blocks | where: "type", "formula_header" | first %}
+  {% assign formula_card_blocks  = section.blocks | where: "type", "formula_card" %}
+  {% if formula_group_block != blank or formula_header_block != blank or formula_card_blocks.size > 0 %}
+    <div class="sp-formula-section" 
+      style="
+        {% if formula_group_block.settings.bg_color != blank %}background-color: {{ formula_group_block.settings.bg_color }}; padding: 40px; border-radius: 16px;{% endif %}
+        {% if formula_group_block.settings.border_color != blank %}border: 1px solid {{ formula_group_block.settings.border_color }};{% endif %}
+      "
+      {% if formula_group_block %} {{ formula_group_block.shopify_attributes }} {% endif %}
+    >
+      <div class="sp-section-header" {% if formula_header_block %} {{ formula_header_block.shopify_attributes }} {% endif %}>
+        <span class="sec-subtitle" style="{% if formula_header_block.settings.subtitle_color != blank %}color: {{ formula_header_block.settings.subtitle_color }};{% endif %}">
+          {{ formula_header_block.settings.subtitle | default: formula_group_block.settings.subtitle | default: "SAVOIR-FAIRE & SENSORIALITY" }}
+        </span>
+        <h3 class="sec-title" style="{% if formula_header_block.settings.title_color != blank %}color: {{ formula_header_block.settings.title_color }};{% endif %}">
+          {{ formula_header_block.settings.title | default: formula_group_block.settings.title | default: "Doku & Koku Notaları" }}
+        </h3>
+      </div>
+
+      <div class="formula-notes-grid" style="grid-template-columns: repeat({{ formula_group_block.settings.columns_desktop | default: 3 }}, 1fr);">
+        {% if formula_card_blocks.size > 0 %}
+          {% for block in formula_card_blocks %}
+            <div class="fn-card" 
+              style="
+                {% if block.settings.bg_color != blank %}background-color: {{ block.settings.bg_color }};{% endif %}
+                {% if block.settings.border_color != blank %}border-color: {{ block.settings.border_color }};{% endif %}
+              "
+              {{ block.shopify_attributes }}
+            >
+              <span class="fn-icon" style="{% if block.settings.icon_color != blank %}color: {{ block.settings.icon_color }};{% endif %}">
+                {{ block.settings.icon | default: "✨" }}
+              </span>
+              <h4 style="{% if block.settings.text_color != blank %}color: {{ block.settings.text_color }};{% endif %}">
+                {{ block.settings.title | default: "FORMÜL DOKUSU" }}
+              </h4>
+              <p style="{% if block.settings.text_color != blank %}color: {{ block.settings.text_color }}; opacity: 0.8;{% endif %}">
+                {{ block.settings.text | default: "İpeksi, yağlı his bırakmayan sıvı nektar dokusu." }}
+              </p>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="fn-card">
+            <span class="fn-icon">✨</span>
+            <h4>FORMÜL DOKUSU</h4>
+            <p>İpeksi, yağlı his bırakmayan sıvı nektar dokusu.</p>
+          </div>
+          <div class="fn-card">
+            <span class="fn-icon">🌹</span>
+            <h4>KOKU İMZASI</h4>
+            <p>Isparta gülü, taze bergamot ve hafif amber alt notaları.</p>
+          </div>
+          <div class="fn-card">
+            <span class="fn-icon">🧪</span>
+            <h4>KLİNİK SONUÇLAR</h4>
+            <p>%96 İlk kullanımda daha parlak cilt, %94 28 günde sıkılaşma.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+
+  <!-- ==========================================
+       4. APPLICATION RITUAL GROUP (OUTER GROUP + INNER HEADER + INNER STEP CARDS SIDE-BY-SIDE)
+  ========================================== -->
+  {% assign ritual_group_block = section.blocks | where: "type", "ritual_group" | first %}
+  {% assign ritual_header_block = section.blocks | where: "type", "ritual_header" | first %}
+  {% assign ritual_step_blocks  = section.blocks | where: "type", "ritual_step" %}
+  {% if ritual_group_block != blank or ritual_header_block != blank or ritual_step_blocks.size > 0 %}
+    <div class="sp-ritual-section" 
+      style="
+        {% if ritual_group_block.settings.bg_color != blank %}background-color: {{ ritual_group_block.settings.bg_color }}; padding: 40px; border-radius: 16px;{% endif %}
+        {% if ritual_group_block.settings.border_color != blank %}border: 1px solid {{ ritual_group_block.settings.border_color }};{% endif %}
+      "
+      {% if ritual_group_block %} {{ ritual_group_block.shopify_attributes }} {% endif %}
+    >
+      <div class="sp-section-header" {% if ritual_header_block %} {{ ritual_header_block.shopify_attributes }} {% endif %}>
+        <span class="sec-subtitle" style="{% if ritual_header_block.settings.subtitle_color != blank %}color: {{ ritual_header_block.settings.subtitle_color }};{% endif %}">
+          {{ ritual_header_block.settings.subtitle | default: ritual_group_block.settings.subtitle | default: "APPLICATION RITUAL" }}
+        </span>
+        <h3 class="sec-title" style="{% if ritual_header_block.settings.title_color != blank %}color: {{ ritual_header_block.settings.title_color }};{% endif %}">
+          {{ ritual_header_block.settings.title | default: ritual_group_block.settings.title | default: "Güzellik Ritüeli" }}
+        </h3>
+      </div>
+
+      <div class="ritual-grid">
+        {% if ritual_step_blocks.size > 0 %}
+          {% for block in ritual_step_blocks %}
+            <div class="ritual-card" 
+              style="
+                {% if block.settings.bg_color != blank %}background-color: {{ block.settings.bg_color }};{% endif %}
+                {% if block.settings.border_color != blank %}border-color: {{ block.settings.border_color }};{% endif %}
+              "
+              {{ block.shopify_attributes }}
+            >
+              <span class="step-num" style="{% if block.settings.step_num_color != blank %}color: {{ block.settings.step_num_color }};{% endif %}">
+                {{ block.settings.step_number | default: "01" }}
+              </span>
+              <h4>{{ block.settings.title | default: "HAZIRLIK" }}</h4>
+              <p>{{ block.settings.text | default: "Cildinizi nazik bir misel su ile temizleyin ve tonikleyin." }}</p>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="ritual-card">
+            <span class="step-num">01</span>
+            <h4>HAZIRLIK</h4>
+            <p>Cildinizi nazik bir misel su ile temizleyin ve tonikleyin.</p>
+          </div>
+          <div class="ritual-card">
+            <span class="step-num">02</span>
+            <h4>UYGULAMA</h4>
+            <p>3-4 damla iksiri avucunuza alıp dairesel masajla yedirin.</p>
+          </div>
+          <div class="ritual-card">
+            <span class="step-num">03</span>
+            <h4>MÜKEMMELLİK</h4>
+            <p>Nemlendirici kreminiz ile ışıltılı görünümü mühürleyin.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+
+  <!-- ==========================================
+       5. REVIEWS GROUP (OUTER GROUP + INNER HEADER + SCORE CARD + INNER REVIEW CARDS SIDE-BY-SIDE)
+  ========================================== -->
+  {% assign reviews_group_block = section.blocks | where: "type", "reviews_group" | first %}
+  {% assign reviews_header_block = section.blocks | where: "type", "reviews_header" | first %}
+  {% assign reviews_score_block  = section.blocks | where: "type", "reviews_score" | first %}
+  {% assign review_item_blocks   = section.blocks | where: "type", "review_item" %}
+  {% if reviews_group_block != blank or reviews_header_block != blank or reviews_score_block != blank or review_item_blocks.size > 0 %}
+    <div class="sp-reviews-section" 
+      style="{% if reviews_group_block.settings.bg_color != blank %}background-color: {{ reviews_group_block.settings.bg_color }}; padding: 40px; border-radius: 16px;{% endif %}"
+      {% if reviews_group_block %} {{ reviews_group_block.shopify_attributes }} {% endif %}
+    >
+      <div class="sp-section-header" {% if reviews_header_block %} {{ reviews_header_block.shopify_attributes }} {% endif %}>
+        <span class="sec-subtitle">
+          {{ reviews_header_block.settings.subtitle | default: reviews_group_block.settings.subtitle | default: "CLIENT EXPERIENCE" }}
+        </span>
+        <h3 class="sec-title">
+          {{ reviews_header_block.settings.title | default: reviews_group_block.settings.title | default: "Müşteri Değerlendirmeleri" }}
+        </h3>
+      </div>
+
+      <div class="reviews-wrapper">
+        <!-- Score Card (Left) -->
+        <div class="reviews-score-card" {% if reviews_score_block %} {{ reviews_score_block.shopify_attributes }} {% endif %}>
+          <div class="score-main">
+            <span class="big-score" style="{% if reviews_score_block.settings.score_color != blank %}color: {{ reviews_score_block.settings.score_color }};{% endif %}">
+              {{ reviews_score_block.settings.score | default: "4.9" }}
+            </span>
+            <span class="stars-gold" style="{% if reviews_score_block.settings.star_color != blank %}color: {{ reviews_score_block.settings.star_color }};{% endif %}">
+              ★★★★★
+            </span>
+            <span class="total-reviews">{{ reviews_score_block.settings.review_count | default: "128" }} Doğrulanmış Yorum</span>
+          </div>
+          <div class="score-bars">
+            <div class="s-bar-row"><span>5 Yıldız</span><div class="bar-bg"><div class="bar-fill" style="width: 92%;"></div></div><span>92%</span></div>
+            <div class="s-bar-row"><span>4 Yıldız</span><div class="bar-bg"><div class="bar-fill" style="width: 6%;"></div></div><span>6%</span></div>
+            <div class="s-bar-row"><span>3 Yıldız</span><div class="bar-bg"><div class="bar-fill" style="width: 2%;"></div></div><span>2%</span></div>
+          </div>
+        </div>
+
+        <!-- Review Cards (Right) -->
+        <div class="reviews-cards-grid">
+          {% if review_item_blocks.size > 0 %}
+            {% for block in review_item_blocks %}
+              <div class="review-item-card" 
+                style="
+                  {% if block.settings.bg_color != blank %}background-color: {{ block.settings.bg_color }};{% endif %}
+                  {% if block.settings.border_color != blank %}border-color: {{ block.settings.border_color }};{% endif %}
+                "
+                {{ block.shopify_attributes }}
+              >
+                <div class="rev-header">
+                  <span class="rev-stars">
+                    {% assign r_count = block.settings.rating | default: 5 %}
+                    {% for i in (1..r_count) %}★{% endfor %}
+                  </span>
+                  <span class="rev-date">{{ block.settings.date | default: "12 Temmuz 2026" }}</span>
+                </div>
+                <h5 class="rev-author">{{ block.settings.author | default: "Zeynep K." }} <span class="v-badge-sm">✓ {{ block.settings.badge | default: "Onaylı Alıcı" }}</span></h5>
+                <p class="rev-text">"{{ block.settings.comment | default: "Kullanmaya başladığım ilk haftadan itibaren cildimdeki ışıltıyı herkes fark etti." }}"</p>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="review-item-card">
+              <div class="rev-header">
+                <span class="rev-stars">★★★★★</span>
+                <span class="rev-date">12 Temmuz 2026</span>
+              </div>
+              <h5 class="rev-author">Zeynep K. <span class="v-badge-sm">✓ Onaylı Alıcı</span></h5>
+              <p class="rev-text">"Kullanmaya başladığım ilk haftadan itibaren cildimdeki ışıltıyı herkes fark etti. Kokusu ve dokusu inanılmaz derecede lüks."</p>
+            </div>
+            <div class="review-item-card">
+              <div class="rev-header">
+                <span class="rev-stars">★★★★★</span>
+                <span class="rev-date">28 Haziran 2026</span>
+              </div>
+              <h5 class="rev-author">Selin A. <span class="v-badge-sm">✓ Onaylı Alıcı</span></h5>
+              <p class="rev-text">"Chanel kalitesinde bir ürün. Hızlı emiliyor ve kesinlikle yağlı his bırakmıyor. Paketlemesi de mükemmeldi."</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+
+  <!-- ==========================================
+       6. RELATED PRODUCTS GROUP (EXACT SYNC WITH COLLECTION PRODUCTS CATALOG)
+  ========================================== -->
+  {% assign related_group_block = section.blocks | where: "type", "related_group" | first %}
+  {% assign related_header_block = section.blocks | where: "type", "related_header" | first %}
+  {% assign related_product_blocks = section.blocks | where: "type", "related_product" %}
+
+  <div class="sp-related-section" 
+    style="{% if related_group_block.settings.bg_color != blank %}background-color: {{ related_group_block.settings.bg_color }}; padding: 40px; border-radius: 16px;{% endif %}"
+    {% if related_group_block %} {{ related_group_block.shopify_attributes }} {% endif %}
+  >
+    <div class="sp-section-header" {% if related_header_block %} {{ related_header_block.shopify_attributes }} {% endif %}>
+      <span class="sec-subtitle">
+        {{ related_header_block.settings.subtitle | default: related_group_block.settings.subtitle | default: "COMPLETE THE RITUAL" }}
+      </span>
+      <h3 class="sec-title">
+        {{ related_header_block.settings.title | default: related_group_block.settings.title | default: "Tamamlayıcı Ürünler" }}
+      </h3>
+    </div>
+
+    <div class="related-grid">
+      {% if related_product_blocks.size > 0 %}
+        {% for block in related_product_blocks %}
+          <div class="rel-product-card" 
+            style="
+              {% if block.settings.bg_color != blank %}background-color: {{ block.settings.bg_color }};{% endif %}
+              {% if block.settings.border_color != blank %}border-color: {{ block.settings.border_color }};{% endif %}
+            "
+            {{ block.shopify_attributes }}
+          >
+            <a href="{{ block.settings.url | default: '/products/gift-card' }}" class="rel-img-wrap">
+              {% if block.settings.image != blank %}
+                <img src="{{ block.settings.image | image_url: width: 300 }}" alt="{{ block.settings.title }}" class="rel-img" loading="lazy">
+              {% else %}
+                <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="{{ block.settings.title }}" class="rel-img" loading="lazy">
+              {% endif %}
+            </a>
+            <div class="rel-info">
+              {% if block.settings.badge != blank %}
+                <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">{{ block.settings.badge }}</span>
+              {% endif %}
+              <h4 class="rel-title"><a href="{{ block.settings.url | default: '/products/gift-card' }}">{{ block.settings.title | default: "Crème de la Rose Anti-Age" }}</a></h4>
+              <span class="rel-price">{{ block.settings.price | default: "₺1.850,00" }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      {% elsif collections.all.products.size > 0 %}
+        {% assign counter = 0 %}
+        {% for item in collections.all.products %}
+          {% if item.id != product.id and counter < 2 %}
+            {% assign counter = counter | plus: 1 %}
+            <div class="rel-product-card">
+              <a href="{{ item.url }}" class="rel-img-wrap">
+                {% if item.featured_media != blank %}
+                  <img src="{{ item.featured_media | image_url: width: 300 }}" alt="{{ item.title | escape }}" class="rel-img" loading="lazy">
+                {% else %}
+                  <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="{{ item.title | escape }}" class="rel-img" loading="lazy">
+                {% endif %}
+              </a>
+              <div class="rel-info">
+                {% if item.vendor != blank %}
+                  <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">{{ item.vendor }}</span>
+                {% endif %}
+                <h4 class="rel-title"><a href="{{ item.url }}">{{ item.title }}</a></h4>
+                <span class="rel-price">{{ item.price | money }}</span>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        {% comment %} EXACT PRODUCT ITEMS FROM THE COLLECTION PAGE {% endcomment %}
+        <div class="rel-product-card">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Velvet Hydra Besleyici Gece Kremi 50ml" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">YOĞUN NEM</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Velvet Hydra Besleyici Gece Kremi 50ml</a></h4>
+            <span class="rel-price">₺520,00</span>
+          </div>
+        </div>
+        <div class="rel-product-card">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Lumière Gold Eye Contour Elixir 15ml" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">✦ ÖZEL</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Lumière Gold Eye Contour Elixir 15ml</a></h4>
+            <span class="rel-price">₺590,00</span>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       7. OTHER PRODUCTS SLIDER SECTION (EXACT SYNC WITH COLLECTION PRODUCTS CATALOG)
+  ========================================== -->
+  {% assign other_slider_group_block = section.blocks | where: "type", "other_slider_group" | first %}
+  {% assign other_slider_header_block = section.blocks | where: "type", "other_slider_header" | first %}
+  {% assign other_slider_item_blocks   = section.blocks | where: "type", "other_slider_item" %}
+  {% assign target_collection = section.settings.other_products_collection %}
+
+  <div class="sp-other-products-section" 
+    style="{% if other_slider_group_block.settings.bg_color != blank %}background-color: {{ other_slider_group_block.settings.bg_color }}; padding: 40px; border-radius: 16px;{% endif %}"
+    {% if other_slider_group_block %} {{ other_slider_group_block.shopify_attributes }} {% endif %}
+  >
+    <div class="sp-section-header-slider" {% if other_slider_header_block %} {{ other_slider_header_block.shopify_attributes }} {% endif %}>
+      <div>
+        <span class="sec-subtitle">
+          {{ other_slider_header_block.settings.subtitle | default: other_slider_group_block.settings.subtitle | default: "TÜM ÜRÜNLERİMİZ" }}
+        </span>
+        <h3 class="sec-title">
+          {{ other_slider_header_block.settings.title | default: other_slider_group_block.settings.title | default: "Diğer Ürünlerimiz" }}
+        </h3>
+      </div>
+      
+      {% if other_slider_header_block.settings.show_arrows == blank or other_slider_header_block.settings.show_arrows == true %}
+        <div class="slider-arrow-controls">
+          <button type="button" class="slider-arrow-btn slider-prev" id="SpOtherSliderPrev" aria-label="Önceki Ürünler">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button type="button" class="slider-arrow-btn slider-next" id="SpOtherSliderNext" aria-label="Sonraki Ürünler">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="other-products-track" id="SpOtherProductsTrack">
+      {% if other_slider_item_blocks.size > 0 %}
+        {% comment %} Tema editöründe elle eklenmiş slider blokları {% endcomment %}
+        {% for block in other_slider_item_blocks %}
+          <div class="rel-product-card-slide" 
+            style="{% if block.settings.card_width %}width: {{ block.settings.card_width }}px;{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            <a href="{{ block.settings.url | default: '/products/gift-card' }}" class="rel-img-wrap">
+              {% if block.settings.image != blank %}
+                <img src="{{ block.settings.image | image_url: width: 300 }}" alt="{{ block.settings.title }}" class="rel-img" loading="lazy">
+              {% else %}
+                <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ block.settings.title }}" class="rel-img" loading="lazy">
+              {% endif %}
+            </a>
+            <div class="rel-info">
+              {% if block.settings.badge != blank %}
+                <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">{{ block.settings.badge }}</span>
+              {% endif %}
+              <h4 class="rel-title"><a href="{{ block.settings.url | default: '/products/gift-card' }}">{{ block.settings.title | default: "Rose Gold Nectar Serum 30ml" }}</a></h4>
+              <span class="rel-price">{{ block.settings.price | default: "₺1.450,00" }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      {% elsif target_collection != blank and target_collection.products.size > 0 %}
+        {% comment %} Seçilmiş koleksiyondan gerçek Shopify ürünleri {% endcomment %}
+        {% for item in target_collection.products %}
+          {% if item.id != product.id %}
+            <div class="rel-product-card-slide">
+              <a href="{{ item.url }}" class="rel-img-wrap">
+                {% if item.featured_media != blank %}
+                  <img src="{{ item.featured_media | image_url: width: 300 }}" alt="{{ item.title | escape }}" class="rel-img" loading="lazy">
+                {% else %}
+                  <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ item.title | escape }}" class="rel-img" loading="lazy">
+                {% endif %}
+              </a>
+              <div class="rel-info">
+                {% if item.vendor != blank %}
+                  <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">{{ item.vendor }}</span>
+                {% endif %}
+                <h4 class="rel-title"><a href="{{ item.url }}">{{ item.title }}</a></h4>
+                <span class="rel-price">{{ item.price | money }}</span>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        {% comment %} EXACT PRODUCT ITEMS FROM THE COLLECTION PAGE (templates/collection.json) {% endcomment %}
+        <div class="rel-product-card-slide">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Radiance Glow Hyalüronik Serum 30ml" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">✦ EN ÇOK SATAN</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Radiance Glow Hyalüronik Serum 30ml</a></h4>
+            <span class="rel-price">₺450,00</span>
+          </div>
+        </div>
+
+        <div class="rel-product-card-slide">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Pure Vitamin C Brightening Essence 30ml" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">YENİ</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Pure Vitamin C Brightening Essence 30ml</a></h4>
+            <span class="rel-price">₺550,00</span>
+          </div>
+        </div>
+
+        <div class="rel-product-card-slide">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Midnight Youth Repair Oil 30ml" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">ORGANİK</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Midnight Youth Repair Oil 30ml</a></h4>
+            <span class="rel-price">₺740,00</span>
+          </div>
+        </div>
+
+        <div class="rel-product-card-slide">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Velvet Hydra Besleyici Gece Kremi 50ml" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">YOĞUN NEM</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Velvet Hydra Besleyici Gece Kremi 50ml</a></h4>
+            <span class="rel-price">₺520,00</span>
+          </div>
+        </div>
+
+        <div class="rel-product-card-slide">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Hydra-Luxe Intensive Day Cream 50ml" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">✦ SEÇKİN</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Hydra-Luxe Intensive Day Cream 50ml</a></h4>
+            <span class="rel-price">₺620,00</span>
+          </div>
+        </div>
+
+        <div class="rel-product-card-slide">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Rose Water Balancing Emulsion 100ml" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">DOĞAL</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Rose Water Balancing Emulsion 100ml</a></h4>
+            <span class="rel-price">₺340,00</span>
+          </div>
+        </div>
+
+        <div class="rel-product-card-slide">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Pembe Kuvars Canlandırıcı Yüz Maskesi 100ml" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">DETOKS</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Pembe Kuvars Canlandırıcı Yüz Maskesi 100ml</a></h4>
+            <span class="rel-price">₺480,00</span>
+          </div>
+        </div>
+
+        <div class="rel-product-card-slide">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Rose Infusion Detox Sheet Mask Set" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">ÖZEL SET</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Rose Infusion Detox Sheet Mask Set</a></h4>
+            <span class="rel-price">₺380,00</span>
+          </div>
+        </div>
+
+        <div class="rel-product-card-slide">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Charcoal Purifying Clay Mask 100ml" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">ARINDIRICI</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Charcoal Purifying Clay Mask 100ml</a></h4>
+            <span class="rel-price">₺310,00</span>
+          </div>
+        </div>
+
+        <div class="rel-product-card-slide">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Anti-Aging Peptit Göz Çevresi Kremi 15ml" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">İNDİRİM</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Anti-Aging Peptit Göz Çevresi Kremi 15ml</a></h4>
+            <span class="rel-price">₺390,00</span>
+          </div>
+        </div>
+
+        <div class="rel-product-card-slide">
+          <a href="/products/gift-card" class="rel-img-wrap">
+            <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Lumière Gold Eye Contour Elixir 15ml" class="rel-img" loading="lazy">
+          </a>
+          <div class="rel-info">
+            <span class="v-badge-sm" style="display: inline-block; margin-bottom: 4px;">✦ ÖZEL</span>
+            <h4 class="rel-title"><a href="/products/gift-card">Lumière Gold Eye Contour Elixir 15ml</a></h4>
+            <span class="rel-price">₺590,00</span>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
 </div>
 
 {% stylesheet %}
-  .product-info__price {
-    margin-block-end: 0.75rem;
+  .single-product-page-section {
+    position: relative;
+    padding-top: var(--padding-top);
+    padding-bottom: var(--padding-bottom);
+    background: var(--bg-color);
+    color: #ffffff;
+    min-height: 100vh;
   }
 
-  .product-badges {
+  .luxury-ambient-glow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 500px;
+    background: radial-gradient(circle, rgba(247, 202, 208, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* HERO BUY BOX */
+  .single-product-hero-container {
+    max-width: 1280px;
+    margin: 0 auto 100px auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 80px;
+    position: relative;
+    z-index: 2;
+    align-items: start;
+  }
+
+  .sticky-media-frame {
+    position: sticky;
+    top: 110px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1.25rem;
+    flex-direction: column;
+    gap: 16px;
   }
 
-  .product-badge {
-    display: inline-flex;
+  .main-image-viewport {
+    position: relative;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    display: flex;
     align-items: center;
-    padding: 0.35rem 0.85rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .main-image-viewport:hover {
+    border-color: rgba(247, 202, 208, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .viewport-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .media-thumbnails-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .thumb-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    cursor: pointer;
+    overflow: hidden;
+    padding: 0;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+  }
+
+  .thumb-btn:hover {
+    opacity: 1;
+    border-color: rgba(247, 202, 208, 0.4);
+  }
+
+  .thumb-btn.active {
+    opacity: 1;
+    border-color: #f7cad0;
+    box-shadow: 0 0 12px rgba(247, 202, 208, 0.25);
+  }
+
+  .thumb-btn-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .minimal-info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .vendor-tag {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: rgba(194, 91, 130, 0.2);
+    border: 1px solid rgba(247, 202, 208, 0.4);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #f7cad0;
+  }
+
+  .sp-title {
+    margin: 0;
+    font-size: 2.4rem;
+    font-weight: 800;
     line-height: 1.2;
-    border: 1px solid transparent;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    letter-spacing: -0.02em;
+    color: #ffffff;
   }
 
-  .product-badge--cruelty-free {
-    color: #9d4b6a;
-    background: linear-gradient(135deg, #fce7f0 0%, #f8d7e3 100%);
-    border-color: rgba(194, 91, 130, 0.18);
-    box-shadow: 0 1px 3px rgba(194, 91, 130, 0.12);
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
   }
 
-  .product-badge--vegan {
-    color: #8b4a72;
-    background: linear-gradient(135deg, #fdf0f5 0%, #f5e0eb 100%);
-    border-color: rgba(176, 82, 122, 0.16);
-    box-shadow: 0 1px 3px rgba(176, 82, 122, 0.1);
+  .price-current {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: #f7cad0;
   }
 
-  .product-badge:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(194, 91, 130, 0.16);
+  .price-compare {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.45);
+    text-decoration: line-through;
+  }
+
+  .v-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 12px;
+  }
+
+  .v-pills-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .v-pill-btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .v-pill-btn:hover {
+    border-color: rgba(247, 202, 208, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .v-pill-btn.active {
+    background: linear-gradient(135deg, #c25b82 0%, #a24367 100%);
+    border-color: transparent;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(194, 91, 130, 0.35);
+  }
+
+  .buy-action-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 16px;
+  }
+
+  .sp-qty-picker {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 2px;
+  }
+
+  .sp-qty-btn {
+    width: 36px;
+    height: 50px;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .sp-qty-btn:hover {
+    color: #f7cad0;
+  }
+
+  .sp-qty-val {
+    width: 38px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  .sp-add-to-cart-btn {
+    height: 52px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, #c25b82 0%, #a24367 100%);
+    color: #ffffff;
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(194, 91, 130, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .sp-add-to-cart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px rgba(194, 91, 130, 0.55);
+  }
+
+  .sp-add-to-cart-btn:active {
+    transform: translateY(0);
+  }
+
+  .sp-accordion-details {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 16px 0;
+  }
+
+  .sp-accordion-summary {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    color: rgba(255, 255, 255, 0.9);
+    transition: color 0.2s;
+  }
+
+  .sp-accordion-summary:hover {
+    color: #f7cad0;
+  }
+
+  .sp-accordion-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .sp-acc-plus {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.5);
+    transition: transform 0.3s ease;
+  }
+
+  .sp-accordion-details[open] .sp-acc-plus {
+    transform: rotate(45deg);
+  }
+
+  .sp-accordion-body {
+    padding-top: 16px;
+    font-size: 13px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* EDITORIAL BOTTOM BLOCKS (SIDE-BY-SIDE GRIDS) */
+  .sp-section-header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .sp-section-header.align-left { text-align: left; }
+  .sp-section-header.align-right { text-align: right; }
+  .sp-text-block.align-left { text-align: left; }
+  .sp-text-block.align-right { text-align: right; }
+
+  .sec-subtitle {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: rgba(194, 91, 130, 0.2);
+    border: 1px solid rgba(247, 202, 208, 0.3);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #f7cad0;
+    margin-bottom: 12px;
+  }
+
+  .sec-title {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: #ffffff;
+  }
+
+  .sp-editorial-banner-wrap {
+    max-width: 1280px;
+    margin: 0 auto 100px auto;
+    padding: 0 40px;
+  }
+
+  .editorial-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 480px;
+    display: flex;
+    align-items: center;
+    padding: 60px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .editorial-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.6);
+  }
+
+  .editorial-content {
+    position: relative;
+    z-index: 2;
+    max-width: 550px;
+  }
+
+  .ed-tag {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: rgba(194, 91, 130, 0.3);
+    border: 1px solid rgba(247, 202, 208, 0.4);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #f7cad0;
+    margin-bottom: 16px;
+  }
+
+  .ed-title {
+    margin: 0 0 16px 0;
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #ffffff;
+  }
+
+  .ed-desc {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* FORMULA & RITUAL 3-COLUMN SIDE-BY-SIDE GRIDS */
+  .sp-formula-section,
+  .sp-ritual-section {
+    max-width: 1280px;
+    margin: 0 auto 100px auto;
+    padding: 0 40px;
+  }
+
+  .formula-notes-grid,
+  .ritual-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .fn-card,
+  .ritual-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding: 32px 24px;
+    transition: all 0.3s ease;
+  }
+
+  .fn-card {
+    text-align: center;
+  }
+
+  .fn-card:hover,
+  .ritual-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(247, 202, 208, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .fn-icon {
+    font-size: 28px;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .step-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent-gold);
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .fn-card h4,
+  .ritual-card h4 {
+    margin: 0 0 8px 0;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+
+  .fn-card p,
+  .ritual-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* REVIEWS SIDE-BY-SIDE GRID */
+  .sp-reviews-section {
+    max-width: 1280px;
+    margin: 0 auto 100px auto;
+    padding: 0 40px;
+  }
+
+  .reviews-wrapper {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 40px;
+  }
+
+  .reviews-score-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .score-main {
+    text-align: center;
+  }
+
+  .big-score {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #ffffff;
+    display: block;
+  }
+
+  .total-reviews {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+    margin-top: 4px;
+  }
+
+  .score-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .s-bar-row {
+    display: grid;
+    grid-template-columns: 50px 1fr 30px;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .bar-bg {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #c25b82, #f7cad0);
+  }
+
+  .reviews-cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .review-item-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding: 24px;
+    transition: all 0.3s ease;
+  }
+
+  .review-item-card:hover {
+    border-color: rgba(247, 202, 208, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .rev-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .rev-stars {
+    color: #f7cad0;
+  }
+
+  .rev-date {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .rev-author {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .v-badge-sm {
+    font-size: 10px;
+    color: #4ade80;
+    font-weight: 700;
+  }
+
+  .rev-text {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+  }
+
+  /* RELATED PRODUCTS 2-COLUMN SIDE-BY-SIDE GRID */
+  .sp-related-section {
+    max-width: 1280px;
+    margin: 0 auto 100px auto;
+    padding: 0 40px;
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .rel-product-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 18px;
+    transition: all 0.3s ease;
+  }
+
+  .rel-product-card:hover {
+    border-color: rgba(247, 202, 208, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transform: translateY(-4px);
+  }
+
+  .rel-img-wrap {
+    width: 100px;
+    height: 120px;
+    border-radius: 14px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .rel-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .rel-title {
+    margin: 0 0 6px 0;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .rel-title a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .rel-title a:hover {
+    color: #f7cad0;
+  }
+
+  .rel-price {
+    font-size: 1.05rem;
+    color: #f7cad0;
+    font-weight: 800;
+  }
+
+  /* OTHER PRODUCTS SLIDER SECTION */
+  .sp-other-products-section {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .sp-section-header-slider {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 30px;
+  }
+
+  .slider-arrow-controls {
+    display: flex;
+    gap: 12px;
+  }
+
+  .slider-arrow-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .slider-arrow-btn:hover {
+    background: linear-gradient(135deg, #c25b82 0%, #a24367 100%);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 8px 24px rgba(194, 91, 130, 0.35);
+  }
+
+  .other-products-track {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 16px;
+    scrollbar-width: none;
+  }
+
+  .other-products-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rel-product-card-slide {
+    width: 320px;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px;
+    transition: all 0.3s ease;
+  }
+
+  .rel-product-card-slide:hover {
+    transform: translateY(-4px);
+    border-color: rgba(247, 202, 208, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .rel-info {
+    flex: 1;
+  }
+
+  .rel-info .rel-title {
+    font-weight: 700;
+  }
+
+  .rel-info .rel-title a:hover {
+    color: #f7cad0;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 991px) {
+    .single-product-hero-container {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 0 20px;
+    }
+
+    .sticky-media-frame {
+      position: relative;
+      top: 0;
+    }
+
+    .sp-title {
+      font-size: 1.8rem;
+    }
+
+    .sp-editorial-banner-wrap,
+    .sp-formula-section,
+    .sp-ritual-section,
+    .sp-reviews-section,
+    .sp-related-section,
+    .sp-other-products-section {
+      padding: 0 20px;
+      margin-bottom: 60px;
+    }
+
+    .editorial-card {
+      height: 380px;
+      padding: 30px;
+    }
+
+    .ed-title {
+      font-size: 1.8rem;
+    }
+
+    .formula-notes-grid,
+    .ritual-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .reviews-wrapper {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .related-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .rel-product-card-slide {
+      width: 260px;
+    }
+
+    .buy-action-row {
+      grid-template-columns: 1fr;
+    }
   }
 {% endstylesheet %}
 
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', () => {
+    // --- THUMBNAIL SWITCHER ---
+    const mainImg = document.getElementById('MainProductMediaImage');
+    const thumbs = document.querySelectorAll('.thumb-btn');
+
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        thumbs.forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+
+        const newUrl = thumb.getAttribute('data-img-url');
+        if (mainImg && newUrl) {
+          mainImg.style.opacity = '0.3';
+          setTimeout(() => {
+            mainImg.src = newUrl;
+            mainImg.style.opacity = '1';
+          }, 150);
+        }
+      });
+    });
+
+    // --- VARIANT PILLS ---
+    const vPills = document.querySelectorAll('.v-pill-btn');
+    vPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const parent = pill.closest('.v-pills-row');
+        if (parent) {
+          parent.querySelectorAll('.v-pill-btn').forEach(b => b.classList.remove('active'));
+          pill.classList.add('active');
+        }
+      });
+    });
+
+    // --- QTY PICKER ---
+    const qtyInput = document.querySelector('.sp-qty-val');
+    const minusBtn = document.querySelector('.sp-qty-minus');
+    const plusBtn = document.querySelector('.sp-qty-plus');
+
+    if (qtyInput && minusBtn && plusBtn) {
+      minusBtn.addEventListener('click', () => {
+        let val = parseInt(qtyInput.value) || 1;
+        if (val > 1) qtyInput.value = val - 1;
+      });
+
+      plusBtn.addEventListener('click', () => {
+        let val = parseInt(qtyInput.value) || 1;
+        qtyInput.value = val + 1;
+      });
+    }
+
+    // --- OTHER PRODUCTS SLIDER ARROWS ---
+    const prevBtn = document.getElementById('SpOtherSliderPrev');
+    const nextBtn = document.getElementById('SpOtherSliderNext');
+    const track = document.getElementById('SpOtherProductsTrack');
+
+    if (prevBtn && nextBtn && track) {
+      prevBtn.addEventListener('click', () => {
+        track.scrollBy({ left: -340, behavior: 'smooth' });
+      });
+
+      nextBtn.addEventListener('click', () => {
+        track.scrollBy({ left: 340, behavior: 'smooth' });
+      });
+    }
+  });
+{% endjavascript %}
+
 {% schema %}
 {
-  "name": "t:general.product",
-  "settings": [],
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  }
+  "name": "Lüks Ürün Sayfası",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "other_products_collection",
+      "label": "Diğer Ürünler Koleksiyonu",
+      "info": "Boş bırakılırsa tüm ürünler (collections.all) otomatik olarak mağaza kataloğundan çekilir."
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "label": "Üst Boşluk",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "label": "Alt Boşluk",
+      "default": 120
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Arka Plan Rengi",
+      "default": "#0a070b"
+    },
+    {
+      "type": "color",
+      "id": "accent_gold",
+      "label": "Vurgu Rengi",
+      "default": "#e8c4c8"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_media_gallery",
+      "name": "Ürün Görsel Galerisi",
+      "settings": [
+        {
+          "type": "select",
+          "id": "aspect_ratio",
+          "label": "Görsel Oranı",
+          "default": "4 / 5",
+          "options": [
+            { "value": "4 / 5", "label": "4:5 (Dikey Lüks)" },
+            { "value": "1 / 1", "label": "1:1 (Kare)" },
+            { "value": "3 / 4", "label": "3:4 (Portre)" }
+          ]
+        },
+        { "type": "range", "id": "border_radius", "min": 0, "max": 30, "step": 2, "unit": "px", "label": "Köşe Yuvarlama", "default": 12 },
+        { "type": "color", "id": "bg_color", "label": "Galeri Arka Plan Rengi" },
+        { "type": "checkbox", "id": "show_thumbnails", "label": "Küçük Görseller Gösterilsin mi?", "default": true }
+      ]
+    },
+    {
+      "type": "media_thumbnail",
+      "name": "Küçük Görsel Kartı",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Görsel" },
+        { "type": "text", "id": "alt", "label": "Görsel Alt Metni", "default": "Küçük Görsel" },
+        { "type": "range", "id": "thumb_size", "min": 40, "max": 100, "step": 4, "unit": "px", "label": "Görsel Boyutu", "default": 64 },
+        { "type": "range", "id": "border_radius", "min": 0, "max": 20, "step": 2, "unit": "px", "label": "Köşe Yuvarlama", "default": 8 }
+      ]
+    },
+    {
+      "type": "vendor_badge",
+      "name": "Marka Etiketi",
+      "settings": [
+        { "type": "text", "id": "default_vendor", "label": "Marka İsmi", "default": "CHANEL • HAUTE BEAUTÉ" },
+        { "type": "color", "id": "text_color", "label": "Metin Rengi" },
+        { "type": "range", "id": "font_size", "min": 9, "max": 18, "step": 1, "unit": "px", "label": "Yazı Boyutu", "default": 11 },
+        { "type": "text", "id": "letter_spacing", "label": "Harf Aralığı", "default": "0.3em" }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "Ürün Başlığı",
+      "settings": [
+        { "type": "text", "id": "custom_title", "label": "Özel Başlık Metni (Boşsa ürün adı gösterilir)" },
+        { "type": "color", "id": "text_color", "label": "Başlık Rengi" },
+        { "type": "range", "id": "font_size", "min": 18, "max": 48, "step": 2, "unit": "px", "label": "Yazı Boyutu", "default": 36 },
+        {
+          "type": "select",
+          "id": "font_weight",
+          "label": "Yazı Kalınlığı",
+          "default": "400",
+          "options": [
+            { "value": "300", "label": "İnce (Light)" },
+            { "value": "400", "label": "Normal (Regular)" },
+            { "value": "600", "label": "Yarı Kalın (SemiBold)" },
+            { "value": "700", "label": "Kalın (Bold)" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "price",
+      "name": "Fiyat Bilgisi",
+      "settings": [
+        { "type": "text", "id": "demo_compare_price", "label": "Demo İndirimsiz Fiyat", "default": "₺1.650,00" },
+        { "type": "color", "id": "price_color", "label": "Fiyat Rengi" },
+        { "type": "color", "id": "compare_color", "label": "Eski Fiyat Rengi" },
+        { "type": "range", "id": "font_size", "min": 14, "max": 36, "step": 2, "unit": "px", "label": "Fiyat Yazı Boyutu", "default": 26 },
+        { "type": "checkbox", "id": "show_tax_notice", "label": "Vergi/Kargo Notu Gösterilsin mi?", "default": true },
+        { "type": "text", "id": "tax_notice_text", "label": "Not Metni", "default": "KDV dahil • Kargo sepette hesaplanır" }
+      ]
+    },
+    {
+      "type": "variant_picker",
+      "name": "Varyant Seçimi",
+      "settings": [
+        { "type": "range", "id": "label_size", "min": 9, "max": 16, "step": 1, "unit": "px", "label": "Etiket Yazı Boyutu", "default": 11 },
+        { "type": "range", "id": "pill_border_radius", "min": 0, "max": 20, "step": 2, "unit": "px", "label": "Buton Köşe Yuvarlama", "default": 6 }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Satın Alma Butonları",
+      "settings": [
+        { "type": "text", "id": "button_text", "label": "Buton Metni", "default": "SEPETE EKLE" },
+        { "type": "color", "id": "button_bg", "label": "Buton Arka Plan Rengi" },
+        { "type": "color", "id": "button_text_color", "label": "Buton Metin Rengi" },
+        { "type": "range", "id": "button_border_radius", "min": 0, "max": 20, "step": 2, "unit": "px", "label": "Köşe Yuvarlama", "default": 6 },
+        { "type": "checkbox", "id": "show_quantity", "label": "Adet Seçici Gösterilsin mi?", "default": true },
+        { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Hemen Satın Al Gösterilsin mi?", "default": true }
+      ]
+    },
+    {
+      "type": "collapsible_tab",
+      "name": "Açılır Sekme",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Sekme Başlığı", "default": "ÜRÜN DETAYLARI & İÇERİK" },
+        { "type": "richtext", "id": "content", "label": "Sekme İçeriği", "default": "<p>Isparta gülü ve 24k altın özleri içeren hücre yenileyici elit formül. Cildi derinlemesine nemlendirir ve ışıltı kazandırır.</p>" },
+        { "type": "text", "id": "icon", "label": "İkon / Emoji (Örn: 🌿, ✨, 🧪)" },
+        { "type": "checkbox", "id": "open_by_default", "label": "Varsayılan Olarak Açık Gelsin", "default": false },
+        { "type": "color", "id": "title_color", "label": "Başlık Rengi" },
+        { "type": "color", "id": "content_color", "label": "İçerik Rengi" },
+        { "type": "color", "id": "border_color", "label": "Çizgi Rengi" }
+      ]
+    },
+    {
+      "type": "section_heading",
+      "name": "Bölüm Başlığı",
+      "settings": [
+        { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "LA MAISON DE BEAUTÉ" },
+        { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Özel Başlık Metni" },
+        { "type": "color", "id": "subtitle_color", "label": "Üst Başlık Rengi" },
+        { "type": "color", "id": "title_color", "label": "Ana Başlık Rengi" },
+        {
+          "type": "select",
+          "id": "align",
+          "label": "Hizalama",
+          "default": "center",
+          "options": [
+            { "value": "left", "label": "Sol" },
+            { "value": "center", "label": "Orta" },
+            { "value": "right", "label": "Sağ" }
+          ]
+        },
+        { "type": "range", "id": "margin_bottom", "min": 10, "max": 100, "step": 5, "unit": "px", "label": "Alt Boşluk", "default": 50 }
+      ]
+    },
+    {
+      "type": "text_block",
+      "name": "Metin Bloğu",
+      "settings": [
+        { "type": "richtext", "id": "content", "label": "Metin İçeriği", "default": "<p>Nadir botanik özler ve 24K altın minerallerinin buluştuğu zamansız bir ritüel.</p>" },
+        { "type": "color", "id": "text_color", "label": "Metin Rengi" },
+        { "type": "range", "id": "font_size", "min": 12, "max": 24, "step": 1, "unit": "px", "label": "Yazı Boyutu", "default": 15 },
+        { "type": "range", "id": "max_width", "min": 300, "max": 1200, "step": 50, "unit": "px", "label": "Maksimum Genişlik", "default": 700 },
+        {
+          "type": "select",
+          "id": "align",
+          "label": "Hizalama",
+          "default": "center",
+          "options": [
+            { "value": "left", "label": "Sol" },
+            { "value": "center", "label": "Orta" },
+            { "value": "right", "label": "Sağ" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "editorial_banner",
+      "name": "Editorial Banner",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Görsel" },
+        { "type": "text", "id": "subtitle", "label": "Üst Başlık", "default": "LA MAISON DE BEAUTÉ" },
+        { "type": "text", "id": "title", "label": "Ana Başlık", "default": "Işıltının ve Zarafetin En Saf Hali" },
+        { "type": "textarea", "id": "text", "label": "Açıklama Metni", "default": "Nadir botanik özler ve 24K altın minerallerinin buluştuğu zamansız bir ritüel." },
+        { "type": "range", "id": "height", "min": 250, "max": 700, "step": 10, "unit": "px", "label": "Banner Yüksekliği", "default": 480 },
+        { "type": "range", "id": "card_border_radius", "min": 0, "max": 30, "step": 2, "unit": "px", "label": "Köşe Yuvarlama", "default": 16 },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Metin Hizalaması",
+          "default": "left",
+          "options": [
+            { "value": "left", "label": "Sol" },
+            { "value": "center", "label": "Orta" },
+            { "value": "right", "label": "Sağ" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "formula_header",
+      "name": "Formül Grubu Başlığı",
+      "settings": [
+        { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "SAVOIR-FAIRE & SENSORIALITY" },
+        { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Doku & Koku Notaları" },
+        { "type": "color", "id": "subtitle_color", "label": "Üst Başlık Rengi" },
+        { "type": "color", "id": "title_color", "label": "Ana Başlık Rengi" }
+      ]
+    },
+    {
+      "type": "formula_group",
+      "name": "Formül Grubu",
+      "settings": [
+        { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "SAVOIR-FAIRE & SENSORIALITY" },
+        { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Doku & Koku Notaları" },
+        { "type": "color", "id": "bg_color", "label": "Grup Arka Plan Rengi" },
+        { "type": "color", "id": "border_color", "label": "Grup Çerçeve Rengi" },
+        {
+          "type": "select",
+          "id": "columns_desktop",
+          "label": "Masaüstü Sütun Sayısı",
+          "default": "3",
+          "options": [
+            { "value": "2", "label": "2 Sütun" },
+            { "value": "3", "label": "3 Sütun" },
+            { "value": "4", "label": "4 Sütun" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "formula_card",
+      "name": "Formül Kartı",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "İkon / Emoji", "default": "✨" },
+        { "type": "text", "id": "title", "label": "Başlık", "default": "FORMÜL DOKUSU" },
+        { "type": "text", "id": "text", "label": "Açıklama", "default": "İpeksi, yağlı his bırakmayan sıvı nektar dokusu." },
+        { "type": "color", "id": "bg_color", "label": "Kart Arka Plan Rengi" },
+        { "type": "color", "id": "border_color", "label": "Kart Çerçeve Rengi" },
+        { "type": "color", "id": "text_color", "label": "Metin Rengi" },
+        { "type": "color", "id": "icon_color", "label": "İkon Rengi" }
+      ]
+    },
+    {
+      "type": "ritual_header",
+      "name": "Ritüel Grubu Başlığı",
+      "settings": [
+        { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "APPLICATION RITUAL" },
+        { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Güzellik Ritüeli" },
+        { "type": "color", "id": "subtitle_color", "label": "Üst Başlık Rengi" },
+        { "type": "color", "id": "title_color", "label": "Ana Başlık Rengi" }
+      ]
+    },
+    {
+      "type": "ritual_group",
+      "name": "Ritüel Grubu",
+      "settings": [
+        { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "APPLICATION RITUAL" },
+        { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Güzellik Ritüeli" },
+        { "type": "color", "id": "bg_color", "label": "Grup Arka Plan Rengi" },
+        { "type": "color", "id": "border_color", "label": "Grup Çerçeve Rengi" }
+      ]
+    },
+    {
+      "type": "ritual_step",
+      "name": "Ritüel Adım Kartı",
+      "settings": [
+        { "type": "text", "id": "step_number", "label": "Adım Numarası", "default": "01" },
+        { "type": "text", "id": "title", "label": "Başlık", "default": "HAZIRLIK" },
+        { "type": "text", "id": "text", "label": "Açıklama", "default": "Cildinizi nazik bir misel su ile temizleyin ve tonikleyin." },
+        { "type": "color", "id": "step_num_color", "label": "Numara Rengi" },
+        { "type": "color", "id": "bg_color", "label": "Kart Arka Plan Rengi" },
+        { "type": "color", "id": "border_color", "label": "Kart Çerçeve Rengi" }
+      ]
+    },
+    {
+      "type": "reviews_header",
+      "name": "Yorumlar Grubu Başlığı",
+      "settings": [
+        { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "CLIENT EXPERIENCE" },
+        { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Müşteri Değerlendirmeleri" }
+      ]
+    },
+    {
+      "type": "reviews_group",
+      "name": "Yorumlar Grubu",
+      "settings": [
+        { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "CLIENT EXPERIENCE" },
+        { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Müşteri Değerlendirmeleri" },
+        { "type": "color", "id": "bg_color", "label": "Grup Arka Plan Rengi" }
+      ]
+    },
+    {
+      "type": "reviews_score",
+      "name": "Puan Özeti Kartı",
+      "settings": [
+        { "type": "text", "id": "score", "label": "Puan", "default": "4.9" },
+        { "type": "text", "id": "review_count", "label": "Yorum Sayısı", "default": "128" },
+        { "type": "color", "id": "score_color", "label": "Puan Rengi" },
+        { "type": "color", "id": "star_color", "label": "Yıldız Rengi" }
+      ]
+    },
+    {
+      "type": "review_item",
+      "name": "Müşteri Yorum Kartı",
+      "settings": [
+        { "type": "text", "id": "author", "label": "Yazar İsmi", "default": "Zeynep K." },
+        { "type": "text", "id": "badge", "label": "Onay Etiketi", "default": "Onaylı Alıcı" },
+        { "type": "text", "id": "date", "label": "Tarih", "default": "12 Temmuz 2026" },
+        { "type": "textarea", "id": "comment", "label": "Yorum Metni", "default": "Kullanmaya başladığım ilk haftadan itibaren cildimdeki ışıltıyı herkes fark etti." },
+        { "type": "range", "id": "rating", "min": 1, "max": 5, "step": 1, "label": "Yıldız Sayısı", "default": 5 },
+        { "type": "color", "id": "bg_color", "label": "Kart Arka Plan Rengi" },
+        { "type": "color", "id": "border_color", "label": "Kart Çerçeve Rengi" }
+      ]
+    },
+    {
+      "type": "related_header",
+      "name": "Tamamlayıcı Başlığı",
+      "settings": [
+        { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "COMPLETE THE RITUAL" },
+        { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Tamamlayıcı Ürünler" }
+      ]
+    },
+    {
+      "type": "related_group",
+      "name": "Tamamlayıcı Grubu",
+      "settings": [
+        { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "COMPLETE THE RITUAL" },
+        { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Tamamlayıcı Ürünler" },
+        { "type": "color", "id": "bg_color", "label": "Grup Arka Plan Rengi" }
+      ]
+    },
+    {
+      "type": "related_product",
+      "name": "Tamamlayıcı Kartı",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Görsel" },
+        { "type": "text", "id": "title", "label": "Başlık", "default": "Crème de la Rose Anti-Age" },
+        { "type": "text", "id": "price", "label": "Fiyat", "default": "₺1.850,00" },
+        { "type": "url", "id": "url", "label": "Link" },
+        { "type": "text", "id": "badge", "label": "Rozet (Örn: En Çok Satan)" },
+        { "type": "color", "id": "bg_color", "label": "Kart Arka Plan Rengi" },
+        { "type": "color", "id": "border_color", "label": "Kart Çerçeve Rengi" }
+      ]
+    },
+    {
+      "type": "other_slider_header",
+      "name": "Diğer Ürünler Başlığı",
+      "settings": [
+        { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "TÜM ÜRÜNLERİMİZ" },
+        { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Diğer Ürünlerimiz" },
+        { "type": "checkbox", "id": "show_arrows", "label": "Ok Butonları Gösterilsin mi?", "default": true }
+      ]
+    },
+    {
+      "type": "other_slider_group",
+      "name": "Diğer Ürünler Grubu",
+      "settings": [
+        { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "TÜM ÜRÜNLERİMİZ" },
+        { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Diğer Ürünlerimiz" },
+        { "type": "color", "id": "bg_color", "label": "Grup Arka Plan Rengi" }
+      ]
+    },
+    {
+      "type": "other_slider_item",
+      "name": "Diğer Ürün Kartı",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Görsel" },
+        { "type": "text", "id": "title", "label": "Başlık", "default": "Rose Gold Nectar Serum 30ml" },
+        { "type": "text", "id": "price", "label": "Fiyat", "default": "₺1.450,00" },
+        { "type": "url", "id": "url", "label": "Link" },
+        { "type": "text", "id": "badge", "label": "Rozet (Örn: Yeni)" },
+        { "type": "range", "id": "card_width", "min": 200, "max": 450, "step": 10, "unit": "px", "label": "Kart Genişliği", "default": 320 }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lüks Ürün Sayfası"
+    }
+  ]
 }
 {% endschema %}

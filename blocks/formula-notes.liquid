@@ -1,0 +1,105 @@
+{% doc %}
+  Formula & Olfactory Notes block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'formula-notes', id: 'formula-notes-1' %}
+{% enddoc %}
+
+<div class="sp-formula-section" {{ block.shopify_attributes }}>
+  <div class="sp-section-header">
+    <span class="sec-subtitle">SAVOIR-FAIRE & SENSORIALITY</span>
+    <h3 class="sec-title">Doku & Koku Notaları</h3>
+  </div>
+
+  <div class="formula-notes-grid">
+    <!-- Texture Box -->
+    <div class="fn-card">
+      <span class="fn-icon">✨</span>
+      <h4>{{ block.settings.t1_title | default: "FORMÜL DOKUSU" }}</h4>
+      <p>{{ block.settings.t1_desc | default: "İpeksi, yağlı his bırakmayan hızlı emilen sıvı nektar dokusu." }}</p>
+    </div>
+
+    <!-- Scent Notes Box -->
+    <div class="fn-card">
+      <span class="fn-icon">🌹</span>
+      <h4>{{ block.settings.t2_title | default: "KOKU İMZASI" }}</h4>
+      <p>{{ block.settings.t2_desc | default: "Isparta gülü, taze bergamot ve hafif amber alt notaları." }}</p>
+    </div>
+
+    <!-- Clinical Proof Box -->
+    <div class="fn-card">
+      <span class="fn-icon">🧪</span>
+      <h4>{{ block.settings.t3_title | default: "KLİNİK SONUÇLAR" }}</h4>
+      <p>{{ block.settings.t3_desc | default: "%96 İlk kullanımda daha parlak cilt, %94 28 günde sıkılaşma." }}</p>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .sp-formula-section {
+    max-width: 1280px;
+    margin: 0 auto 80px auto;
+    padding: 0 40px;
+  }
+
+  .formula-notes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+
+  .fn-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 30px 24px;
+    text-align: center;
+  }
+
+  .fn-icon {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .fn-card h4 {
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #e8c4c8;
+  }
+
+  .fn-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  @media (max-width: 991px) {
+    .formula-notes-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Formül ve Notalar",
+  "settings": [
+    { "type": "text", "id": "t1_title", "label": "1. Başlık", "default": "FORMÜL DOKUSU" },
+    { "type": "text", "id": "t1_desc", "label": "1. Açıklama", "default": "İpeksi, yağlı his bırakmayan hızlı emilen sıvı nektar dokusu." },
+    { "type": "text", "id": "t2_title", "label": "2. Başlık", "default": "KOKU İMZASI" },
+    { "type": "text", "id": "t2_desc", "label": "2. Açıklama", "default": "Isparta gülü, taze bergamot ve hafif amber alt notaları." },
+    { "type": "text", "id": "t3_title", "label": "3. Başlık", "default": "KLİNİK SONUÇLAR" },
+    { "type": "text", "id": "t3_desc", "label": "3. Açıklama", "default": "%96 İlk kullanımda daha parlak cilt, %94 28 günde sıkılaşma." }
+  ],
+  "presets": [
+    {
+      "name": "Formül ve Notalar"
+    }
+  ]
+}
+{% endschema %}

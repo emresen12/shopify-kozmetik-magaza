@@ -281,9 +281,57 @@
       <!-- Sağ Ekran Ürün Izgarası (Right Product Grid Area) -->
       <main class="collection-products-area">
         {% assign card_blocks = section.blocks | where: "type", "product_card" %}
+        {% assign sync_col = section.settings.sync_collection %}
 
         <div class="collection-products-grid">
-          {% if card_blocks.size > 0 %}
+          {% if sync_col != blank and sync_col.products.size > 0 %}
+            {% comment %} === GERÇEK SHOPIFY KOLEKSİYON ÜRÜNLER (senkronize mod) === {% endcomment %}
+            {% for item in sync_col.products %}
+              {% assign mod2 = forloop.index | modulo: 2 %}
+              <div class="haute-product-card"
+                data-category="all"
+                data-price="{{ item.price | divided_by: 100.0 }}"
+                data-index="{{ forloop.index }}"
+                data-title="{{ item.title | escape }}"
+                data-vendor="{{ item.vendor | escape }}"
+                data-tags="{{ item.tags | join: ',' | escape }}"
+                data-stock="{% if item.available %}in_stock{% else %}out_of_stock{% endif %}"
+              >
+                <div class="card-image-wrapper">
+                  <a href="{{ item.url }}">
+                    {% if item.featured_image %}
+                      {{ item.featured_image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
+                    {% elsif mod2 == 0 %}
+                      <img src="{{ 'luxury-cream.jpg' | asset_url }}" class="card-img" alt="{{ item.title | escape }}" width="400" height="400" loading="lazy">
+                    {% else %}
+                      <img src="{{ 'luxury-serum.jpg' | asset_url }}" class="card-img" alt="{{ item.title | escape }}" width="400" height="400" loading="lazy">
+                    {% endif %}
+                  </a>
+                  {% unless item.available %}
+                    <span class="card-badge badge-out-stock">TÜKENDİ</span>
+                  {% endunless %}
+                  <button type="button" class="card-wishlist-btn" aria-label="Favorilere Ekle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  </button>
+                </div>
+                <div class="card-content-wrapper">
+                  <div class="card-rating-stars">★★★★★ <span class="rating-val">5.0</span></div>
+                  <h3 class="card-title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                  <p class="card-desc">{{ item.description | strip_html | truncate: 75 }}</p>
+                  <div class="card-price-row">
+                    <span class="price-main">{{ item.price | money }}</span>
+                    {% if item.compare_at_price > item.price %}
+                      <span class="price-compare">{{ item.compare_at_price | money }}</span>
+                    {% endif %}
+                  </div>
+                  <button type="button" class="card-quick-add-btn demo-add-btn {% unless item.available %}disabled{% endunless %}" {% unless item.available %}disabled{% endunless %}>
+                    <span>{% if item.available %}Sepete Ekle{% else %}Tükendi{% endif %}</span>
+                  </button>
+                </div>
+              </div>
+            {% endfor %}
+          {% elsif card_blocks.size > 0 %}
+            {% comment %} === TEMA EDİTÖR BLOK MOD (manuel ürün kartları) === {% endcomment %}
             {% for block in card_blocks %}
               {% assign prod = block.settings.product %}
               {% if prod != blank %}
@@ -332,7 +380,7 @@
                   --card-qadd-border: {{ block.settings.quick_add_border }};
                 " {{ block.shopify_attributes }}>
                 <div class="card-image-wrapper">
-                  <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
+                  <a href="{% if prod != blank and prod.url != blank %}{{ prod.url }}{% elsif block.settings.url != blank and block.settings.url != '#' %}{{ block.settings.url }}{% else %}/products/gift-card{% endif %}">
                     {% if block.settings.image != blank %}
                       {{ block.settings.image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
                     {% elsif prod != blank and prod.featured_image %}
@@ -362,7 +410,7 @@
                   <div class="card-rating-stars">★★★★★ <span class="rating-val">5.0</span></div>
 
                   <h3 class="card-title">
-                    <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
+                    <a href="{% if prod != blank and prod.url != blank %}{{ prod.url }}{% elsif block.settings.url != blank and block.settings.url != '#' %}{{ block.settings.url }}{% else %}/products/gift-card{% endif %}">
                       {% if prod != blank %}{{ prod.title }}{% else %}{{ block.settings.title }}{% endif %}
                     </a>
                   </h3>
@@ -1176,6 +1224,12 @@
 {
   "name": "Koleksiyon Ürün Izgarası",
   "settings": [
+    {
+      "type": "collection",
+      "id": "sync_collection",
+      "label": "Ürün Kataloğu (Senkronizasyon)",
+      "info": "Bu koleksiyonu seçerseniz hem bu sayfa hem de ürün sayfasının altı aynı ürünleri gösterir."
+    },
     {
       "type": "range",
       "id": "columns_desktop",

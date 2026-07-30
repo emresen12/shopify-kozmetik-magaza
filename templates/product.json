@@ -2,7 +2,240 @@
   "sections": {
     "main": {
       "type": "product",
-      "settings": {}
+      "blocks": {
+        "product_media_gallery_1": {
+          "type": "product_media_gallery",
+          "settings": {
+            "show_thumbnails": true
+          }
+        },
+        "media_thumbnail_1": {
+          "type": "media_thumbnail",
+          "settings": {
+            "alt": "Küçük Görsel 1"
+          }
+        },
+        "media_thumbnail_2": {
+          "type": "media_thumbnail",
+          "settings": {
+            "alt": "Küçük Görsel 2"
+          }
+        },
+        "vendor_badge_1": {
+          "type": "vendor_badge",
+          "settings": {
+            "default_vendor": "CHANEL • HAUTE BEAUTÉ"
+          }
+        },
+        "title_1": {
+          "type": "title",
+          "settings": {}
+        },
+        "price_1": {
+          "type": "price",
+          "settings": {
+            "demo_compare_price": "₺1.650,00"
+          }
+        },
+        "variant_picker_1": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "buy_buttons_1": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true
+          }
+        },
+        "tab_1": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "ÜRÜN DETAYLARI & FORMÜL",
+            "content": "<p>Fransa Grasse gül özleri ve 24K altın parçacıkları içeren hücre yenileyici iksir. Cildi derinlemesine nemlendirir, elastikiyet kazandırır ve anında doğal bir ışıltı verir.</p>"
+          }
+        },
+        "tab_2": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "İÇERİK (INGREDIENTS)",
+            "content": "<p>Rosa Damascena Flower Water, Aqua, Glycerin, 24K Pure Gold Flakes, Sodium Hyaluronate, Niacinamide, Squalane, Tocopherol (Vitamin E), Rosa Canina Fruit Extract.</p>"
+          }
+        },
+        "editorial_banner_1": {
+          "type": "editorial_banner",
+          "settings": {
+            "subtitle": "LA MAISON DE BEAUTÉ",
+            "title": "Işıltının ve Zarafetin En Saf Hali",
+            "text": "Nadir botanik özler ve 24K altın minerallerinin buluştuğu zamansız bir güzellik ritüeli."
+          }
+        },
+        "formula_header_1": {
+          "type": "formula_header",
+          "settings": {
+            "subtitle": "SAVOIR-FAIRE & SENSORIALITY",
+            "title": "Doku & Koku Notaları"
+          }
+        },
+        "formula_group_1": {
+          "type": "formula_group",
+          "settings": {}
+        },
+        "formula_card_1": {
+          "type": "formula_card",
+          "settings": {
+            "icon": "✨",
+            "title": "FORMÜL DOKUSU",
+            "text": "İpeksi, yağlı his bırakmayan sıvı nektar dokusu."
+          }
+        },
+        "formula_card_2": {
+          "type": "formula_card",
+          "settings": {
+            "icon": "🌹",
+            "title": "KOKU İMZASI",
+            "text": "Isparta gülü, taze bergamot ve hafif amber alt notaları."
+          }
+        },
+        "formula_card_3": {
+          "type": "formula_card",
+          "settings": {
+            "icon": "🧪",
+            "title": "KLİNİK SONUÇLAR",
+            "text": "%96 İlk kullanımda daha parlak cilt, %94 28 günde sıkılaşma."
+          }
+        },
+        "ritual_header_1": {
+          "type": "ritual_header",
+          "settings": {
+            "subtitle": "APPLICATION RITUAL",
+            "title": "Güzellik Ritüeli"
+          }
+        },
+        "ritual_group_1": {
+          "type": "ritual_group",
+          "settings": {}
+        },
+        "ritual_step_1": {
+          "type": "ritual_step",
+          "settings": {
+            "step_number": "01",
+            "title": "HAZIRLIK",
+            "text": "Cildinizi nazik bir misel su ile temizleyin ve tonikleyin."
+          }
+        },
+        "ritual_step_2": {
+          "type": "ritual_step",
+          "settings": {
+            "step_number": "02",
+            "title": "UYGULAMA",
+            "text": "3-4 damla iksiri avucunuza alıp dairesel masajla yedirin."
+          }
+        },
+        "ritual_step_3": {
+          "type": "ritual_step",
+          "settings": {
+            "step_number": "03",
+            "title": "MÜKEMMELLİK",
+            "text": "Nemlendirici kreminiz ile ışıltılı görünümü mühürleyin."
+          }
+        },
+        "reviews_header_1": {
+          "type": "reviews_header",
+          "settings": {
+            "subtitle": "CLIENT EXPERIENCE",
+            "title": "Müşteri Değerlendirmeleri"
+          }
+        },
+        "reviews_group_1": {
+          "type": "reviews_group",
+          "settings": {}
+        },
+        "reviews_score_1": {
+          "type": "reviews_score",
+          "settings": {
+            "score": "4.9",
+            "review_count": "128"
+          }
+        },
+        "review_item_1": {
+          "type": "review_item",
+          "settings": {
+            "author": "Zeynep K.",
+            "badge": "Onaylı Alıcı",
+            "date": "12 Temmuz 2026",
+            "comment": "Kullanmaya başladığım ilk haftadan itibaren cildimdeki ışıltıyı herkes fark etti. Kokusu ve dokusu inanılmaz derecede lüks."
+          }
+        },
+        "review_item_2": {
+          "type": "review_item",
+          "settings": {
+            "author": "Selin A.",
+            "badge": "Onaylı Alıcı",
+            "date": "28 Haziran 2026",
+            "comment": "Chanel kalitesinde bir ürün. Hızlı emiliyor ve kesinlikle yağlı his bırakmıyor. Paketlemesi de mükemmeldi."
+          }
+        },
+        "related_header_1": {
+          "type": "related_header",
+          "settings": {
+            "subtitle": "COMPLETE THE RITUAL",
+            "title": "Tamamlayıcı Ürünler"
+          }
+        },
+        "related_group_1": {
+          "type": "related_group",
+          "settings": {}
+        },
+        "other_slider_header_1": {
+          "type": "other_slider_header",
+          "settings": {
+            "subtitle": "TÜM ÜRÜNLERİMİZ",
+            "title": "Diğer Ürünlerimiz"
+          }
+        },
+        "other_slider_group_1": {
+          "type": "other_slider_group",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "product_media_gallery_1",
+        "media_thumbnail_1",
+        "media_thumbnail_2",
+        "vendor_badge_1",
+        "title_1",
+        "price_1",
+        "variant_picker_1",
+        "buy_buttons_1",
+        "tab_1",
+        "tab_2",
+        "editorial_banner_1",
+        "formula_header_1",
+        "formula_group_1",
+        "formula_card_1",
+        "formula_card_2",
+        "formula_card_3",
+        "ritual_header_1",
+        "ritual_group_1",
+        "ritual_step_1",
+        "ritual_step_2",
+        "ritual_step_3",
+        "reviews_header_1",
+        "reviews_group_1",
+        "reviews_score_1",
+        "review_item_1",
+        "review_item_2",
+        "related_header_1",
+        "related_group_1",
+        "other_slider_header_1",
+        "other_slider_group_1"
+      ],
+      "settings": {
+        "padding_top": 90,
+        "padding_bottom": 120,
+        "bg_color": "#0a070b",
+        "accent_gold": "#e8c4c8"
+      }
     }
   },
   "order": [

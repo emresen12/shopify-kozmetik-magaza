@@ -1,0 +1,26 @@
+{% doc %}
+  Related Header component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'related-header', id: 'related-header-1' %}
+{% enddoc %}
+
+<div class="sp-section-header" {{ block.shopify_attributes }}>
+  <span class="sec-subtitle">{{ block.settings.subtitle | default: "COMPLETE THE RITUAL" }}</span>
+  <h3 class="sec-title">{{ block.settings.title | default: "Tamamlayıcı Ürünler" }}</h3>
+</div>
+
+{% schema %}
+{
+  "name": "Tamamlayıcı Başlığı",
+  "settings": [
+    { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "COMPLETE THE RITUAL" },
+    { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Tamamlayıcı Ürünler" }
+  ],
+  "presets": [
+    {
+      "name": "Tamamlayıcı Başlığı"
+    }
+  ]
+}
+{% endschema %}

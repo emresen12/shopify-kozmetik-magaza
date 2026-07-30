@@ -1,0 +1,26 @@
+{% doc %}
+  Formula Header component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'formula-header', id: 'formula-header-1' %}
+{% enddoc %}
+
+<div class="sp-section-header" {{ block.shopify_attributes }}>
+  <span class="sec-subtitle">{{ block.settings.subtitle | default: "SAVOIR-FAIRE & SENSORIALITY" }}</span>
+  <h3 class="sec-title">{{ block.settings.title | default: "Doku & Koku Notaları" }}</h3>
+</div>
+
+{% schema %}
+{
+  "name": "Formül Grubu Başlığı",
+  "settings": [
+    { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "SAVOIR-FAIRE & SENSORIALITY" },
+    { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Doku & Koku Notaları" }
+  ],
+  "presets": [
+    {
+      "name": "Formül Grubu Başlığı"
+    }
+  ]
+}
+{% endschema %}

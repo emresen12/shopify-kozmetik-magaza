@@ -1,0 +1,71 @@
+{% doc %}
+  Section Heading block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'section-heading', id: 'heading-1' %}
+{% enddoc %}
+
+<div class="sp-section-header align-{{ block.settings.align | default: 'center' }}" {{ block.shopify_attributes }}>
+  {% if block.settings.subtitle != blank %}
+    <span class="sec-subtitle">{{ block.settings.subtitle }}</span>
+  {% endif %}
+  {% if block.settings.title != blank %}
+    <h3 class="sec-title">{{ block.settings.title }}</h3>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .sp-section-header {
+    margin-bottom: 40px;
+  }
+  .sp-section-header.align-center {
+    text-align: center;
+  }
+  .sp-section-header.align-left {
+    text-align: left;
+  }
+  .sp-section-header.align-right {
+    text-align: right;
+  }
+  .sec-subtitle {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: rgba(255, 255, 255, 0.4);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .sec-title {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    color: #ffffff;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Bölüm Başlığı",
+  "settings": [
+    { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "LA MAISON DE BEAUTÉ" },
+    { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Özel Başlık Metni" },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Hizalama",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Sol" },
+        { "value": "center", "label": "Orta" },
+        { "value": "right", "label": "Sağ" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bölüm Başlığı"
+    }
+  ]
+}
+{% endschema %}

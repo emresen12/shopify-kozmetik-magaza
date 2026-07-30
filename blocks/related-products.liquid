@@ -1,0 +1,125 @@
+{% doc %}
+  Related Products block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'related-products', id: 'related-products-1' %}
+{% enddoc %}
+
+<div class="sp-related-section" {{ block.shopify_attributes }}>
+  <div class="sp-section-header">
+    <span class="sec-subtitle">COMPLETE THE RITUAL</span>
+    <h3 class="sec-title">Tamamlayıcı Ürünler</h3>
+  </div>
+
+  <div class="related-grid">
+    <div class="rel-product-card">
+      <a href="/products/gift-card" class="rel-img-wrap">
+        <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Nemlendirici Krem" class="rel-img" loading="lazy">
+      </a>
+      <div class="rel-info">
+        <h4 class="rel-title"><a href="/products/gift-card">Crème de la Rose Anti-Age</a></h4>
+        <span class="rel-price">₺1.850,00</span>
+      </div>
+    </div>
+
+    <div class="rel-product-card">
+      <a href="/products/gift-card" class="rel-img-wrap">
+        <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Göz Çevresi Serumu" class="rel-img" loading="lazy">
+      </a>
+      <div class="rel-info">
+        <h4 class="rel-title"><a href="/products/gift-card">Elixir Yeux Contour 15ml</a></h4>
+        <span class="rel-price">₺1.450,00</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .sp-related-section {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .sp-section-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .sec-subtitle {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: rgba(255, 255, 255, 0.4);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .sec-title {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    color: #ffffff;
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+
+  .rel-product-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px;
+  }
+
+  .rel-img-wrap {
+    width: 100px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .rel-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .rel-title {
+    margin: 0 0 6px 0;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .rel-title a {
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .rel-price {
+    font-size: 14px;
+    color: #e8c4c8;
+    font-weight: 600;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Tamamlayıcı Ürünler",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Tamamlayıcı Ürünler"
+    }
+  ]
+}
+{% endschema %}

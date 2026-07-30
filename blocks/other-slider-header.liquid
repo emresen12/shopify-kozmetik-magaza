@@ -1,0 +1,28 @@
+{% doc %}
+  Other Slider Header component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'other-slider-header', id: 'other-slider-header-1' %}
+{% enddoc %}
+
+<div class="sp-section-header-slider" {{ block.shopify_attributes }}>
+  <div>
+    <span class="sec-subtitle">{{ block.settings.subtitle | default: "TÜM ÜRÜNLERİMİZ" }}</span>
+    <h3 class="sec-title">{{ block.settings.title | default: "Diğer Ürünlerimiz" }}</h3>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Diğer Ürünler Başlığı",
+  "settings": [
+    { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "TÜM ÜRÜNLERİMİZ" },
+    { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Diğer Ürünlerimiz" }
+  ],
+  "presets": [
+    {
+      "name": "Diğer Ürünler Başlığı"
+    }
+  ]
+}
+{% endschema %}

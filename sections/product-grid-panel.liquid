@@ -104,7 +104,7 @@
             --card-qadd-border: {{ block.settings.quick_add_border }};
           " {{ block.shopify_attributes }}>
             <div class="card-image-wrapper">
-              <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
+              <a href="{% if prod != blank and prod.url != blank %}{{ prod.url }}{% elsif block.settings.url != blank and block.settings.url != '#' %}{{ block.settings.url }}{% else %}/products/gift-card{% endif %}">
                 {% if block.settings.image != blank %}
                   {{ block.settings.image | image_url: width: 450 | image_tag: class: 'card-img', loading: 'lazy' }}
                 {% elsif prod != blank and prod.featured_image %}
@@ -134,7 +134,7 @@
             <div class="card-info">
               <div class="card-rating">{{ block.settings.rating_stars | default: "★★★★★" }} <span>{{ block.settings.rating_score | default: "(4.9)" }}</span></div>
               <h3 class="card-title">
-                <a href="{{ prod.url | default: block.settings.url | default: '#' }}">
+                <a href="{% if prod != blank and prod.url != blank %}{{ prod.url }}{% elsif block.settings.url != blank and block.settings.url != '#' %}{{ block.settings.url }}{% else %}/products/gift-card{% endif %}">
                   {% if prod != blank %}{{ prod.title }}{% else %}{{ block.settings.title }}{% endif %}
                 </a>
               </h3>

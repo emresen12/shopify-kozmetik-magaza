@@ -1,0 +1,189 @@
+{% doc %}
+  Verified Reviews block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'reviews-section', id: 'reviews-section-1' %}
+{% enddoc %}
+
+<div class="sp-reviews-section" {{ block.shopify_attributes }}>
+  <div class="sp-section-header">
+    <span class="sec-subtitle">CLIENT EXPERIENCE</span>
+    <h3 class="sec-title">Müşteri Değerlendirmeleri</h3>
+  </div>
+
+  <div class="reviews-wrapper">
+    <div class="reviews-score-card">
+      <div class="score-main">
+        <span class="big-score">4.9</span>
+        <span class="stars-gold">★★★★★</span>
+        <span class="total-reviews">128 Doğrulanmış Yorum</span>
+      </div>
+
+      <div class="score-bars">
+        <div class="s-bar-row"><span>5 Yıldız</span><div class="bar-bg"><div class="bar-fill" style="width: 92%;"></div></div><span>92%</span></div>
+        <div class="s-bar-row"><span>4 Yıldız</span><div class="bar-bg"><div class="bar-fill" style="width: 6%;"></div></div><span>6%</span></div>
+        <div class="s-bar-row"><span>3 Yıldız</span><div class="bar-bg"><div class="bar-fill" style="width: 2%;"></div></div><span>2%</span></div>
+      </div>
+    </div>
+
+    <div class="reviews-cards-grid">
+      <div class="review-item-card">
+        <div class="rev-header">
+          <span class="rev-stars">★★★★★</span>
+          <span class="rev-date">12 Temmuz 2026</span>
+        </div>
+        <h5 class="rev-author">Zeynep K. <span class="v-badge-sm">✓ Onaylı Alıcı</span></h5>
+        <p class="rev-text">"Kullanmaya başladığım ilk haftadan itibaren cildimdeki ışıltıyı herkes fark etti. Kokusu ve dokusu inanılmaz derecede lüks."</p>
+      </div>
+
+      <div class="review-item-card">
+        <div class="rev-header">
+          <span class="rev-stars">★★★★★</span>
+          <span class="rev-date">28 Haziran 2026</span>
+        </div>
+        <h5 class="rev-author">Selin A. <span class="v-badge-sm">✓ Onaylı Alıcı</span></h5>
+        <p class="rev-text">"Chanel kalitesinde bir ürün. Hızlı emiliyor ve kesinlikle yağlı his bırakmıyor. Paketlemesi de mükemmeldi."</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .sp-reviews-section {
+    max-width: 1280px;
+    margin: 0 auto 80px auto;
+    padding: 0 40px;
+  }
+
+  .reviews-wrapper {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 40px;
+  }
+
+  .reviews-score-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .score-main {
+    text-align: center;
+  }
+
+  .big-score {
+    font-size: 3rem;
+    font-weight: 300;
+    color: #ffffff;
+    display: block;
+  }
+
+  .total-reviews {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+    margin-top: 4px;
+  }
+
+  .score-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .s-bar-row {
+    display: grid;
+    grid-template-columns: 50px 1fr 30px;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .bar-bg {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: #e8c4c8;
+  }
+
+  .reviews-cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .review-item-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .rev-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .rev-stars {
+    color: #e8c4c8;
+  }
+
+  .rev-date {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .rev-author {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .v-badge-sm {
+    font-size: 10px;
+    color: #a3e635;
+    font-weight: 500;
+  }
+
+  .rev-text {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+  }
+
+  @media (max-width: 991px) {
+    .reviews-wrapper {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Değerlendirmeler",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Değerlendirmeler"
+    }
+  ]
+}
+{% endschema %}

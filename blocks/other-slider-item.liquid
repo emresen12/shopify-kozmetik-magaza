@@ -1,0 +1,37 @@
+{% doc %}
+  Other Slider Item block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'other-slider-item', id: 'other-slider-item-1' %}
+{% enddoc %}
+
+<div class="rel-product-card-slide" {{ block.shopify_attributes }}>
+  <a href="{{ block.settings.url | default: '/products/gift-card' }}" class="rel-img-wrap">
+    {% if block.settings.image != blank %}
+      <img src="{{ block.settings.image | image_url: width: 300 }}" alt="{{ block.settings.title }}" class="rel-img" loading="lazy">
+    {% else %}
+      <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="{{ block.settings.title }}" class="rel-img" loading="lazy">
+    {% endif %}
+  </a>
+  <div class="rel-info">
+    <h4 class="rel-title"><a href="{{ block.settings.url | default: '/products/gift-card' }}">{{ block.settings.title | default: "Rose Gold Nectar Serum 30ml" }}</a></h4>
+    <span class="rel-price">{{ block.settings.price | default: "₺1.450,00" }}</span>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Diğer Ürün Kartı",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Görsel" },
+    { "type": "text", "id": "title", "label": "Başlık", "default": "Rose Gold Nectar Serum 30ml" },
+    { "type": "text", "id": "price", "label": "Fiyat", "default": "₺1.450,00" },
+    { "type": "url", "id": "url", "label": "Link" }
+  ],
+  "presets": [
+    {
+      "name": "Diğer Ürün Kartı"
+    }
+  ]
+}
+{% endschema %}

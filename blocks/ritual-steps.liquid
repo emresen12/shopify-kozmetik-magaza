@@ -1,0 +1,116 @@
+{% doc %}
+  Ritual Steps block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'ritual-steps', id: 'ritual-steps-1' %}
+{% enddoc %}
+
+<div class="sp-ritual-section" {{ block.shopify_attributes }}>
+  <div class="sp-section-header">
+    <span class="sec-subtitle">APPLICATION RITUAL</span>
+    <h3 class="sec-title">Güzellik Ritüeli</h3>
+  </div>
+
+  <div class="ritual-grid">
+    <div class="ritual-card">
+      <span class="step-num">01</span>
+      <h4>{{ block.settings.step1_title | default: "HAZIRLIK" }}</h4>
+      <p>{{ block.settings.step1_desc | default: "Cildinizi nazik bir misel su ile temizleyin ve tonikleyin." }}</p>
+    </div>
+    <div class="ritual-card">
+      <span class="step-num">02</span>
+      <h4>{{ block.settings.step2_title | default: "UYGULAMA" }}</h4>
+      <p>{{ block.settings.step2_desc | default: "3-4 damla iksiri avucunuza alıp dairesel masajla yedirin." }}</p>
+    </div>
+    <div class="ritual-card">
+      <span class="step-num">03</span>
+      <h4>{{ block.settings.step3_title | default: "MÜKEMMELLİK" }}</h4>
+      <p>{{ block.settings.step3_desc | default: "Nemlendirici kreminiz ile ışıltılı görünümü mühürleyin." }}</p>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .sp-ritual-section {
+    max-width: 1280px;
+    margin: 0 auto 80px auto;
+    padding: 0 40px;
+  }
+
+  .sp-section-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .sec-subtitle {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: rgba(255, 255, 255, 0.4);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .sec-title {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    color: #ffffff;
+  }
+
+  .ritual-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+
+  .ritual-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 30px 24px;
+  }
+
+  .step-num {
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: #e8c4c8;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .ritual-card h4 {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #ffffff;
+  }
+
+  .ritual-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.6);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Uygulama Ritüeli",
+  "settings": [
+    { "type": "text", "id": "step1_title", "label": "1. Adım Başlığı", "default": "HAZIRLIK" },
+    { "type": "text", "id": "step1_desc", "label": "1. Adım Açıklaması", "default": "Cildinizi nazik bir misel su ile temizleyin ve tonikleyin." },
+    { "type": "text", "id": "step2_title", "label": "2. Adım Başlığı", "default": "UYGULAMA" },
+    { "type": "text", "id": "step2_desc", "label": "2. Adım Açıklaması", "default": "3-4 damla iksiri avucunuza alıp dairesel masajla yedirin." },
+    { "type": "text", "id": "step3_title", "label": "3. Adım Başlığı", "default": "MÜKEMMELLİK" },
+    { "type": "text", "id": "step3_desc", "label": "3. Adım Açıklaması", "default": "Nemlendirici kreminiz ile ışıltılı görünümü mühürleyin." }
+  ],
+  "presets": [
+    {
+      "name": "Uygulama Ritüeli"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,59 @@
+{% doc %}
+  Text Block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'text-block', id: 'text-block-1' %}
+{% enddoc %}
+
+<div class="sp-text-block align-{{ block.settings.align | default: 'center' }}" {{ block.shopify_attributes }}>
+  <div class="sp-text-content">
+    {{ block.settings.content | default: "<p>Nadir botanik özler ve 24K altın minerallerinin buluştuğu zamansız bir ritüel.</p>" }}
+  </div>
+</div>
+
+{% stylesheet %}
+  .sp-text-block {
+    max-width: 800px;
+    margin: 0 auto 40px auto;
+    padding: 0 20px;
+  }
+  .sp-text-block.align-center {
+    text-align: center;
+  }
+  .sp-text-block.align-left {
+    text-align: left;
+  }
+  .sp-text-block.align-right {
+    text-align: right;
+  }
+  .sp-text-content {
+    font-size: 15px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.7);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Metin Bloğu",
+  "settings": [
+    { "type": "richtext", "id": "content", "label": "Metin İçeriği", "default": "<p>Nadir botanik özler ve 24K altın minerallerinin buluştuğu zamansız bir ritüel.</p>" },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Hizalama",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Sol" },
+        { "value": "center", "label": "Orta" },
+        { "value": "right", "label": "Sağ" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Metin Bloğu"
+    }
+  ]
+}
+{% endschema %}

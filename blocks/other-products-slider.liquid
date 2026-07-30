@@ -1,0 +1,161 @@
+{% doc %}
+  Other Products Slider block component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'other-products-slider', id: 'other-products-slider-1' %}
+{% enddoc %}
+
+<div class="sp-other-products-section" {{ block.shopify_attributes }}>
+  <div class="sp-section-header-slider">
+    <div>
+      <span class="sec-subtitle">{{ block.settings.subtitle | default: "TÜM ÜRÜNLERİMİZ" }}</span>
+      <h3 class="sec-title">{{ block.settings.title | default: "Diğer Ürünlerimiz" }}</h3>
+    </div>
+    
+    <!-- Left & Right Arrow Controls -->
+    <div class="slider-arrow-controls">
+      <button type="button" class="slider-arrow-btn slider-prev" aria-label="Önceki Ürünler">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <button type="button" class="slider-arrow-btn slider-next" aria-label="Sonraki Ürünler">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Scrollable Slider Track -->
+  <div class="other-products-track">
+    <div class="rel-product-card-slide">
+      <a href="/products/gift-card" class="rel-img-wrap">
+        <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Serum 1" class="rel-img" loading="lazy">
+      </a>
+      <div class="rel-info">
+        <h4 class="rel-title"><a href="/products/gift-card">Rose Gold Nectar Serum 30ml</a></h4>
+        <span class="rel-price">₺1.450,00</span>
+      </div>
+    </div>
+
+    <div class="rel-product-card-slide">
+      <a href="/products/gift-card" class="rel-img-wrap">
+        <img src="{{ 'luxury-cream.jpg' | asset_url }}" alt="Krem 2" class="rel-img" loading="lazy">
+      </a>
+      <div class="rel-info">
+        <h4 class="rel-title"><a href="/products/gift-card">Crème Hydratante Velours 50ml</a></h4>
+        <span class="rel-price">₺1.850,00</span>
+      </div>
+    </div>
+
+    <div class="rel-product-card-slide">
+      <a href="/products/gift-card" class="rel-img-wrap">
+        <img src="{{ 'luxury-perfume.jpg' | asset_url }}" alt="Parfüm 3" class="rel-img" loading="lazy">
+      </a>
+      <div class="rel-info">
+        <h4 class="rel-title"><a href="/products/gift-card">Eau de Parfum Rose Imperial 100ml</a></h4>
+        <span class="rel-price">₺2.950,00</span>
+      </div>
+    </div>
+
+    <div class="rel-product-card-slide">
+      <a href="/products/gift-card" class="rel-img-wrap">
+        <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Göz Serumu 4" class="rel-img" loading="lazy">
+      </a>
+      <div class="rel-info">
+        <h4 class="rel-title"><a href="/products/gift-card">Elixir Yeux Contour 15ml</a></h4>
+        <span class="rel-price">₺1.250,00</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .sp-other-products-section {
+    max-width: 1280px;
+    margin: 80px auto 0 auto;
+    padding: 0 40px;
+  }
+
+  .sp-section-header-slider {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 30px;
+  }
+
+  .slider-arrow-controls {
+    display: flex;
+    gap: 10px;
+  }
+
+  .slider-arrow-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .slider-arrow-btn:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+  }
+
+  .other-products-track {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 16px;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .other-products-track::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  .rel-product-card-slide {
+    width: 280px;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .rel-product-card-slide:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  @media (max-width: 991px) {
+    .sp-other-products-section {
+      padding: 0 20px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Diğer Ürünler Slider",
+  "settings": [
+    { "type": "text", "id": "subtitle", "label": "Bölüm Üst Başlığı", "default": "TÜM ÜRÜNLERİMİZ" },
+    { "type": "text", "id": "title", "label": "Bölüm Ana Başlığı", "default": "Diğer Ürünlerimiz" }
+  ],
+  "presets": [
+    {
+      "name": "Diğer Ürünler Slider"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,35 @@
+{% doc %}
+  Media Thumbnail component for kozmetik theme.
+
+  @example
+  {% content_for 'block', type: 'media-thumbnail', id: 'media-thumbnail-1' %}
+{% enddoc %}
+
+<button 
+  type="button" 
+  class="thumb-btn"
+  data-img-url="{% if block.settings.image != blank %}{{ block.settings.image | image_url: width: 1400 }}{% else %}{{ 'luxury-serum.jpg' | asset_url }}{% endif %}"
+  aria-label="{{ block.settings.alt | default: 'Küçük Görsel' }}"
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.image != blank %}
+    <img src="{{ block.settings.image | image_url: width: 180, height: 180, crop: 'center' }}" alt="{{ block.settings.alt | default: 'Görsel' }}" class="thumb-btn-img" loading="lazy">
+  {% else %}
+    <img src="{{ 'luxury-serum.jpg' | asset_url }}" alt="Görsel 1" class="thumb-btn-img">
+  {% endif %}
+</button>
+
+{% schema %}
+{
+  "name": "Küçük Görsel Kartı",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Görsel" },
+    { "type": "text", "id": "alt", "label": "Görsel Alt Metni", "default": "Küçük Görsel" }
+  ],
+  "presets": [
+    {
+      "name": "Küçük Görsel Kartı"
+    }
+  ]
+}
+{% endschema %}
