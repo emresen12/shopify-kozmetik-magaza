@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -6,44 +15,73 @@
         "product_media_gallery_1": {
           "type": "product_media_gallery",
           "settings": {
+            "thumb_pos": "overlay_bottom_left",
+            "aspect_ratio": "4 / 5",
+            "border_radius": 12,
+            "bg_color": "",
             "show_thumbnails": true
           }
         },
         "media_thumbnail_1": {
           "type": "media_thumbnail",
           "settings": {
-            "alt": "Küçük Görsel 1"
+            "alt": "Küçük Görsel 1",
+            "thumb_size": 64,
+            "border_radius": 8
           }
         },
         "media_thumbnail_2": {
           "type": "media_thumbnail",
           "settings": {
-            "alt": "Küçük Görsel 2"
+            "alt": "Küçük Görsel 2",
+            "thumb_size": 64,
+            "border_radius": 8
           }
         },
         "vendor_badge_1": {
           "type": "vendor_badge",
           "settings": {
-            "default_vendor": "CHANEL • HAUTE BEAUTÉ"
+            "default_vendor": "CHANEL • HAUTE BEAUTÉ",
+            "text_color": "",
+            "font_size": 11,
+            "letter_spacing": "0.3em"
           }
         },
         "title_1": {
           "type": "title",
-          "settings": {}
+          "settings": {
+            "custom_title": "",
+            "text_color": "",
+            "font_size": 36,
+            "font_weight": "400"
+          }
         },
         "price_1": {
           "type": "price",
           "settings": {
-            "demo_compare_price": "₺1.650,00"
+            "demo_compare_price": "₺1.650,00",
+            "price_color": "",
+            "compare_color": "",
+            "font_size": 26,
+            "show_tax_notice": true,
+            "tax_notice_text": "KDV dahil • Kargo sepette hesaplanır"
           }
         },
         "variant_picker_1": {
           "type": "variant_picker",
-          "settings": {}
+          "settings": {
+            "label_size": 11,
+            "pill_border_radius": 6
+          }
         },
         "buy_buttons_1": {
           "type": "buy_buttons",
           "settings": {
+            "button_text": "SEPETE EKLE",
+            "button_bg": "",
+            "button_text_color": "",
+            "button_border_radius": 6,
+            "show_quantity": true,
             "show_dynamic_checkout": true
           }
         },
@@ -51,14 +89,24 @@
           "type": "collapsible_tab",
           "settings": {
             "heading": "ÜRÜN DETAYLARI & FORMÜL",
-            "content": "<p>Fransa Grasse gül özleri ve 24K altın parçacıkları içeren hücre yenileyici iksir. Cildi derinlemesine nemlendirir, elastikiyet kazandırır ve anında doğal bir ışıltı verir.</p>"
+            "content": "<p>Fransa Grasse gül özleri ve 24K altın parçacıkları içeren hücre yenileyici iksir. Cildi derinlemesine nemlendirir, elastikiyet kazandırır ve anında doğal bir ışıltı verir.</p>",
+            "icon": "",
+            "open_by_default": false,
+            "title_color": "",
+            "content_color": "",
+            "border_color": ""
           }
         },
         "tab_2": {
           "type": "collapsible_tab",
           "settings": {
             "heading": "İÇERİK (INGREDIENTS)",
-            "content": "<p>Rosa Damascena Flower Water, Aqua, Glycerin, 24K Pure Gold Flakes, Sodium Hyaluronate, Niacinamide, Squalane, Tocopherol (Vitamin E), Rosa Canina Fruit Extract.</p>"
+            "content": "<p>Rosa Damascena Flower Water, Aqua, Glycerin, 24K Pure Gold Flakes, Sodium Hyaluronate, Niacinamide, Squalane, Tocopherol (Vitamin E), Rosa Canina Fruit Extract.</p>",
+            "icon": "",
+            "open_by_default": false,
+            "title_color": "",
+            "content_color": "",
+            "border_color": ""
           }
         },
         "editorial_banner_1": {
@@ -66,26 +114,41 @@
           "settings": {
             "subtitle": "LA MAISON DE BEAUTÉ",
             "title": "Işıltının ve Zarafetin En Saf Hali",
-            "text": "Nadir botanik özler ve 24K altın minerallerinin buluştuğu zamansız bir güzellik ritüeli."
+            "text": "Nadir botanik özler ve 24K altın minerallerinin buluştuğu zamansız bir güzellik ritüeli.",
+            "height": 480,
+            "card_border_radius": 16,
+            "text_align": "left"
           }
         },
         "formula_header_1": {
           "type": "formula_header",
           "settings": {
             "subtitle": "SAVOIR-FAIRE & SENSORIALITY",
-            "title": "Doku & Koku Notaları"
+            "title": "Doku & Koku Notaları",
+            "subtitle_color": "",
+            "title_color": ""
           }
         },
         "formula_group_1": {
           "type": "formula_group",
-          "settings": {}
+          "settings": {
+            "subtitle": "SAVOIR-FAIRE & SENSORIALITY",
+            "title": "Doku & Koku Notaları",
+            "bg_color": "",
+            "border_color": "",
+            "columns_desktop": "3"
+          }
         },
         "formula_card_1": {
           "type": "formula_card",
           "settings": {
             "icon": "✨",
             "title": "FORMÜL DOKUSU",
-            "text": "İpeksi, yağlı his bırakmayan sıvı nektar dokusu."
+            "text": "İpeksi, yağlı his bırakmayan sıvı nektar dokusu.",
+            "bg_color": "",
+            "border_color": "",
+            "text_color": "",
+            "icon_color": ""
           }
         },
         "formula_card_2": {
@@ -93,7 +156,11 @@
           "settings": {
             "icon": "🌹",
             "title": "KOKU İMZASI",
-            "text": "Isparta gülü, taze bergamot ve hafif amber alt notaları."
+            "text": "Isparta gülü, taze bergamot ve hafif amber alt notaları.",
+            "bg_color": "",
+            "border_color": "",
+            "text_color": "",
+            "icon_color": ""
           }
         },
         "formula_card_3": {
@@ -101,26 +168,40 @@
           "settings": {
             "icon": "🧪",
             "title": "KLİNİK SONUÇLAR",
-            "text": "%96 İlk kullanımda daha parlak cilt, %94 28 günde sıkılaşma."
+            "text": "%96 İlk kullanımda daha parlak cilt, %94 28 günde sıkılaşma.",
+            "bg_color": "",
+            "border_color": "",
+            "text_color": "",
+            "icon_color": ""
           }
         },
         "ritual_header_1": {
           "type": "ritual_header",
           "settings": {
             "subtitle": "APPLICATION RITUAL",
-            "title": "Güzellik Ritüeli"
+            "title": "Güzellik Ritüeli",
+            "subtitle_color": "",
+            "title_color": ""
           }
         },
         "ritual_group_1": {
           "type": "ritual_group",
-          "settings": {}
+          "settings": {
+            "subtitle": "APPLICATION RITUAL",
+            "title": "Güzellik Ritüeli",
+            "bg_color": "",
+            "border_color": ""
+          }
         },
         "ritual_step_1": {
           "type": "ritual_step",
           "settings": {
             "step_number": "01",
             "title": "HAZIRLIK",
-            "text": "Cildinizi nazik bir misel su ile temizleyin ve tonikleyin."
+            "text": "Cildinizi nazik bir misel su ile temizleyin ve tonikleyin.",
+            "step_num_color": "",
+            "bg_color": "",
+            "border_color": ""
           }
         },
         "ritual_step_2": {
@@ -128,7 +209,10 @@
           "settings": {
             "step_number": "02",
             "title": "UYGULAMA",
-            "text": "3-4 damla iksiri avucunuza alıp dairesel masajla yedirin."
+            "text": "3-4 damla iksiri avucunuza alıp dairesel masajla yedirin.",
+            "step_num_color": "",
+            "bg_color": "",
+            "border_color": ""
           }
         },
         "ritual_step_3": {
@@ -136,7 +220,10 @@
           "settings": {
             "step_number": "03",
             "title": "MÜKEMMELLİK",
-            "text": "Nemlendirici kreminiz ile ışıltılı görünümü mühürleyin."
+            "text": "Nemlendirici kreminiz ile ışıltılı görünümü mühürleyin.",
+            "step_num_color": "",
+            "bg_color": "",
+            "border_color": ""
           }
         },
         "reviews_header_1": {
@@ -148,13 +235,19 @@
         },
         "reviews_group_1": {
           "type": "reviews_group",
-          "settings": {}
+          "settings": {
+            "subtitle": "CLIENT EXPERIENCE",
+            "title": "Müşteri Değerlendirmeleri",
+            "bg_color": ""
+          }
         },
         "reviews_score_1": {
           "type": "reviews_score",
           "settings": {
             "score": "4.9",
-            "review_count": "128"
+            "review_count": "128",
+            "score_color": "",
+            "star_color": ""
           }
         },
         "review_item_1": {
@@ -163,7 +256,10 @@
             "author": "Zeynep K.",
             "badge": "Onaylı Alıcı",
             "date": "12 Temmuz 2026",
-            "comment": "Kullanmaya başladığım ilk haftadan itibaren cildimdeki ışıltıyı herkes fark etti. Kokusu ve dokusu inanılmaz derecede lüks."
+            "comment": "Kullanmaya başladığım ilk haftadan itibaren cildimdeki ışıltıyı herkes fark etti. Kokusu ve dokusu inanılmaz derecede lüks.",
+            "rating": 5,
+            "bg_color": "",
+            "border_color": ""
           }
         },
         "review_item_2": {
@@ -172,7 +268,10 @@
             "author": "Selin A.",
             "badge": "Onaylı Alıcı",
             "date": "28 Haziran 2026",
-            "comment": "Chanel kalitesinde bir ürün. Hızlı emiliyor ve kesinlikle yağlı his bırakmıyor. Paketlemesi de mükemmeldi."
+            "comment": "Chanel kalitesinde bir ürün. Hızlı emiliyor ve kesinlikle yağlı his bırakmıyor. Paketlemesi de mükemmeldi.",
+            "rating": 5,
+            "bg_color": "",
+            "border_color": ""
           }
         },
         "related_header_1": {
@@ -184,18 +283,27 @@
         },
         "related_group_1": {
           "type": "related_group",
-          "settings": {}
+          "settings": {
+            "subtitle": "COMPLETE THE RITUAL",
+            "title": "Tamamlayıcı Ürünler",
+            "bg_color": ""
+          }
         },
         "other_slider_header_1": {
           "type": "other_slider_header",
           "settings": {
             "subtitle": "TÜM ÜRÜNLERİMİZ",
-            "title": "Diğer Ürünlerimiz"
+            "title": "Diğer Ürünlerimiz",
+            "show_arrows": true
           }
         },
         "other_slider_group_1": {
           "type": "other_slider_group",
-          "settings": {}
+          "settings": {
+            "subtitle": "TÜM ÜRÜNLERİMİZ",
+            "title": "Diğer Ürünlerimiz",
+            "bg_color": ""
+          }
         }
       },
       "block_order": [
@@ -231,6 +339,7 @@
         "other_slider_group_1"
       ],
       "settings": {
+        "other_products_collection": "",
         "padding_top": 90,
         "padding_bottom": 120,
         "bg_color": "#0a070b",
