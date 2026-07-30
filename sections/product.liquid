@@ -24,6 +24,7 @@
       {% assign media_thumbnail_blocks = section.blocks | where: "type", "media_thumbnail" %}
 
       <div class="sticky-media-frame" 
+        data-thumb-pos="{{ media_gallery_block.settings.thumb_pos | default: 'bottom' }}"
         style="
           {% if media_gallery_block.settings.border_radius %}border-radius: {{ media_gallery_block.settings.border_radius }}px;{% endif %}
           {% if media_gallery_block.settings.bg_color != blank %}background-color: {{ media_gallery_block.settings.bg_color }};{% endif %}
@@ -197,16 +198,9 @@
               <div class="sp-block block-buy-buttons" {{ block.shopify_attributes }}>
                 {% form 'product', product, id: 'SpProductForm', class: 'sp-form' %}
                   <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id | default: 12345678 }}">
+                  <input type="hidden" name="quantity" value="1">
 
                   <div class="buy-action-row">
-                    {% if block.settings.show_quantity == blank or block.settings.show_quantity == true %}
-                      <div class="sp-qty-picker">
-                        <button type="button" class="sp-qty-btn sp-qty-minus">-</button>
-                        <input type="number" name="quantity" value="1" min="1" class="sp-qty-val">
-                        <button type="button" class="sp-qty-btn sp-qty-plus">+</button>
-                      </div>
-                    {% endif %}
-
                     <button type="submit" name="add" class="sp-add-to-cart-btn" style="
                       {% if block.settings.button_bg != blank %}background-color: {{ block.settings.button_bg }};{% endif %}
                       {% if block.settings.button_text_color != blank %}color: {{ block.settings.button_text_color }};{% endif %}
@@ -215,12 +209,6 @@
                       <span>{{ block.settings.button_text | default: "SEPETE EKLE" }}</span>
                     </button>
                   </div>
-
-                  {% if block.settings.show_dynamic_checkout %}
-                    <div class="sp-dynamic-checkout-wrap">
-                      {{ form | payment_button }}
-                    </div>
-                  {% endif %}
                 {% endform %}
               </div>
 
@@ -259,6 +247,7 @@
   <!-- ==========================================
        STANDALONE SECTION HEADINGS & TEXT BLOCKS
   ========================================== -->
+  <div class="sp-bottom-sections-wrap">
   {% for block in section.blocks %}
     {% if block.type == 'section_heading' %}
       <div class="sp-section-header align-{{ block.settings.align | default: 'center' }}" style="
@@ -828,6 +817,7 @@
   </div>
 
 </div>
+</div>
 
 {% stylesheet %}
   .single-product-page-section {
@@ -870,10 +860,20 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    z-index: 0;
+  }
+  
+  .sp-bottom-sections-wrap {
+    position: relative;
+    z-index: 10;
+    background: var(--bg-color);
+    padding-top: 40px;
+    margin-top: -100px;
   }
 
   .main-image-viewport {
     position: relative;
+    flex-grow: 1;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -903,6 +903,38 @@
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+  }
+
+  .sticky-media-frame[data-thumb-pos^="overlay_"] .media-thumbnails-row {
+    position: absolute;
+    z-index: 10;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    overflow-y: auto;
+    max-height: calc(100% - 40px);
+    margin: 20px;
+  }
+
+  .sticky-media-frame[data-thumb-pos="overlay_top_left"] .media-thumbnails-row {
+    top: 0; left: 0;
+  }
+  .sticky-media-frame[data-thumb-pos="overlay_bottom_left"] .media-thumbnails-row {
+    bottom: 0; left: 0;
+  }
+  .sticky-media-frame[data-thumb-pos="overlay_top_right"] .media-thumbnails-row {
+    top: 0; right: 0;
+  }
+  .sticky-media-frame[data-thumb-pos="overlay_bottom_right"] .media-thumbnails-row {
+    bottom: 0; right: 0;
+  }
+
+  .sticky-media-frame[data-thumb-pos^="overlay_"] .media-thumbnails-row::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .sticky-media-frame[data-thumb-pos^="overlay_"] .media-thumbnails-row::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 4px;
   }
 
   .thumb-btn {
@@ -1027,7 +1059,7 @@
 
   .buy-action-row {
     display: grid;
-    grid-template-columns: 110px 1fr;
+    grid-template-columns: 1fr;
     gap: 16px;
   }
 
@@ -1685,20 +1717,32 @@
       });
     });
 
-    // --- QTY PICKER ---
-    const qtyInput = document.querySelector('.sp-qty-val');
-    const minusBtn = document.querySelector('.sp-qty-minus');
-    const plusBtn = document.querySelector('.sp-qty-plus');
+    // --- AJAX ADD TO CART ---
+    const addToCartForm = document.getElementById('SpProductForm');
+    if (addToCartForm) {
+      addToCartForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = addToCartForm.querySelector('button[type="submit"]');
+        if (btn) btn.disabled = true;
 
-    if (qtyInput && minusBtn && plusBtn) {
-      minusBtn.addEventListener('click', () => {
-        let val = parseInt(qtyInput.value) || 1;
-        if (val > 1) qtyInput.value = val - 1;
-      });
-
-      plusBtn.addEventListener('click', () => {
-        let val = parseInt(qtyInput.value) || 1;
-        qtyInput.value = val + 1;
+        const formData = new FormData(addToCartForm);
+        fetch('/cart/add.js', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (btn) btn.disabled = false;
+          // Open the side cart drawer
+          const cartDrawerTrigger = document.getElementById('cartDrawerTrigger');
+          if (cartDrawerTrigger) {
+             cartDrawerTrigger.click();
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          if (btn) btn.disabled = false;
+        });
       });
     }
 
@@ -1767,6 +1811,19 @@
       "type": "product_media_gallery",
       "name": "Ürün Görsel Galerisi",
       "settings": [
+        {
+          "type": "select",
+          "id": "thumb_pos",
+          "label": "Küçük Görsellerin Konumu",
+          "options": [
+            { "value": "bottom", "label": "Resmin Altında (Dışarıda)" },
+            { "value": "overlay_top_left", "label": "Resmin Üzerinde - Sol Üst" },
+            { "value": "overlay_bottom_left", "label": "Resmin Üzerinde - Sol Alt" },
+            { "value": "overlay_top_right", "label": "Resmin Üzerinde - Sağ Üst" },
+            { "value": "overlay_bottom_right", "label": "Resmin Üzerinde - Sağ Alt" }
+          ],
+          "default": "bottom"
+        },
         {
           "type": "select",
           "id": "aspect_ratio",

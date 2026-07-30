@@ -1,0 +1,282 @@
+{
+    "sections":  {
+                     "hero_banner":  {
+                                         "type":  "collection-hero-banner",
+                                         "blocks":  {
+                                                        "badge_1":  {
+                                                                        "type":  "badge",
+                                                                        "settings":  {
+                                                                                         "text":  "✦ MAKYAJ SANATI"
+                                                                                     }
+                                                                    },
+                                                        "title_1":  {
+                                                                        "type":  "title",
+                                                                        "settings":  {
+                                                                                         "custom_title":  "Göz Alıcı Makyaj Koleksiyonu"
+                                                                                     }
+                                                                    },
+                                                        "desc_1":  {
+                                                                       "type":  "description",
+                                                                       "settings":  {
+                                                                                        "custom_description":  "Kendinizi ifade etmenin en renkli yolu. Kaliteli ve uzun süre kalıcı makyaj ürünlerimizle tanışın."
+                                                                                    }
+                                                                   }
+                                                    },
+                                         "block_order":  [
+                                                             "badge_1",
+                                                             "title_1",
+                                                             "desc_1"
+                                                         ],
+                                         "settings":  {
+
+                                                      }
+                                     },
+                     "filter_bar":  {
+                                        "type":  "collection-filter-bar",
+                                        "blocks":  {
+                                                       "sw_label":  {
+                                                                        "type":  "switcher_header",
+                                                                        "settings":  {
+                                                                                         "label":  "Görünüm"
+                                                                                     }
+                                                                    },
+                                                       "grid_2":  {
+                                                                      "type":  "grid_button",
+                                                                      "settings":  {
+                                                                                       "label":  "2\u0027li",
+                                                                                       "cols":  "2"
+                                                                                   }
+                                                                  },
+                                                       "grid_3":  {
+                                                                      "type":  "grid_button",
+                                                                      "settings":  {
+                                                                                       "label":  "3\u0027lü",
+                                                                                       "cols":  "3"
+                                                                                   }
+                                                                  },
+                                                       "grid_4":  {
+                                                                      "type":  "grid_button",
+                                                                      "settings":  {
+                                                                                       "label":  "4\u0027lü",
+                                                                                       "cols":  "4",
+                                                                                       "is_active":  true
+                                                                                   }
+                                                                  },
+                                                       "sort_main":  {
+                                                                         "type":  "sort_dropdown",
+                                                                         "settings":  {
+                                                                                          "label":  "Sırala"
+                                                                                      }
+                                                                     },
+                                                       "sort_1":  {
+                                                                      "type":  "sort_option",
+                                                                      "settings":  {
+                                                                                       "label":  "Öne Çıkanlar",
+                                                                                       "sort_value":  "manual",
+                                                                                       "is_default":  true
+                                                                                   }
+                                                                  },
+                                                       "sort_2":  {
+                                                                      "type":  "sort_option",
+                                                                      "settings":  {
+                                                                                       "label":  "Fiyat: Düşükten Yükseğe",
+                                                                                       "sort_value":  "price-ascending"
+                                                                                   }
+                                                                  },
+                                                       "sort_3":  {
+                                                                      "type":  "sort_option",
+                                                                      "settings":  {
+                                                                                       "label":  "Fiyat: Yüksekten Düşüğe",
+                                                                                       "sort_value":  "price-descending"
+                                                                                   }
+                                                                  },
+                                                       "sort_4":  {
+                                                                      "type":  "sort_option",
+                                                                      "settings":  {
+                                                                                       "label":  "En Yeniler",
+                                                                                       "sort_value":  "created-descending"
+                                                                                   }
+                                                                  },
+                                                       "sort_5":  {
+                                                                      "type":  "sort_option",
+                                                                      "settings":  {
+                                                                                       "label":  "Alfabetik: A-Z",
+                                                                                       "sort_value":  "title-ascending"
+                                                                                   }
+                                                                  },
+                                                       "sort_6":  {
+                                                                      "type":  "sort_option",
+                                                                      "settings":  {
+                                                                                       "label":  "Alfabetik: Z-A",
+                                                                                       "sort_value":  "title-descending"
+                                                                                   }
+                                                                  }
+                                                   },
+                                        "block_order":  [
+                                                            "sw_label",
+                                                            "grid_2",
+                                                            "grid_3",
+                                                            "grid_4",
+                                                            "sort_main",
+                                                            "sort_1",
+                                                            "sort_2",
+                                                            "sort_3",
+                                                            "sort_4",
+                                                            "sort_5",
+                                                            "sort_6"
+                                                        ],
+                                        "settings":  {
+
+                                                     }
+                                    },
+                     "product_grid":  {
+                                          "type":  "collection-product-grid",
+                                          "blocks":  {
+                                                         "config_1":  {
+                                                                          "type":  "sidebar_config",
+                                                                          "settings":  {
+                                                                                           "filter_type":  "drawer",
+                                                                                           "filter_position":  "left"
+                                                                                       }
+                                                                      },
+                                                         "header_1":  {
+                                                                          "type":  "sidebar_header",
+                                                                          "settings":  {
+                                                                                           "title":  "FİLTRELER",
+                                                                                           "icon":  "✦",
+                                                                                           "reset_text":  "Temizle"
+                                                                                       }
+                                                                      },
+                                                         "filter_1":  {
+                                                                          "type":  "category_filter",
+                                                                          "settings":  {
+                                                                                           "block_title":  "KATEGORİLER",
+                                                                                           "label":  "Tüm Makyaj",
+                                                                                           "category":  "all",
+                                                                                           "is_active":  true
+                                                                                       }
+                                                                      },
+                                                         "filter_2":  {
+                                                                          "type":  "category_filter",
+                                                                          "settings":  {
+                                                                                           "label":  "Yüz Makyajı",
+                                                                                           "category":  "yuz-makyaji"
+                                                                                       }
+                                                                      },
+                                                         "filter_3":  {
+                                                                          "type":  "category_filter",
+                                                                          "settings":  {
+                                                                                           "label":  "Göz Makyajı",
+                                                                                           "category":  "goz-makyaji"
+                                                                                       }
+                                                                      },
+                                                         "filter_4":  {
+                                                                          "type":  "category_filter",
+                                                                          "settings":  {
+                                                                                           "label":  "Dudak",
+                                                                                           "category":  "dudak"
+                                                                                       }
+                                                                      },
+                                                         "avail_1":  {
+                                                                         "type":  "availability_filter",
+                                                                         "settings":  {
+                                                                                          "title":  "STOK DURUMU",
+                                                                                          "in_stock_label":  "Stokta Var",
+                                                                                          "out_of_stock_label":  "Tükendi / Stokta Yok"
+                                                                                      }
+                                                                     },
+                                                         "price_1":  {
+                                                                         "type":  "price_filter",
+                                                                         "settings":  {
+                                                                                          "title":  "FİYAT ARALIĞI",
+                                                                                          "currency_symbol":  "₺",
+                                                                                          "min_price_default":  0,
+                                                                                          "max_price_limit":  5000
+                                                                                      }
+                                                                     },
+                                                         "vendor_1":  {
+                                                                          "type":  "vendor_filter",
+                                                                          "settings":  {
+                                                                                           "title":  "MARKALAR",
+                                                                                           "vendors":  "Lumière, Haute Cosmetics, Rose Infusion, Bio-Active"
+                                                                                       }
+                                                                      },
+                                                         "tag_1":  {
+                                                                       "type":  "tag_filter",
+                                                                       "settings":  {
+                                                                                        "title":  "NOTA ETİKETLERİ",
+                                                                                        "tags":  "Çiçeksi, Odunsu, Baharatlı, Meyveli, Oryantal"
+                                                                                    }
+                                                                   },
+                                                         "card_1":  {
+                                                                        "type":  "product_card",
+                                                                        "settings":  {
+                                                                                         "category":  "edp",
+                                                                                         "badge_text":  "✦ EN ÇOK SATAN",
+                                                                                         "title":  "Rose Nuit Eau de Parfum 50ml",
+                                                                                         "description":  "Gece açan güllerin ve sedir ağacının büyüleyici uyumu",
+                                                                                         "price":  "₺1.450,00",
+                                                                                         "compare_price":  "₺1.650,00"
+                                                                                     }
+                                                                    },
+                                                         "card_2":  {
+                                                                        "type":  "product_card",
+                                                                        "settings":  {
+                                                                                         "category":  "edp",
+                                                                                         "badge_text":  "YENİ",
+                                                                                         "title":  "Oud Mystique 100ml",
+                                                                                         "description":  "Gizemli agar ağacı ve baharatların oryantal dokunuşu",
+                                                                                         "price":  "₺2.550,00",
+                                                                                         "compare_price":  "₺2.900,00"
+                                                                                     }
+                                                                    },
+                                                         "card_3":  {
+                                                                        "type":  "product_card",
+                                                                        "settings":  {
+                                                                                         "category":  "edt",
+                                                                                         "badge_text":  "FERAH",
+                                                                                         "title":  "Citrus Bloom Eau de Toilette 100ml",
+                                                                                         "description":  "Akdeniz turunçgillerinin tazeleyen ve enerji veren notaları",
+                                                                                         "price":  "₺940,00",
+                                                                                         "compare_price":  "₺1.200,00"
+                                                                                     }
+                                                                    },
+                                                         "card_4":  {
+                                                                        "type":  "product_card",
+                                                                        "settings":  {
+                                                                                         "category":  "niche",
+                                                                                         "badge_text":  "✦ SEÇKİN",
+                                                                                         "title":  "Velvet Iris Extrait de Parfum 30ml",
+                                                                                         "description":  "Nadir iris çiçeklerinin pudralı ve zarif imza kokusu",
+                                                                                         "price":  "₺3.520,00",
+                                                                                         "compare_price":  "₺4.000,00"
+                                                                                     }
+                                                                    }
+                                                     },
+                                          "block_order":  [
+                                                              "config_1",
+                                                              "header_1",
+                                                              "filter_1",
+                                                              "filter_2",
+                                                              "filter_3",
+                                                              "filter_4",
+                                                              "avail_1",
+                                                              "price_1",
+                                                              "vendor_1",
+                                                              "tag_1",
+                                                              "card_1",
+                                                              "card_2",
+                                                              "card_3",
+                                                              "card_4"
+                                                          ],
+                                          "settings":  {
+                                                           "columns_desktop":  4
+                                                       }
+                                      }
+                 },
+    "order":  [
+                  "hero_banner",
+                  "filter_bar",
+                  "product_grid"
+              ]
+}

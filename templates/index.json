@@ -1,51 +1,262 @@
 {
   "sections": {
-    "hero_banner_section": {
-      "type": "hero-banner",
+    "zoom_scroll_hero_section": {
+      "type": "zoom-scroll-hero",
       "blocks": {
-        "badge_1": {
-          "type": "hero-badge",
+        "pill_1": {
+          "type": "feature_pill",
           "settings": {
-            "text": "✦ İPEKSİ DOKU & DOĞAL IŞILTI"
+            "icon_text": "✦",
+            "title": "%100 Vegan & Organik"
           }
         },
-        "title_1": {
-          "type": "hero-title",
+        "pill_2": {
+          "type": "feature_pill",
           "settings": {
-            "text": "Cilt Bakımında Yeni Çağ"
+            "icon_text": "💧",
+            "title": "24 Sa. Kesintisiz Nem"
           }
         },
-        "subtitle_1": {
-          "type": "hero-subtitle",
+        "pill_3": {
+          "type": "feature_pill",
           "settings": {
-            "text": "Doğanın en değerli özleri ve ileri teknoloji hyalüronik asit kompleksi ile cildinize anında gençlik ve ışıltı kazandırın."
-          }
-        },
-        "button_1": {
-          "type": "hero-button",
-          "settings": {
-            "text": "Koleksiyonu Keşfet",
-            "button_style": "primary"
-          }
-        },
-        "stats_1": {
-          "type": "hero-stats",
-          "settings": {
-            "stat_1_number": "%100",
-            "stat_1_label": "Organik & Vegan",
-            "stat_2_number": "24 Sa.",
-            "stat_2_label": "Kesintisiz Nem",
-            "stat_3_number": "4.9 ★",
-            "stat_3_label": "Müşteri Puanı"
+            "icon_text": "★",
+            "title": "4.9 / 5.0 Müşteri Puanı"
           }
         }
       },
       "block_order": [
-        "badge_1",
-        "title_1",
-        "subtitle_1",
-        "button_1",
-        "stats_1"
+        "pill_1",
+        "pill_2",
+        "pill_3"
+      ],
+      "settings": {
+        "scroll_height": 200,
+        "min_scale": 78,
+        "max_border_radius": 36,
+        "heading": "Lüks Cilt Bakımının Yeni Boyutu",
+        "subheading": "✦ HAUTE COUTURE BEAUTY",
+        "description": "Saf hyalüronik asit kompleksi ve nadir botanik özlerle tasarlanan iksirler cildinize anında gençlik ışıltısı sunar.",
+        "button_label": "Koleksiyonu Keşfet"
+      }
+    },
+    "sticky_products_gallery": {
+      "type": "sticky-products-gallery",
+      "blocks": {
+        "img_block_1": {
+          "type": "image",
+          "settings": {
+            "badge": "✦ SAF HYALÜRONİK SERUM",
+            "badge_bg": "#c25b82"
+          }
+        },
+        "img_block_2": {
+          "type": "image",
+          "settings": {
+            "badge": "✦ YENİLEYİCİ GECE BAKIMI",
+            "badge_bg": "#c25b82"
+          }
+        },
+        "caption_block_1": {
+          "type": "image_caption",
+          "settings": {
+            "image_target": "1",
+            "caption_title": "Radiance Glow Hyalüronik Serum",
+            "caption_subtitle": "%100 Saf Hyalüronik Asit & Pembe Kuvars Özlü Gençlik İksiri"
+          }
+        },
+        "caption_block_2": {
+          "type": "image_caption",
+          "settings": {
+            "image_target": "2",
+            "caption_title": "Velvet Hydra Besleyici Gece Kremi",
+            "caption_subtitle": "Gece boyunca yoğun elastikiyet ve nem bakımı"
+          }
+        },
+        "sticky_text_block": {
+          "type": "sticky_text",
+          "settings": {
+            "overlay_text": "ÜRÜNLER",
+            "overlay_font_size": 64
+          }
+        }
+      },
+      "block_order": [
+        "img_block_1",
+        "img_block_2",
+        "caption_block_1",
+        "caption_block_2",
+        "sticky_text_block"
+      ],
+      "settings": {}
+    },
+    "sticky_products_gallery_cilt_bakimi": {
+      "type": "sticky-products-gallery",
+      "blocks": {
+        "cb_img_1": {
+          "type": "image",
+          "settings": {
+            "badge": "✦ GÖZENEK SIKIŞTIRICI",
+            "badge_bg": "#4a7c59"
+          }
+        },
+        "cb_img_2": {
+          "type": "image",
+          "settings": {
+            "badge": "✦ C VİTAMİNİ İKSİRİ",
+            "badge_bg": "#d4a373"
+          }
+        },
+        "cb_caption_1": {
+          "type": "image_caption",
+          "settings": {
+            "image_target": "1",
+            "caption_title": "Isparta Gül Suyu Arındırıcı Tonik",
+            "caption_subtitle": "Gözenek sıkılaştırıcı %100 doğal gül suyu ve papatya özü"
+          }
+        },
+        "cb_caption_2": {
+          "type": "image_caption",
+          "settings": {
+            "image_target": "2",
+            "caption_title": "Aydınlatıcı C Vitamini & Niasinamid Serum",
+            "caption_subtitle": "Cilt tonu eşitleyici ve antioksidan koruma sağlayan serum"
+          }
+        },
+        "cb_sticky_text": {
+          "type": "sticky_text",
+          "settings": {
+            "overlay_text": "CİLT BAKIMI",
+            "overlay_font_size": 64
+          }
+        }
+      },
+      "block_order": [
+        "cb_img_1",
+        "cb_img_2",
+        "cb_caption_1",
+        "cb_caption_2",
+        "cb_sticky_text"
+      ],
+      "settings": {}
+    },
+    "sticky_products_gallery_parfum": {
+      "type": "sticky-products-gallery",
+      "blocks": {
+        "p_img_1": {
+          "type": "image",
+          "settings": {
+            "badge": "✦ ÖZEL SEZON KOKUSU",
+            "badge_bg": "#8b5cf6"
+          }
+        },
+        "p_img_2": {
+          "type": "image",
+          "settings": {
+            "badge": "✦ NICHE KOLEKSİYON",
+            "badge_bg": "#ec4899"
+          }
+        },
+        "p_img_3": {
+          "type": "image",
+          "settings": {
+            "badge": "✦ MİSTİK & ORYANTAL",
+            "badge_bg": "#10b981"
+          }
+        },
+        "p_caption_1": {
+          "type": "image_caption",
+          "settings": {
+            "image_target": "1",
+            "caption_title": "Velvet Rose & Amber Eau de Parfum",
+            "caption_subtitle": "Gül, oryantal amber ve sıcak vanilya notaları içeren büyüleyici koku"
+          }
+        },
+        "p_caption_2": {
+          "type": "image_caption",
+          "settings": {
+            "image_target": "2",
+            "caption_title": "Fleur de Paris Niche Extrait de Parfum",
+            "caption_subtitle": "Beyaz çiçekler, yasemin ve odunsu sedir dokunuşları"
+          }
+        },
+        "p_caption_3": {
+          "type": "image_caption",
+          "settings": {
+            "image_target": "3",
+            "caption_title": "Oud & Sandalwood Extrait de Parfum",
+            "caption_subtitle": "Nadir bulunan ud ağacı, sandal ve tütsü notalarıyla yoğun gece kokusu"
+          }
+        },
+        "p_sticky_text": {
+          "type": "sticky_text",
+          "settings": {
+            "overlay_text": "PARFÜM",
+            "overlay_font_size": 64
+          }
+        }
+      },
+      "block_order": [
+        "p_img_1",
+        "p_img_2",
+        "p_img_3",
+        "p_caption_1",
+        "p_caption_2",
+        "p_caption_3",
+        "p_sticky_text"
+      ],
+      "settings": {}
+    },
+    "sticky_products_gallery_koleksiyonlar": {
+      "type": "sticky-products-gallery",
+      "blocks": {
+        "k_img_1": {
+          "type": "image",
+          "settings": {
+            "badge": "✦ SEZON KOLEKSİYONLARI",
+            "badge_bg": "#c25b82",
+            "url": "/collections/all"
+          }
+        },
+        "k_img_2": {
+          "type": "image",
+          "settings": {
+            "badge": "✦ TÜM KATEGORİLER",
+            "badge_bg": "#3b82f6",
+            "url": "/collections/all"
+          }
+        },
+        "k_caption_1": {
+          "type": "image_caption",
+          "settings": {
+            "image_target": "1",
+            "caption_title": "Yeni Sezon Özel Seri Koleksiyonlar",
+            "caption_subtitle": "Tüm seçkin makyaj, cilt bakımı ve parfüm koleksiyonlarını inceleyin"
+          }
+        },
+        "k_caption_2": {
+          "type": "image_caption",
+          "settings": {
+            "image_target": "2",
+            "caption_title": "Sınırlı Sürüm Lüks Setler",
+            "caption_subtitle": "Sezona özel hazırlanan hediyelik lüks setler ve cilt bakım rutinleri"
+          }
+        },
+        "k_sticky_text": {
+          "type": "sticky_text",
+          "settings": {
+            "overlay_text": "KOLEKSİYONLAR",
+            "overlay_url": "/collections/all",
+            "overlay_font_size": 64
+          }
+        }
+      },
+      "block_order": [
+        "k_img_1",
+        "k_img_2",
+        "k_caption_1",
+        "k_caption_2",
+        "k_sticky_text"
       ],
       "settings": {}
     },
@@ -129,7 +340,7 @@
           "type": "accordion",
           "settings": {
             "title": "Kullanım Rutini & Uygulama",
-            "content": "Sabah ve akşam temizlenmiş yüz ve boyun bölgesine 3-4 damla uygulayın."
+            "content": "Sabah dan akşam temizlenmiş yüz ve boyun bölgesine 3-4 damla uygulayın."
           }
         }
       },
@@ -221,28 +432,14 @@
         "card_4"
       ],
       "settings": {}
-    },
-    "serum_showcase": {
-      "type": "serum-showcase",
-      "blocks": {
-        "image_1": {
-          "type": "image",
-          "settings": {
-            "badge_text": "✦ ÖNE ÇIKAN SAF HYALÜRONİK SERUM",
-            "caption_title": "Radiance Glow Hyalüronik Serum",
-            "caption_subtitle": "%100 Saf Hyalüronik Asit & Pembe Kuvars Özlü Gençlik İksiri"
-          }
-        }
-      },
-      "block_order": [
-        "image_1"
-      ],
-      "settings": {}
     }
   },
   "order": [
-    "hero_banner_section",
-    "serum_showcase",
+    "zoom_scroll_hero_section",
+    "sticky_products_gallery",
+    "sticky_products_gallery_cilt_bakimi",
+    "sticky_products_gallery_parfum",
+    "sticky_products_gallery_koleksiyonlar",
     "featured_product_showcase",
     "product_grid_showcase"
   ]

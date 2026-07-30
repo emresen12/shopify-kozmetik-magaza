@@ -6,16 +6,20 @@
         "badge_1": {
           "type": "badge",
           "settings": {
-            "text": "✦ SEÇKİN KOLEKSİYONLAR"
+            "text": "✦ MAKYAJ SANATI"
           }
         },
         "title_1": {
           "type": "title",
-          "settings": {}
+          "settings": {
+            "custom_title": "Göz Alıcı Makyaj Koleksiyonu"
+          }
         },
         "desc_1": {
           "type": "description",
-          "settings": {}
+          "settings": {
+            "custom_description": "Kendinizi ifade etmenin en renkli yolu. Kaliteli ve uzun süre kalıcı makyaj ürünlerimizle tanışın."
+          }
         }
       },
       "block_order": [
@@ -143,7 +147,7 @@
           "type": "category_filter",
           "settings": {
             "block_title": "KATEGORİLER",
-            "label": "Tüm Ürünler",
+            "label": "Tüm Makyaj",
             "category": "all",
             "is_active": true
           }
@@ -151,29 +155,22 @@
         "filter_2": {
           "type": "category_filter",
           "settings": {
-            "label": "Serumlar",
-            "category": "serum"
+            "label": "Yüz Makyajı",
+            "category": "yuz-makyaji"
           }
         },
         "filter_3": {
           "type": "category_filter",
           "settings": {
-            "label": "Nemlendiriciler",
-            "category": "moisturizer"
+            "label": "Göz Makyajı",
+            "category": "goz-makyaji"
           }
         },
         "filter_4": {
           "type": "category_filter",
           "settings": {
-            "label": "Yüz Maskeleri",
-            "category": "mask"
-          }
-        },
-        "filter_5": {
-          "type": "category_filter",
-          "settings": {
-            "label": "Göz Bakımı",
-            "category": "eye-care"
+            "label": "Dudak",
+            "category": "dudak"
           }
         },
         "avail_1": {
@@ -190,7 +187,7 @@
             "title": "FİYAT ARALIĞI",
             "currency_symbol": "₺",
             "min_price_default": 0,
-            "max_price_limit": 1000
+            "max_price_limit": 5000
           }
         },
         "vendor_1": {
@@ -203,8 +200,8 @@
         "tag_1": {
           "type": "tag_filter",
           "settings": {
-            "title": "ÖNE ÇIKAN ETİKETLER",
-            "tags": "Organik, Anti-Aging, Leke Karşıtı, Vegan, Hyalüronik"
+            "title": "NOTA ETİKETLERİ",
+            "tags": "Çiçeksi, Odunsu, Baharatlı, Meyveli, Oryantal"
           }
         },
         "card_gen_1": {
@@ -413,7 +410,6 @@
         "filter_2",
         "filter_3",
         "filter_4",
-        "filter_5",
         "avail_1",
         "price_1",
         "vendor_1",

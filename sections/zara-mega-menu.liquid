@@ -4,7 +4,21 @@
   aria-hidden="true"
   role="dialog"
   aria-modal="true"
-  aria-label="Ana Menü">
+  aria-label="Ana Menü"
+  style="
+    --zmm-bg: {{ section.settings.bg_color | default: '#0f0b10' }};
+    --zmm-text: {{ section.settings.text_color | default: '#ffffff' }};
+    --zmm-accent: {{ section.settings.accent_color | default: '#c25b82' }};
+    --zmm-accent-light: {{ section.settings.accent_light | default: '#f7cad0' }};
+    --zmm-top-link: {{ section.settings.top_link_color | default: '#d4b8c0' }};
+    --zmm-cat-color: {{ section.settings.cat_btn_color | default: '#c8b8cc' }};
+    --zmm-cat-active: {{ section.settings.cat_btn_active_color | default: '#ffffff' }};
+    --zmm-sub-title: {{ section.settings.sub_title_color | default: '#f7cad0' }};
+    --zmm-sub-link: {{ section.settings.sub_link_color | default: '#c8b8cc' }};
+    --zmm-highlighted: {{ section.settings.highlighted_color | default: '#f7cad0' }};
+    --zmm-cat-size: {{ section.settings.cat_font_size | default: 20 }}px;
+    --zmm-sub-size: {{ section.settings.sub_link_font_size | default: 14 }}px;
+  ">
 
   <div class="zmm__inner">
 
@@ -36,18 +50,18 @@
       <nav class="zmm__header-right" aria-label="Hızlı erişim">
         <a href="{{ routes.search_url }}" class="zmm__top-link">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          ARA
+          {{ section.settings.link_search_label | default: 'ARA' }}
         </a>
         <a href="{{ routes.cart_url }}" class="zmm__top-link">
-          SEPET{% if cart.item_count > 0 %}&nbsp;({{ cart.item_count }}){% endif %}
+          {{ section.settings.link_cart_label | default: 'SEPET' }}{% if cart.item_count > 0 %}&nbsp;({{ cart.item_count }}){% endif %}
         </a>
         {% if customer %}
-          <a href="{{ routes.account_url }}" class="zmm__top-link">HESABIM</a>
+          <a href="{{ routes.account_url }}" class="zmm__top-link">{{ section.settings.link_myaccount_label | default: 'HESABIM' }}</a>
         {% else %}
-          <a href="{{ routes.account_login_url }}" class="zmm__top-link">GİRİŞ YAP</a>
+          <a href="{{ routes.account_login_url }}" class="zmm__top-link">{{ section.settings.link_account_label | default: 'GİRİŞ YAP' }}</a>
         {% endif %}
         {% if section.settings.help_url != blank %}
-          <a href="{{ section.settings.help_url }}" class="zmm__top-link">YARDIM</a>
+          <a href="{{ section.settings.help_url }}" class="zmm__top-link">{{ section.settings.link_help_label | default: 'YARDIM' }}</a>
         {% endif %}
       </nav>
     </header>
@@ -62,8 +76,8 @@
           {%- for block in section.blocks -%}
             {%- if block.type == 'main_category' -%}
               <li {{ block.shopify_attributes }}>
-                <button
-                  type="button"
+                <a
+                  href="{{ block.settings.category_url | default: routes.all_products_collection_url }}"
                   class="zmm__cat-btn{%- if cat_idx == 0 %} is-active{%- endif -%}"
                   data-panel="zmm-panel-{{ block.id }}"
                   aria-expanded="{%- if cat_idx == 0 -%}true{%- else -%}false{%- endif -%}">
@@ -80,7 +94,7 @@
                     {%- endif -%}
                     <span class="zmm__cat-title-text">{{ block.settings.title }}</span>
                   </div>
-                </button>
+                </a>
               </li>
               {%- assign cat_idx = cat_idx | plus: 1 -%}
             {%- endif -%}
@@ -215,22 +229,32 @@
 .zmm {
   position: fixed;
   inset: 0;
-  z-index: 9999;
-  background: #0f0b10;
-  display: flex;
+  z-index: -1;
+  background: var(--zmm-bg, #0f0b10);
+  display: none;
   flex-direction: column;
   opacity: 0;
   visibility: hidden;
-  pointer-events: none;
+  pointer-events: none !important;
   transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
               visibility 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
 
+.zmm * {
+  pointer-events: none !important;
+}
+
 .zmm.zmm--open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
+  display: flex !important;
+  z-index: 99999 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.zmm.zmm--open * {
+  pointer-events: auto !important;
 }
 
 /* ─── Inner ────────────────────────────────────────── */
@@ -264,7 +288,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #ffffff;
+  color: var(--zmm-text, #ffffff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -291,8 +315,8 @@
   font-weight: 800;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #ffffff;
-  background: linear-gradient(135deg, #ffffff 0%, #f7cad0 100%);
+  color: var(--zmm-text, #ffffff);
+  background: linear-gradient(135deg, var(--zmm-text, #ffffff) 0%, var(--zmm-accent-light, #f7cad0) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -310,7 +334,7 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--zmm-top-link, rgba(255,255,255,0.65));
   display: flex;
   align-items: center;
   gap: 6px;
@@ -328,7 +352,7 @@
   transition: width 0.3s ease;
 }
 .zmm__top-link:hover {
-  color: #f7cad0;
+  color: var(--zmm-accent-light, #f7cad0);
 }
 .zmm__top-link:hover::after {
   width: 100%;
@@ -371,7 +395,7 @@
   width: 100%;
   text-align: left;
   padding: 8px 12px 8px 0;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--zmm-cat-color, rgba(255,255,255,0.35));
   transition: color 0.35s ease, transform 0.35s ease;
   position: relative;
 }
@@ -415,7 +439,7 @@
 
 .zmm__cat-title-text {
   font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 26px;
+  font-size: var(--zmm-cat-size, 26px);
   font-weight: 400;
   line-height: 1.1;
   letter-spacing: -0.01em;
@@ -435,7 +459,7 @@
 }
 .zmm__cat-btn:hover,
 .zmm__cat-btn.is-active {
-  color: #ffffff;
+  color: var(--zmm-cat-active, #ffffff);
   transform: translateX(6px);
 }
 .zmm__cat-btn.is-active::before {
@@ -450,7 +474,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #c25b82;
+  color: var(--zmm-accent, #c25b82);
   background: rgba(194, 91, 130, 0.12);
   border: 1px solid rgba(194, 91, 130, 0.3);
   padding: 2px 7px;
@@ -505,6 +529,32 @@
   align-content: start;
 }
 
+.zmm__panel-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 8px 16px;
+  background: rgba(194, 91, 130, 0.15);
+  border: 1px solid rgba(194, 91, 130, 0.35);
+  border-radius: 30px;
+  color: var(--zmm-accent-light, #f7cad0);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  width: fit-content;
+}
+.zmm__panel-all-link:hover {
+  background: var(--zmm-accent, #c25b82);
+  color: #ffffff;
+  transform: translateX(4px);
+  box-shadow: 0 4px 14px rgba(194, 91, 130, 0.35);
+}
+
 .zmm__sub-group {
   break-inside: avoid;
   margin-bottom: 36px;
@@ -516,7 +566,7 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #c25b82;
+  color: var(--zmm-sub-title, #c25b82);
   margin-bottom: 14px;
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(194, 91, 130, 0.2);
@@ -532,10 +582,10 @@
 .zmm__sub-link {
   display: block;
   font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-size: 13px;
+  font-size: var(--zmm-sub-size, 13px);
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.68);
+  color: var(--zmm-sub-link, rgba(255,255,255,0.68));
   text-decoration: none;
   padding: 7px 0;
   transition: color 0.2s ease, padding-left 0.25s ease;
@@ -546,7 +596,7 @@
   padding-left: 6px;
 }
 .zmm__sub-link--hot {
-  color: #f7cad0;
+  color: var(--zmm-highlighted, #f7cad0);
   font-weight: 600;
 }
 .zmm__sub-link--hot::after {
@@ -707,7 +757,9 @@
 
   catBtns.forEach(function (btn) {
     btn.addEventListener('mouseenter', function () { activatePanel(btn); });
-    btn.addEventListener('click',      function () { activatePanel(btn); });
+    btn.addEventListener('click', function () {
+      closeMenu();
+    });
   });
 
   /* ── Triggers ─────────────────────────────── */
@@ -741,14 +793,140 @@
   "tag": "div",
   "settings": [
     {
+      "type": "header",
+      "content": "🏷️ Marka & Logo"
+    },
+    {
       "type": "image_picker",
       "id": "logo",
       "label": "Logo Görseli (Boş bırakılırsa mağaza adı gösterilir)"
     },
     {
+      "type": "header",
+      "content": "🔗 Üst Bar Linkleri"
+    },
+    {
+      "type": "text",
+      "id": "link_search_label",
+      "label": "Arama Linki Yazısı",
+      "default": "ARA"
+    },
+    {
+      "type": "text",
+      "id": "link_cart_label",
+      "label": "Sepet Linki Yazısı",
+      "default": "SEPET"
+    },
+    {
+      "type": "text",
+      "id": "link_account_label",
+      "label": "Hesap Linki Yazısı (Giriş yapılmamış)",
+      "default": "GİRİŞ YAP"
+    },
+    {
+      "type": "text",
+      "id": "link_myaccount_label",
+      "label": "Hesap Linki Yazısı (Giriş yapılmış)",
+      "default": "HESABIM"
+    },
+    {
+      "type": "text",
+      "id": "link_help_label",
+      "label": "Yardım Linki Yazısı",
+      "default": "YARDIM"
+    },
+    {
       "type": "url",
       "id": "help_url",
       "label": "Yardım Sayfası Linki"
+    },
+    {
+      "type": "header",
+      "content": "🎨 Renk Ayarları"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Menü Arka Plan Rengi",
+      "default": "#0f0b10"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Genel Metin Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Vurgu / Aktif Rengi",
+      "default": "#c25b82"
+    },
+    {
+      "type": "color",
+      "id": "accent_light",
+      "label": "Vurgu Açık Tonu",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "color",
+      "id": "top_link_color",
+      "label": "Üst Bar Link Rengi",
+      "default": "#d4b8c0"
+    },
+    {
+      "type": "color",
+      "id": "cat_btn_color",
+      "label": "Kategori Yazı Rengi",
+      "default": "#c8b8cc"
+    },
+    {
+      "type": "color",
+      "id": "cat_btn_active_color",
+      "label": "Aktif Kategori Yazı Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "sub_title_color",
+      "label": "Alt Grup Başlığı Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "color",
+      "id": "sub_link_color",
+      "label": "Alt Link Rengi",
+      "default": "#c8b8cc"
+    },
+    {
+      "type": "color",
+      "id": "highlighted_color",
+      "label": "Öne Çıkan Link Rengi",
+      "default": "#f7cad0"
+    },
+    {
+      "type": "header",
+      "content": "🔡 Yazı Boyutları"
+    },
+    {
+      "type": "range",
+      "id": "cat_font_size",
+      "label": "Kategori Yazı Boyutu",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "sub_link_font_size",
+      "label": "Alt Link Yazı Boyutu",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 14
     }
   ],
   "blocks": [
@@ -757,32 +935,53 @@
       "name": "Ana Kategori",
       "settings": [
         {
+          "type": "header",
+          "content": "📌 Kategori Ayarları"
+        },
+        {
           "type": "text",
           "id": "title",
           "label": "Kategori Adı",
           "default": "MAKYAJ"
         },
         {
+          "type": "url",
+          "id": "category_url",
+          "label": "Kategori Sayfası Linki (İsteğe Bağlı)"
+        },
+        {
           "type": "image_picker",
           "id": "image",
-          "label": "Kategori Görseli / İkonu"
+          "label": "Kategori Küçük Görseli"
         },
         {
           "type": "text",
           "id": "badge",
           "label": "Etiket (YENİ, HOT vb. — isteğe bağlı)"
+        },
+        {
+          "type": "color",
+          "id": "badge_color",
+          "label": "Etiket Rengi",
+          "default": "#c25b82"
         }
       ]
     },
     {
       "type": "sub_group",
-      "name": "Alt Menü Grubu",
+      "name": "Alt Menü Grup Başlığı",
       "settings": [
         {
           "type": "text",
           "id": "title",
-          "label": "Grup Başlığı (örn: YÜZ)",
+          "label": "Grup Başlığı",
           "default": "YÜZ"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Başlık Rengi",
+          "default": "#f7cad0"
         }
       ]
     },
@@ -804,8 +1003,13 @@
         {
           "type": "checkbox",
           "id": "is_highlighted",
-          "label": "Öne çıkar (Pembe renkle göster)",
+          "label": "Öne Çıkar (Pembe renkle göster)",
           "default": false
+        },
+        {
+          "type": "color",
+          "id": "custom_color",
+          "label": "Özel Renk (Boş bırakırsan varsayılan uygulanır)"
         }
       ]
     },
@@ -826,8 +1030,25 @@
         },
         {
           "type": "text",
+          "id": "subtitle",
+          "label": "Görsel Alt Başlığı"
+        },
+        {
+          "type": "text",
           "id": "badge",
-          "label": "Üzerine Rozet (örn: YENİ — isteğe bağlı)"
+          "label": "Rozet Metni (isteğe bağlı)"
+        },
+        {
+          "type": "color",
+          "id": "badge_color",
+          "label": "Rozet Rengi",
+          "default": "#c25b82"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Buton Metni (isteğe bağlı)",
+          "default": "Keşfet"
         },
         {
           "type": "url",
@@ -843,7 +1064,39 @@
       "blocks": [
         {
           "type": "main_category",
-          "settings": { "title": "MAKYAJ" }
+          "settings": { "title": "TÜM ÜRÜNLER", "badge": "TÜMÜ", "category_url": "/collections/all" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "ÖNE ÇIKAN KOLEKSİYONLAR" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Tüm Ürünler Kataloğu", "url": "/collections/all", "is_highlighted": true }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Makyaj Koleksiyonu", "url": "/collections/makyaj" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Cilt Bakım Rutini", "url": "/collections/cilt-bakimi" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Parfüm & Kokular", "url": "/collections/parfum" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Vücut Bakımı", "url": "/collections/vucut-bakimi" }
+        },
+        {
+          "type": "featured_image",
+          "settings": { "title": "TÜM ÜRÜNLER KATALOĞU", "badge": "TÜMÜ", "url": "/collections/all" }
+        },
+        {
+          "type": "main_category",
+          "settings": { "title": "MAKYAJ", "category_url": "/collections/makyaj" }
         },
         {
           "type": "sub_group",
