@@ -1,0 +1,1066 @@
+<div
+  id="zmm-overlay"
+  class="zmm"
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Ana Menü">
+
+  <div class="zmm__inner">
+
+    <!-- ── HEADER ─────────────────────────────────────── -->
+    <header class="zmm__header">
+      <div class="zmm__header-left">
+        <button
+          type="button"
+          class="zmm__close"
+          id="zmm-close-btn"
+          aria-label="Menüyü kapat">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+
+        <a href="{{ routes.root_url }}" class="zmm__logo" aria-label="{{ shop.name }}">
+          {% if section.settings.logo != blank %}
+            {{ section.settings.logo | image_url: width: 200 | image_tag: alt: shop.name, class: 'zmm__logo-img', loading: 'eager' }}
+          {% else %}
+            <span class="zmm__logo-text">{{ shop.name }}</span>
+          {% endif %}
+        </a>
+      </div>
+
+      <nav class="zmm__header-right" aria-label="Hızlı erişim">
+        <a href="{{ routes.search_url }}" class="zmm__top-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          ARA
+        </a>
+        <a href="{{ routes.cart_url }}" class="zmm__top-link">
+          SEPET{% if cart.item_count > 0 %}&nbsp;({{ cart.item_count }}){% endif %}
+        </a>
+        {% if customer %}
+          <a href="{{ routes.account_url }}" class="zmm__top-link">HESABIM</a>
+        {% else %}
+          <a href="{{ routes.account_login_url }}" class="zmm__top-link">GİRİŞ YAP</a>
+        {% endif %}
+        {% if section.settings.help_url != blank %}
+          <a href="{{ section.settings.help_url }}" class="zmm__top-link">YARDIM</a>
+        {% endif %}
+      </nav>
+    </header>
+
+    <!-- ── BODY ───────────────────────────────────────── -->
+    <div class="zmm__body">
+
+      <!-- Col 1 · Main Categories -->
+      <div class="zmm__col-cats" role="navigation" aria-label="Ana kategoriler">
+        <ul class="zmm__cat-list" role="list">
+          {%- assign cat_idx = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'main_category' -%}
+              <li {{ block.shopify_attributes }}>
+                <button
+                  type="button"
+                  class="zmm__cat-btn{%- if cat_idx == 0 %} is-active{%- endif -%}"
+                  data-panel="zmm-panel-{{ block.id }}"
+                  aria-expanded="{%- if cat_idx == 0 -%}true{%- else -%}false{%- endif -%}">
+                  {%- if block.settings.badge != blank -%}
+                    <span class="zmm__cat-badge">{{ block.settings.badge }}</span>
+                  {%- endif -%}
+                  {{ block.settings.title }}
+                </button>
+              </li>
+              {%- assign cat_idx = cat_idx | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <!-- Cols 2-4 · Panels -->
+      <div class="zmm__panels">
+        {%- assign panel_idx = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'main_category' -%}
+            {%- assign current_id = block.id -%}
+
+            <div
+              id="zmm-panel-{{ block.id }}"
+              class="zmm__panel{%- if panel_idx == 0 %} is-active{%- endif -%}"
+              role="region"
+              aria-label="{{ block.settings.title }}">
+
+              <!-- Sub-link columns -->
+              <div class="zmm__sub-area">
+                {%- assign in_cat   = false -%}
+                {%- assign in_group = false -%}
+
+                {%- for sub in section.blocks -%}
+                  {%- if sub.type == 'main_category' -%}
+                    {%- if sub.id == current_id -%}
+                      {%- assign in_cat = true -%}
+                    {%- else -%}
+                      {%- if in_cat and in_group -%}
+                        </ul></div>
+                        {%- assign in_group = false -%}
+                      {%- endif -%}
+                      {%- assign in_cat = false -%}
+                    {%- endif -%}
+                  {%- endif -%}
+
+                  {%- if in_cat -%}
+                    {%- if sub.type == 'sub_group' -%}
+                      {%- if in_group -%}
+                        </ul></div>
+                      {%- endif -%}
+                      {%- assign in_group = true -%}
+                      <div class="zmm__sub-group" {{ sub.shopify_attributes }}>
+                        {%- if sub.settings.title != blank -%}
+                          <h3 class="zmm__sub-title">{{ sub.settings.title }}</h3>
+                        {%- endif -%}
+                        <ul class="zmm__sub-list" role="list">
+                    {%- elsif sub.type == 'sub_link' -%}
+                      {%- if in_group -%}
+                        <li {{ sub.shopify_attributes }}>
+                          <a
+                            href="{{ sub.settings.url | default: '#' }}"
+                            class="zmm__sub-link{%- if sub.settings.is_highlighted %} zmm__sub-link--hot{%- endif -%}">
+                            {{ sub.settings.title }}
+                          </a>
+                        </li>
+                      {%- endif -%}
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- if in_group -%}</ul></div>{%- endif -%}
+              </div>
+
+              <!-- Featured images column -->
+              <div class="zmm__feat-col">
+                {%- assign in_cat2 = false -%}
+                {%- assign feat_count = 0 -%}
+                {%- for img in section.blocks -%}
+                  {%- if img.type == 'main_category' -%}
+                    {%- if img.id == current_id -%}
+                      {%- assign in_cat2 = true -%}
+                    {%- else -%}
+                      {%- assign in_cat2 = false -%}
+                    {%- endif -%}
+                  {%- endif -%}
+                  {%- if in_cat2 and img.type == 'featured_image' -%}
+                    <a
+                      href="{{ img.settings.url | default: '#' }}"
+                      class="zmm__feat-card"
+                      {{ img.shopify_attributes }}>
+                      <div class="zmm__feat-img-wrap">
+                        {%- if img.settings.image != blank -%}
+                          {{ img.settings.image | image_url: width: 360 | image_tag:
+                              class: 'zmm__feat-img',
+                              loading: 'lazy',
+                              alt: img.settings.title }}
+                        {%- else -%}
+                          {%- assign ph_num = feat_count | modulo: 4 | plus: 1 -%}
+                          {{ 'collection-' | append: ph_num | placeholder_svg_tag: 'zmm__feat-img zmm__feat-svg' }}
+                        {%- endif -%}
+                        {%- if img.settings.badge != blank -%}
+                          <span class="zmm__feat-badge">{{ img.settings.badge }}</span>
+                        {%- endif -%}
+                      </div>
+                      {%- if img.settings.title != blank -%}
+                        <span class="zmm__feat-label">{{ img.settings.title }}</span>
+                      {%- endif -%}
+                    </a>
+                    {%- assign feat_count = feat_count | plus: 1 -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+
+            </div>
+            {%- assign panel_idx = panel_idx | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+    </div><!-- /zmm__body -->
+  </div><!-- /zmm__inner -->
+</div><!-- /zmm-overlay -->
+
+{% stylesheet %}
+/* ─── Reset & Base ─────────────────────────────────── */
+.zmm *,
+.zmm *::before,
+.zmm *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── Overlay ──────────────────────────────────────── */
+.zmm {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0f0b10;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.zmm.zmm--open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* ─── Inner ────────────────────────────────────────── */
+.zmm__inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 48px;
+}
+
+/* ─── Header ───────────────────────────────────────── */
+.zmm__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 0 24px;
+  border-bottom: 1px solid rgba(247, 202, 208, 0.12);
+  flex-shrink: 0;
+}
+
+.zmm__header-left {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.zmm__close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  transition: color 0.25s ease, background 0.25s ease, transform 0.3s ease;
+}
+.zmm__close:hover {
+  color: #f7cad0;
+  background: rgba(247, 202, 208, 0.08);
+  transform: rotate(90deg);
+}
+
+.zmm__logo {
+  text-decoration: none;
+}
+.zmm__logo-img {
+  height: 36px;
+  width: auto;
+  display: block;
+}
+.zmm__logo-text {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ffffff 0%, #f7cad0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.zmm__header-right {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.zmm__top-link {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.65);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+  position: relative;
+}
+.zmm__top-link::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #f7cad0;
+  transition: width 0.3s ease;
+}
+.zmm__top-link:hover {
+  color: #f7cad0;
+}
+.zmm__top-link:hover::after {
+  width: 100%;
+}
+
+/* ─── Body ─────────────────────────────────────────── */
+.zmm__body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  padding: 40px 0 0;
+  gap: 0;
+}
+
+/* ─── Col 1: Main Categories ───────────────────────── */
+.zmm__col-cats {
+  width: 300px;
+  flex-shrink: 0;
+  padding-right: 48px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  border-right: 1px solid rgba(247, 202, 208, 0.08);
+}
+.zmm__col-cats::-webkit-scrollbar { display: none; }
+
+.zmm__cat-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.zmm__cat-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px 10px 0;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.1;
+  color: rgba(255, 255, 255, 0.28);
+  letter-spacing: -0.01em;
+  transition: color 0.35s ease, transform 0.35s ease;
+  position: relative;
+}
+.zmm__cat-btn::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%) scaleY(0);
+  width: 3px;
+  height: 55%;
+  background: linear-gradient(to bottom, #c25b82, #f7cad0);
+  border-radius: 3px;
+  transition: transform 0.3s ease;
+}
+.zmm__cat-btn:hover,
+.zmm__cat-btn.is-active {
+  color: #ffffff;
+  transform: translateX(8px);
+}
+.zmm__cat-btn.is-active::before {
+  transform: translateY(-50%) scaleY(1);
+}
+
+.zmm__cat-badge {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c25b82;
+  background: rgba(194, 91, 130, 0.12);
+  border: 1px solid rgba(194, 91, 130, 0.3);
+  padding: 2px 7px;
+  border-radius: 20px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* ─── Panels ───────────────────────────────────────── */
+.zmm__panels {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.zmm__panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 40px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+  overflow-y: auto;
+  padding: 0 0 40px 48px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(247, 202, 208, 0.2) transparent;
+}
+.zmm__panel::-webkit-scrollbar { width: 4px; }
+.zmm__panel::-webkit-scrollbar-track { background: transparent; }
+.zmm__panel::-webkit-scrollbar-thumb { background: rgba(247, 202, 208, 0.2); border-radius: 4px; }
+
+.zmm__panel.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  position: relative;
+  animation: zmmSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes zmmSlideIn {
+  from { opacity: 0; transform: translateX(18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ─── Sub-link area ────────────────────────────────── */
+.zmm__sub-area {
+  flex: 1;
+  column-count: 2;
+  column-gap: 36px;
+  align-content: start;
+}
+
+.zmm__sub-group {
+  break-inside: avoid;
+  margin-bottom: 36px;
+}
+
+.zmm__sub-title {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #c25b82;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(194, 91, 130, 0.2);
+}
+
+.zmm__sub-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.zmm__sub-link {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.68);
+  text-decoration: none;
+  padding: 7px 0;
+  transition: color 0.2s ease, padding-left 0.25s ease;
+  border-bottom: 1px solid transparent;
+}
+.zmm__sub-link:hover {
+  color: #ffffff;
+  padding-left: 6px;
+}
+.zmm__sub-link--hot {
+  color: #f7cad0;
+  font-weight: 600;
+}
+.zmm__sub-link--hot::after {
+  content: ' ✦';
+  font-size: 8px;
+  opacity: 0.7;
+}
+
+/* ─── Featured image column ────────────────────────── */
+.zmm__feat-col {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  flex-shrink: 0;
+  width: 380px;
+  align-items: flex-start;
+}
+
+.zmm__feat-card {
+  flex: 1;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.zmm__feat-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.zmm__feat-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.zmm__feat-card:hover .zmm__feat-img {
+  transform: scale(1.06);
+}
+.zmm__feat-svg {
+  padding: 20px;
+  opacity: 0.25;
+}
+
+.zmm__feat-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #c25b82;
+  color: #ffffff;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 3px;
+}
+
+.zmm__feat-label {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  transition: color 0.2s ease;
+}
+.zmm__feat-card:hover .zmm__feat-label {
+  color: #f7cad0;
+}
+
+/* ─── Responsive ───────────────────────────────────── */
+@media (max-width: 1100px) {
+  .zmm__feat-col { width: 280px; }
+  .zmm__cat-btn { font-size: 26px; }
+}
+
+@media (max-width: 860px) {
+  .zmm__inner { padding: 0 24px; }
+  .zmm__body { flex-direction: column; overflow-y: auto; gap: 0; padding: 20px 0 0; }
+  .zmm__col-cats {
+    width: 100%;
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(247, 202, 208, 0.1);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+  .zmm__cat-list { flex-direction: row; gap: 4px; white-space: nowrap; }
+  .zmm__cat-btn { font-size: 20px; padding: 8px 16px; white-space: nowrap; transform: none !important; }
+  .zmm__cat-btn.is-active, .zmm__cat-btn:hover { transform: none !important; color: #ffffff; }
+  .zmm__cat-btn::before { display: none; }
+  .zmm__panels { height: auto; }
+  .zmm__panel {
+    flex-direction: column;
+    padding: 0 0 40px;
+    position: relative;
+    overflow: visible;
+  }
+  .zmm__sub-area { column-count: 2; }
+  .zmm__feat-col { width: 100%; flex-direction: row; }
+  .zmm__header { padding: 20px 0 18px; }
+  .zmm__header-right { gap: 16px; }
+}
+
+@media (max-width: 520px) {
+  .zmm__sub-area { column-count: 1; }
+  .zmm__feat-col { width: 100%; gap: 10px; }
+  .zmm__header-right { display: none; }
+}
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  const overlay = document.getElementById('zmm-overlay');
+  if (!overlay) return;
+
+  const catBtns  = overlay.querySelectorAll('.zmm__cat-btn');
+  const panels   = overlay.querySelectorAll('.zmm__panel');
+  const closeBtn = document.getElementById('zmm-close-btn');
+
+  /* ── Open / Close ─────────────────────────── */
+  function openMenu() {
+    overlay.classList.add('zmm--open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    overlay.classList.remove('zmm--open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  /* ── Panel switching ──────────────────────── */
+  function activatePanel(btn) {
+    catBtns.forEach(function (b) {
+      b.classList.remove('is-active');
+      b.setAttribute('aria-expanded', 'false');
+    });
+    panels.forEach(function (p) { p.classList.remove('is-active'); });
+
+    btn.classList.add('is-active');
+    btn.setAttribute('aria-expanded', 'true');
+    var targetId = btn.getAttribute('data-panel');
+    var panel = document.getElementById(targetId);
+    if (panel) panel.classList.add('is-active');
+  }
+
+  catBtns.forEach(function (btn) {
+    btn.addEventListener('mouseenter', function () { activatePanel(btn); });
+    btn.addEventListener('click',      function () { activatePanel(btn); });
+  });
+
+  /* ── Triggers ─────────────────────────────── */
+  /* Intercept the existing hamburger in CAPTURE phase
+     so it fires before navDrawer's listener */
+  var hamburger = document.getElementById('navDrawerTrigger');
+  if (hamburger) {
+    hamburger.addEventListener('click', function (e) {
+      e.stopImmediatePropagation();
+      if (overlay.classList.contains('zmm--open')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    }, true);
+  }
+
+  /* Close button inside menu */
+  if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+
+  /* Escape key */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('zmm--open')) closeMenu();
+  });
+})();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Mega Menü (Tam Ekran)",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Görseli (Boş bırakılırsa mağaza adı gösterilir)"
+    },
+    {
+      "type": "url",
+      "id": "help_url",
+      "label": "Yardım Sayfası Linki"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "main_category",
+      "name": "Ana Kategori",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Kategori Adı",
+          "default": "MAKYAJ"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Etiket (YENİ, HOT vb. — isteğe bağlı)"
+        }
+      ]
+    },
+    {
+      "type": "sub_group",
+      "name": "Alt Menü Grubu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Grup Başlığı (örn: YÜZ)",
+          "default": "YÜZ"
+        }
+      ]
+    },
+    {
+      "type": "sub_link",
+      "name": "Alt Menü Linki",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Link Yazısı",
+          "default": "Fondöten"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Hedef URL"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_highlighted",
+          "label": "Öne çıkar (Pembe renkle göster)",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "featured_image",
+      "name": "Öne Çıkan Görsel",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Görsel"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Görsel Başlığı",
+          "default": "YENİ KOLEKSİYON"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Üzerine Rozet (örn: YENİ — isteğe bağlı)"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Tıklanınca gidilecek sayfa"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mega Menü (Tam Ekran)",
+      "blocks": [
+        {
+          "type": "main_category",
+          "settings": { "title": "MAKYAJ" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "YÜZ" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Yeni Ürünler", "is_highlighted": true }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Fondöten" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Kapatıcı & Concealer" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Allık & Bronzer" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "GÖZ" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Maskara" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Eyeliner & Kalem" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Göz Farı Paleti" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "DUDAK" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Ruj", "is_highlighted": true }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Dudak Parlatıcı" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Dudak Kalemi" }
+        },
+        {
+          "type": "featured_image",
+          "settings": { "title": "VİRAL RUJ SETİ", "badge": "YENİ" }
+        },
+        {
+          "type": "featured_image",
+          "settings": { "title": "GÖZ KOLEKSİYONU" }
+        },
+        {
+          "type": "main_category",
+          "settings": { "title": "CİLT BAKIMI" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "TEMİZLEME" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Yeni Ürünler", "is_highlighted": true }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Yüz Yıkama Jeli" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Misel Suyu" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Yüz Peelingi" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "NEMLENDİRİCİ" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Gündüz Kremi" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Gece Kremi" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Göz Çevresi Kremi" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "SERUM & BAKIM" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "C Vitamini Serumu", "is_highlighted": true }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Hyalüronik Asit" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Retinol" }
+        },
+        {
+          "type": "featured_image",
+          "settings": { "title": "CİLT BAKIM RUTİNİ" }
+        },
+        {
+          "type": "featured_image",
+          "settings": { "title": "SERUM KOLEKS.", "badge": "ÇOK SATAN" }
+        },
+        {
+          "type": "main_category",
+          "settings": { "title": "PARFÜM" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "KADIN" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Yeni Kokular", "is_highlighted": true }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Çiçeksi" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Odunsu & Oriental" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "ERKEK" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Taze & Aquatik" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Odunsu" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "ÖZEL SETLER" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Hediye Setleri", "is_highlighted": true }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Minyatür Koleksiyonu" }
+        },
+        {
+          "type": "featured_image",
+          "settings": { "title": "YENİ SEZON KOKULAR", "badge": "2025" }
+        },
+        {
+          "type": "featured_image",
+          "settings": { "title": "HEDİYE SETLERİ" }
+        },
+        {
+          "type": "main_category",
+          "settings": { "title": "VÜCUT BAKIMI" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "VÜCUT" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Yeni Ürünler", "is_highlighted": true }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Vücut Losyonu" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Vücut Yağı" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Vücut Peeling" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "EL & AYAK" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "El Kremi" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Tırnak Bakımı" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "EV KOKUları" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Mum", "is_highlighted": true }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Oda Spreyi" }
+        },
+        {
+          "type": "featured_image",
+          "settings": { "title": "DOĞAL MUMLAR" }
+        },
+        {
+          "type": "featured_image",
+          "settings": { "title": "VÜCUT BAKIM SETİ", "badge": "HEDİYE" }
+        },
+        {
+          "type": "main_category",
+          "settings": { "title": "YENİ ÜRÜNLER", "badge": "YENİ" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "ÖNE ÇIKANLAR" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Bu Hafta Gelenler", "is_highlighted": true }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Çok Satanlar" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Editörün Seçimi" }
+        },
+        {
+          "type": "sub_group",
+          "settings": { "title": "ÖZEL KOLEKSİYONLAR" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Sezon Koleksiyonu" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Sınırlı Sürüm" }
+        },
+        {
+          "type": "sub_link",
+          "settings": { "title": "Hediye Setleri" }
+        },
+        {
+          "type": "featured_image",
+          "settings": { "title": "HAFTANIN YENİLERİ", "badge": "YENİ" }
+        },
+        {
+          "type": "featured_image",
+          "settings": { "title": "EDITÖRÜN SEÇİMİ" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

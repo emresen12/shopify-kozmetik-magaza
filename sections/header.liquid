@@ -10,7 +10,7 @@
     
     <!-- Left Area: Brand Logo / Shop Name & 3-Line Hamburger Menu Icon -->
     <div class="header__left">
-      <button type="button" class="header__icon-btn menu-drawer-toggle-btn menu-toggle-btn" aria-label="Menüyü Aç" title="Menü">
+      <button type="button" class="header__icon-btn menu-drawer-toggle-btn" id="navDrawerTrigger" aria-label="Menüyü Aç" title="Menü">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -96,6 +96,205 @@
 
   </div>
 </header>
+
+<!-- ==========================================
+     SIDE NAV MENU DRAWER (3 Çizgili Yan Açılır Menü)
+========================================== -->
+<div class="side-drawer" id="navDrawer" aria-hidden="true">
+  <div class="side-drawer__backdrop" data-close-drawer></div>
+  <div class="side-drawer__panel nav-drawer-panel">
+    
+    {% assign b_n_head = section.blocks | where: "type", "drawer_nav_header" %}
+    {% assign b_n_link = section.blocks | where: "type", "drawer_nav_link" %}
+    {% assign b_n_menu = section.blocks | where: "type", "drawer_nav_menu" %}
+    {% assign b_n_acc  = section.blocks | where: "type", "drawer_nav_account" %}
+    {% assign b_n_crt  = section.blocks | where: "type", "drawer_nav_cart" %}
+    {% assign b_n_acts = section.blocks | where: "type", "drawer_nav_actions" %}
+    {% assign b_n_prm  = section.blocks | where: "type", "drawer_nav_promo" %}
+    {% assign nav_blocks_size = b_n_head.size | plus: b_n_link.size | plus: b_n_menu.size | plus: b_n_acc.size | plus: b_n_crt.size | plus: b_n_acts.size | plus: b_n_prm.size %}
+
+    {% if nav_blocks_size > 0 %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          
+          {% when 'drawer_nav_header' %}
+            <div class="side-drawer__header" {{ block.shopify_attributes }}>
+              <h3 class="drawer-title" style="color: {{ block.settings.title_color | default: '#ffffff' }};">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+                <span>{{ block.settings.title | default: "Menü" }}</span>
+              </h3>
+              <button type="button" class="side-drawer__close" data-close-drawer aria-label="Kapat">✕</button>
+            </div>
+
+          {% when 'drawer_nav_link' %}
+            <div class="nav-drawer-single-link-wrapper" {{ block.shopify_attributes }}>
+              <a href="{{ block.settings.url | default: '#' }}" class="nav-drawer-link-item">
+                <span class="link-bullet">{{ block.settings.icon | default: "✦" }}</span>
+                <span>{{ block.settings.title | default: "Sayfa Linki" }}</span>
+              </a>
+            </div>
+
+          {% when 'drawer_nav_menu' %}
+            <div class="side-drawer__body nav-drawer-body" {{ block.shopify_attributes }}>
+              <nav class="nav-drawer-links-wrapper">
+                {% assign nav_linklist_handle = block.settings.menu | default: section.settings.menu %}
+                {% if nav_linklist_handle != blank and linklists[nav_linklist_handle].links.size > 0 %}
+                  {% for link in linklists[nav_linklist_handle].links %}
+                    <a href="{{ link.url }}" class="nav-drawer-link-item {% if link.active %}active{% endif %}">
+                      <span class="link-bullet">✦</span>
+                      <span>{{ link.title }}</span>
+                    </a>
+                  {% endfor %}
+                {% else %}
+                  <a href="{{ routes.root_url }}" class="nav-drawer-link-item active">
+                    <span class="link-bullet">✦</span>
+                    <span>Ana Sayfa</span>
+                  </a>
+                  <a href="{{ routes.all_products_collection_url }}" class="nav-drawer-link-item">
+                    <span class="link-bullet">✦</span>
+                    <span>Ürünler</span>
+                  </a>
+                  <a href="{{ routes.collections_url }}" class="nav-drawer-link-item">
+                    <span class="link-bullet">✦</span>
+                    <span>Katalog / Koleksiyonlar</span>
+                  </a>
+                {% endif %}
+              </nav>
+            </div>
+
+          {% when 'drawer_nav_account' %}
+            <div class="nav-drawer-action-single" {{ block.shopify_attributes }}>
+              <button type="button" class="nav-action-btn account-action-btn" id="navDrawerAuthBtn" style="
+                --btn-bg: {{ block.settings.btn_bg | default: 'rgba(255, 255, 255, 0.05)' }};
+                --btn-border: {{ block.settings.btn_border | default: 'rgba(255, 255, 255, 0.12)' }};
+                --btn-color: {{ block.settings.btn_color | default: '#ffffff' }};
+              ">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>{{ block.settings.label | default: "Hesabım" }}</span>
+              </button>
+            </div>
+
+          {% when 'drawer_nav_cart' %}
+            <div class="nav-drawer-action-single" {{ block.shopify_attributes }}>
+              <button type="button" class="nav-action-btn cart-action-btn" id="navDrawerCartBtn" style="
+                --btn-bg: {{ block.settings.btn_bg | default: 'rgba(255, 255, 255, 0.05)' }};
+                --btn-border: {{ block.settings.btn_border | default: 'rgba(255, 255, 255, 0.12)' }};
+                --btn-color: {{ block.settings.btn_color | default: '#ffffff' }};
+              ">
+                <div class="nav-cart-icon-wrap">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="9" cy="21" r="1"/>
+                    <circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                  </svg>
+                  <span class="nav-cart-count">{{ cart.item_count }}</span>
+                </div>
+                <span>{{ block.settings.label | default: "Sepetim" }}</span>
+              </button>
+            </div>
+
+          {% when 'drawer_nav_actions' %}
+            <div class="nav-drawer-actions-wrapper" style="
+              --btn-bg: {{ block.settings.btn_bg | default: 'rgba(255, 255, 255, 0.05)' }};
+              --btn-border: {{ block.settings.btn_border | default: 'rgba(255, 255, 255, 0.12)' }};
+              --btn-color: {{ block.settings.btn_text_color | default: '#ffffff' }};
+            " {{ block.shopify_attributes }}>
+              <button type="button" class="nav-action-btn account-action-btn" id="navDrawerAuthBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>{{ block.settings.account_label | default: "Hesabım" }}</span>
+              </button>
+
+              <button type="button" class="nav-action-btn cart-action-btn" id="navDrawerCartBtn">
+                <div class="nav-cart-icon-wrap">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="9" cy="21" r="1"/>
+                    <circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                  </svg>
+                  <span class="nav-cart-count">{{ cart.item_count }}</span>
+                </div>
+                <span>{{ block.settings.cart_label | default: "Sepetim" }}</span>
+              </button>
+            </div>
+
+          {% when 'drawer_nav_promo' %}
+            <div class="nav-drawer-promo-card" style="
+              background: {{ block.settings.bg_color | default: 'rgba(194, 91, 130, 0.15)' }};
+              border: 1px solid {{ block.settings.border_color | default: '#f7cad0' }};
+            " {{ block.shopify_attributes }}>
+              <span class="promo-icon">{{ block.settings.icon | default: "✨" }}</span>
+              <p class="promo-text">{{ block.settings.text | default: "Özel Teklifler ve Yeni Ürünleri Keşfedin" }}</p>
+            </div>
+
+        {% endcase %}
+      {% endfor %}
+
+    {% else %}
+      <!-- Fallback when no blocks added -->
+      <div class="side-drawer__header">
+        <h3 class="drawer-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <span>Menü</span>
+        </h3>
+        <button type="button" class="side-drawer__close" data-close-drawer aria-label="Kapat">✕</button>
+      </div>
+
+      <div class="side-drawer__body nav-drawer-body">
+        <nav class="nav-drawer-links-wrapper">
+          <a href="{{ routes.root_url }}" class="nav-drawer-link-item active">
+            <span class="link-bullet">✦</span>
+            <span>Ana Sayfa</span>
+          </a>
+          <a href="{{ routes.all_products_collection_url }}" class="nav-drawer-link-item">
+            <span class="link-bullet">✦</span>
+            <span>Ürünler</span>
+          </a>
+          <a href="{{ routes.collections_url }}" class="nav-drawer-link-item">
+            <span class="link-bullet">✦</span>
+            <span>Katalog</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="nav-drawer-actions-wrapper">
+        <button type="button" class="nav-action-btn account-action-btn" id="navDrawerAuthBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span>Hesabım</span>
+        </button>
+
+        <button type="button" class="nav-action-btn cart-action-btn" id="navDrawerCartBtn">
+          <div class="nav-cart-icon-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="nav-cart-count">{{ cart.item_count }}</span>
+          </div>
+          <span>Sepetim</span>
+        </button>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
 
 <!-- ==========================================
      SIDE AUTH DRAWER (Giriş Yap / Kayıt Ol Yan Açılır Penceresi)
